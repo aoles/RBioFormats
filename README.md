@@ -1,4 +1,6 @@
-RBioFormats
-===========
+## Installation
 
-R interface to Bio-Formats library
+```
+# install.packages("devtools")
+devtools::install_github("aoles/RBioFormats")
+```

@@ -10,4 +10,7 @@ Interfaces the \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bi
 \author{
 Andrzej Oles \email{andrzej.oles@embl.de}, 2014
 }
+\references{
+\href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats website}
+}
 

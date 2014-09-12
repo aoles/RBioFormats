@@ -1,6 +1,6 @@
 #' Read Images
 #' 
-#' Read image files using the Bio-Formats library
+#' Read image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
 #' 
 #' @param file character, file name
 #' @param filter.metadata logical, specifies whether ugly metadata (entries with unprintable characters, and extremely large entries) should be discarded from the metadata table

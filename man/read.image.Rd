@@ -19,7 +19,7 @@ read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
 A \code{\link{BFImage-class}} object.
 }
 \description{
-Read image files using the Bio-Formats library
+Read image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
 }
 \examples{
 require(EBImage)

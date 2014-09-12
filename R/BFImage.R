@@ -48,5 +48,35 @@ BFImage = function(image = Image(),
 #' 
 #' @param x An Image object or an array
 #' @return A character vector giving the dimension labels.
+#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
+#' @examples
+#' # sample timelapse image
+#' img = read.image(mockFile(sizeC = 3, sizeT = 10))
+#' 
+#' dimorder(img)
+#' 
 #' @export
-dimorder = function(x) names(dim(x))
+dimorder = function(x) names(dimnames(x))
+
+#' @rdname BFImage-class
+#' @export
+setMethod ("show", signature(object = "BFImage"), function(object) {
+  callNextMethod()
+  cat('\ncoreMetadata: ')
+  str(coreMetadata(object))
+})
+
+#' @rdname BFImage-class
+#' @param y A BFImage object
+#' @return Named list consisting of key value pairs.
+#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
+#' @examples
+#' img = read.image(mockFile())
+#' 
+#' coreMetadata(img)
+#' 
+#' @export
+coreMetadata = function (y) {
+  if (is(y, 'BFImage')) y@coreMetadata
+  else NULL
+}

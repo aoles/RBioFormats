@@ -87,7 +87,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   colormode = if (metadata$sizeC == 1) 0L else 2L
   dim = .setOutputDim(metadata)
 
-  data = array(data, dim)
+  data = array(data, dim, dimnames = setNames(vector("list", length(dim) ), names(dim)) )
   
   if ( isTRUE(normalize) )
     data = normalize(data, separate = FALSE, ft = c(0, 1), inputRange = range)

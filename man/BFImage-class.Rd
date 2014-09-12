@@ -3,10 +3,16 @@
 \name{BFImage-class}
 \alias{BFImage}
 \alias{BFImage-class}
+\alias{coreMetadata}
+\alias{show,BFImage-method}
 \title{Bio-Formats Image Class}
 \usage{
 BFImage(image = Image(), coreMetadata = list(), globalMetadata = list(),
   seriesMetadata = list(), omexml = "")
+
+\S4method{show}{BFImage}(object)
+
+coreMetadata(y)
 }
 \arguments{
 \item{image}{an Image object}
@@ -18,6 +24,13 @@ BFImage(image = Image(), coreMetadata = list(), globalMetadata = list(),
 \item{seriesMetadata}{named list containing image metadata}
 
 \item{omexml}{a string containing a dumped OME-XML DOM tree}
+
+\item{y}{A BFImage object}
+
+\item{object}{Any R object}
+}
+\value{
+Named list consisting of key value pairs.
 }
 \description{
 Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
@@ -33,4 +46,12 @@ Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
 
 \item{\code{omexml}}{a string containing a dumped OME-XML DOM tree}
 }}
+\examples{
+img = read.image(mockFile())
+
+coreMetadata(img)
+}
+\author{
+Andrzej Oles \email{andrzej.oles@embl.de}, 2014
+}
 

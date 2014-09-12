@@ -14,4 +14,13 @@ A character vector giving the dimension labels.
 \description{
 Get the ordering of the image frames
 }
+\examples{
+# sample timelapse image
+img = read.image(mockFile(sizeC = 3, sizeT = 10))
+
+dimorder(img)
+}
+\author{
+Andrzej Oles \email{andrzej.oles@embl.de}, 2014
+}
 

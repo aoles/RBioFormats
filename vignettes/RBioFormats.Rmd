@@ -77,7 +77,7 @@ Some core metadata which is guaranteed to exist for any image type is stored in 
 f = system.file("images", "nuclei.tif", package = "EBImage")
 img = read.image(f)
 
-names(img@coreMetadata)
+names(coreMetadata(img))
 ```
 
 The `globalMetadata` and `seriesMetadata` are format-specific.
@@ -95,7 +95,7 @@ xml = xmlTreeParse(img@omexml)
 xmlRoot(xml)
 ```
 
-For details on how to work with XML data in R see the `r Rpackage('XML')` package [documentation](http://www.omegahat.org/RSXML/ "XML package documentation").
+For details on working with XML data in R see the `r Rpackage('XML')` package [documentation](http://www.omegahat.org/RSXML/ "XML package documentation").
 
 ## Performance relative to *EBImage*
 
@@ -127,7 +127,7 @@ ranges = sapply(types, function(t) {
 knitr::kable(ranges)
 ```
 
-Image data returned by `r Rpackage('RBioFormats')` is scaled by default to the [0:1] range. This behavior can be controlled using the `normalize` argument to `read.image`.
+Image data returned by `r Rpackage('RBioFormats')` is by default scaled to the [0:1] range. This behavior can be controlled using the `normalize` argument to `read.image`.
 
 ```{r range}
 sapply(types, function(t) {

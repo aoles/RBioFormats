@@ -59,11 +59,19 @@ BFImage = function(image = Image(),
 dimorder = function(x) names(dimnames(x))
 
 #' @rdname BFImage-class
+#' @param object A BFImage object
 #' @export
 setMethod ("show", signature(object = "BFImage"), function(object) {
   callNextMethod()
-  cat('\ncoreMetadata: ')
-  str(coreMetadata(object))
+  
+  cat('\n')
+  for (s in c("coreMetadata", "globalMetadata", "seriesMetadata")) {
+    meta = do.call(s, list(object))
+    if ( (l=length(meta)) > 0 ) {
+      cat(s, ': ')
+      str(meta, max.level = 0, list.len = l)
+    } 
+  }
 })
 
 #' @rdname BFImage-class
@@ -78,5 +86,21 @@ setMethod ("show", signature(object = "BFImage"), function(object) {
 #' @export
 coreMetadata = function (y) {
   if (is(y, 'BFImage')) y@coreMetadata
+  else NULL
+}
+
+#' @rdname BFImage-class
+#' @inheritParams coreMetadata
+#' @export
+globalMetadata = function (y) {
+  if (is(y, 'BFImage')) y@globalMetadata
+  else NULL
+}
+
+#' @rdname BFImage-class
+#' @inheritParams coreMetadata
+#' @export
+seriesMetadata = function (y) {
+  if (is(y, 'BFImage')) y@seriesMetadata
   else NULL
 }

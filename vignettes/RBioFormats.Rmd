@@ -83,7 +83,7 @@ names(coreMetadata(img))
 The `globalMetadata` and `seriesMetadata` are format-specific.
 
 ```{r globalMetadata}
-img@globalMetadata
+str(globalMetadata(img))
 ```
 
 The OME-XML metadata can be accessed using tools from the `r CRANpkg('XML')` package.

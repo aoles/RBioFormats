@@ -1,0 +1,31 @@
+<project name="RBioFormats" basedir="." default="main">
+
+    <property name="src.dir"     value="src"/>
+    <property name="lib.dir"     value="lib"/>
+    <property name="jar.dir"     value="../inst/java"/>
+    
+    <property name="classes.dir" value="${src.dir}/classes"/>
+    
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+    
+    <target name="compile">
+	<mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+    </target>
+    
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+	  <zipgroupfileset dir="${lib.dir}" includes="*.jar" /> 
+	</jar>
+    </target>
+    
+    <target name="clean">
+        <delete dir="${classes.dir}"/>
+    </target>
+    
+    <target name="main" depends="jar,clean"/>
+
+</project>

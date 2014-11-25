@@ -1,7 +1,7 @@
 Package: RBioFormats
-Version: 0.0.5
-Title: R interface to Bio-Formats library
-Description: R interface to Bio-Formats library
+Version: 0.0.6
+Title: R interface to Bio-Formats
+Description: R interface to the Bio-Formats library
 Author: Andrzej Oles
 Maintainer: Andrzej Oles <andrzej.oles@embl.de>
 Depends: rJava (>= 0.9-6)

@@ -4,7 +4,7 @@
 \title{Read Images}
 \usage{
 read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
-  normalize = TRUE)
+  normalize = TRUE, series, subset)
 }
 \arguments{
 \item{file}{character, file name}
@@ -14,9 +14,13 @@ read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
 \item{proprietary.metadata}{logical, should proprietary metadata be populated to OME-XML}
 
 \item{normalize}{logical, should the original image data be mapped to the [0,1] range}
+
+\item{series}{integer vector specifying series to be read; if set to NA all series included in the file are read}
+
+\item{subset}{named list specifing the image subsetting}
 }
 \value{
-A \code{\link{BFImage-class}} object.
+A \code{\link{BFImage-class}} object or a list of \code{\link{BFImage-class}} objects in case of multi-series data.
 }
 \description{
 Read image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.

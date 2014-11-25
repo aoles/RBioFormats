@@ -2,43 +2,32 @@
 #' 
 #' Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
 #' 
-#' @slot coreMetadata named list containing image metadata
-#' @slot globalMetadata named list containing image metadata
-#' @slot seriesMetadata named list containing image metadata
+#' @slot metadata named list containing image metadata
 #' @slot omexml a string containing a dumped OME-XML DOM tree
 #' @importClassesFrom EBImage Image
 #' @export
 setClass ("BFImage",
           contains = "Image",
           representation (
-            coreMetadata = "list",
-            globalMetadata = "list",
-            seriesMetadata = "list",
+            metadata = "list",
             omexml = "character"
           )
 )
 
 #' @param image an Image object
-#' @param coreMetadata named list containing image metadata
-#' @param globalMetadata named list containing image metadata
-#' @param seriesMetadata named list containing image metadata
+#' @param metadata named list containing image metadata
 #' @param omexml a string containing a dumped OME-XML DOM tree
-#' @importFrom EBImage Image
 #' @rdname BFImage-class
 #' @importFrom EBImage imageData colorMode
 #' @export
 BFImage = function(image = Image(), 
-                   coreMetadata = list(),
-                   globalMetadata = list(),
-                   seriesMetadata = list(),
+                   metadata = list(),
                    omexml = "") {
   return(
     new("BFImage", 
       .Data = imageData(image),
       colormode = colorMode(image),
-      coreMetadata = coreMetadata,
-      globalMetadata = globalMetadata,
-      seriesMetadata = seriesMetadata,
+      metadata = metadata,
       omexml = omexml
     )
   )
@@ -85,7 +74,7 @@ setMethod ("show", signature(object = "BFImage"), function(object) {
 #' 
 #' @export
 coreMetadata = function (y) {
-  if (is(y, 'BFImage')) y@coreMetadata
+  if (is(y, 'BFImage')) y@metadata$coreMetadata
   else NULL
 }
 
@@ -93,7 +82,7 @@ coreMetadata = function (y) {
 #' @inheritParams coreMetadata
 #' @export
 globalMetadata = function (y) {
-  if (is(y, 'BFImage')) y@globalMetadata
+  if (is(y, 'BFImage')) y@metadata$globalMetadata
   else NULL
 }
 
@@ -101,6 +90,17 @@ globalMetadata = function (y) {
 #' @inheritParams coreMetadata
 #' @export
 seriesMetadata = function (y) {
-  if (is(y, 'BFImage')) y@seriesMetadata
+  if (is(y, 'BFImage')) y@metadata$seriesMetadata
   else NULL
 }
+
+#' @param x BFImage objects
+#' @importFrom EBImage as.Image
+#' @rdname BFImage-class
+#' @export
+as.Image.BFImage = function(x) {
+  y = as(x, "Image")
+  dimnames(y) = NULL
+  y
+}
+

@@ -13,7 +13,7 @@ parameters = list (
 
 img = read.image(do.call(mockFile, parameters))
 
-metadata = img@coreMetadata 
+metadata = img@metadata$coreMetadata 
 # metadata$indexed
 # metadata
 stopifnot(metadata$sizeC == 3L)

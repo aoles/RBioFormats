@@ -35,7 +35,6 @@ f = system.file("images", "lena-color.png", package = "EBImage")
 
 img = read.image(f)
 img
-dim(img)
 ```
 
 To print just the dimension order use
@@ -46,10 +45,7 @@ dimorder(img)
 Loading images using `r Githubpkg('aoles/RBioFormats')` should give the same results as using the `r Biocpkg('EBImage')` package.
 
 ```{r comparewithref}
-ref = readImage(f)
-img2 = as(img, "Image")
-names(dim(img2)) <- NULL
-identical(ref, img2)
+identical(readImage(f), as.Image(img))
 ```
 
 ## The BFImage class
@@ -60,21 +56,22 @@ identical(ref, img2)
 getClassDef("BFImage")
 ```
 
-Compared to the original *Image* class it contains the following additional slots:
-
-Name | Type | Description
------|------|------------
-coreMetadata | list | named list containing some core metadata
-globalMetadata | list | named list containing global metadata
-seriesMetadata | list | named list containing series specific metadata
-omexml | character | a string containing the dumped OME-XML DOM tree
+Compared to the original *Image* class it features two additional slots containing image metadata: the `metadata` slot which holds the metadata organized in three sublists, namely coreMetadata, globalMetadata and seriesMetadata, and the OME-XML DOM tree representation of the metadata in the `omexml` slot.
 
 ## Working with metadata
 
-Some core metadata which is guaranteed to exist for any image type is stored in the `coreMetadata` slot.
+Use the `read.metadata` function to read the image metadata without loading the pixel data.
+
+```{r read.metadata}
+f = system.file("images", "nuclei.tif", package = "EBImage")
+metadata = read.metadata(f)
+
+str(metadata)
+```
+
+Some core metadata which is guaranteed to exist for any image type is stored in `coreMetadata`.
 
 ```{r coreMetadata}
-f = system.file("images", "nuclei.tif", package = "EBImage")
 img = read.image(f)
 
 names(coreMetadata(img))
@@ -109,7 +106,7 @@ microbenchmark(read.image(f), readImage(f), times = 10)
 For development purposes it is useful to have images of a specific size or pixel type for testing. Mock files containing gradient images can be generated using
 
 ```{r mockFile, out.width='256px', out.height='256px'}
-f = mockFile(sizeX = 256, sizeY = 256, bitsPerPixel = 1)
+f = mockFile(sizeX = 256, sizeY = 256)
 img = read.image(f)
 display(img, method = "raster")
 ```

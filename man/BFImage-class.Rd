@@ -3,14 +3,14 @@
 \name{BFImage-class}
 \alias{BFImage}
 \alias{BFImage-class}
+\alias{as.Image.BFImage}
 \alias{coreMetadata}
 \alias{globalMetadata}
 \alias{seriesMetadata}
 \alias{show,BFImage-method}
 \title{Bio-Formats Image Class}
 \usage{
-BFImage(image = Image(), coreMetadata = list(), globalMetadata = list(),
-  seriesMetadata = list(), omexml = "")
+BFImage(image = Image(), metadata = list(), omexml = "")
 
 \S4method{show}{BFImage}(object)
 
@@ -19,21 +19,21 @@ coreMetadata(y)
 globalMetadata(y)
 
 seriesMetadata(y)
+
+\method{as.Image}{BFImage}(x)
 }
 \arguments{
 \item{image}{an Image object}
 
-\item{coreMetadata}{named list containing image metadata}
-
-\item{globalMetadata}{named list containing image metadata}
-
-\item{seriesMetadata}{named list containing image metadata}
+\item{metadata}{named list containing image metadata}
 
 \item{omexml}{a string containing a dumped OME-XML DOM tree}
 
 \item{object}{A BFImage object}
 
 \item{y}{A BFImage object}
+
+\item{x}{BFImage objects}
 }
 \value{
 Named list consisting of key value pairs.
@@ -44,11 +44,7 @@ Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
 \section{Slots}{
 
 \describe{
-\item{\code{coreMetadata}}{named list containing image metadata}
-
-\item{\code{globalMetadata}}{named list containing image metadata}
-
-\item{\code{seriesMetadata}}{named list containing image metadata}
+\item{\code{metadata}}{named list containing image metadata}
 
 \item{\code{omexml}}{a string containing a dumped OME-XML DOM tree}
 }}

@@ -12,7 +12,7 @@ import loci.formats.services.OMEXMLService;
 import loci.formats.ome.OMEXMLMetadata;
 
 public final class RBioFormats {
-    
+
   public static String sayHello() {
     String result = new String("Hello Java World!");
     return result;

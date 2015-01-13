@@ -27,10 +27,21 @@ read.metadata <- function(file, filter.metadata = FALSE) {
   # harvest core metadata
   metadata = .getMetadataList(reader)
   
-  if ( length(metadata) == 1 ) metadata = metadata[[1]]
+#   if ( (l=length(metadata)) == 1 ) metadata = metadata[[1]]
+#   else attr(metadata, "seriesCount") = length(metadata)
+  attr(metadata, "seriesCount") = length(metadata)
   
   ## if no series present
   metadata
+}
+ 
+#' @param metadata list containing image metadata obtained from a call to \code{read.metadata}
+#' @return The number of image series
+#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2015
+#' @rdname read.metadata
+#' @export
+seriesCount <- function(metadata) {
+  attr(metadata, "seriesCount")
 }
 
 #' Image Metadata

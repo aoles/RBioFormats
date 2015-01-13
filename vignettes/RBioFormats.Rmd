@@ -22,7 +22,7 @@ library("methods")
 Read a greyscale image
 
 ```{r readgrey}
-f = system.file("images", "lena.png", package = "EBImage")
+f = system.file("images", "sample.png", package = "EBImage")
 
 img = read.image(f)
 img
@@ -31,7 +31,7 @@ img
 or an RGB image
 
 ```{r readrgb}
-f = system.file("images", "lena-color.png", package = "EBImage")
+f = system.file("images", "sample-color.png", package = "EBImage")
 
 img = read.image(f)
 img

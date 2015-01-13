@@ -12,7 +12,7 @@
 #' @importFrom EBImage Color normalize
 #' @examples
 #' require(EBImage)
-#' f = system.file("images", "lena-color.png", package="EBImage")
+#' f = system.file("images", "sample-color.png", package="EBImage")
 #' 
 #' img = read.image(f)
 #' img

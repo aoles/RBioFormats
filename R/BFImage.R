@@ -53,6 +53,10 @@ dimorder = function(x) names(dimnames(x))
 setMethod ("show", signature(object = "BFImage"), function(object) {
   callNextMethod()
   
+  printMetadata(object)
+})
+
+printMetadata <- function(object) {
   cat('\n')
   for (s in c("coreMetadata", "globalMetadata", "seriesMetadata")) {
     meta = do.call(s, list(object))
@@ -61,10 +65,21 @@ setMethod ("show", signature(object = "BFImage"), function(object) {
       str(meta, max.level = 0, list.len = l)
     } 
   }
-})
+}
 
 #' @rdname BFImage-class
-#' @param y A BFImage object
+#' @inheritParams as.Image.BFImage
+#' @param ... further arguments to be passed to other methods
+#' @param short turns off image data preview
+#' @export
+print.BFImage <- function(x, short=FALSE, ...) {
+  NextMethod(x, short, ...)
+  printMetadata(x)
+}
+
+#' @rdname BFImage-class
+#' @param y A BFImage object or metadata list
+#' @param series series ID
 #' @return Named list consisting of key value pairs.
 #' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
 #' @examples
@@ -73,28 +88,31 @@ setMethod ("show", signature(object = "BFImage"), function(object) {
 #' coreMetadata(img)
 #' 
 #' @export
-coreMetadata = function (y) {
+coreMetadata = function (y, series=1L) {
   if (is(y, 'BFImage')) y@metadata$coreMetadata
+  else if (is.list(y)) y[[series]]$coreMetadata
   else NULL
 }
 
 #' @rdname BFImage-class
 #' @inheritParams coreMetadata
 #' @export
-globalMetadata = function (y) {
+globalMetadata = function (y, series=1L) {
   if (is(y, 'BFImage')) y@metadata$globalMetadata
+  else if (is.list(y)) y[[series]]$globalMetadata
   else NULL
 }
 
 #' @rdname BFImage-class
 #' @inheritParams coreMetadata
 #' @export
-seriesMetadata = function (y) {
+seriesMetadata = function (y, series=1L) {
   if (is(y, 'BFImage')) y@metadata$seriesMetadata
+  else if (is.list(y)) y[[series]]$seriesMetadata
   else NULL
 }
 
-#' @param x BFImage objects
+#' @param x a BFImage object
 #' @importFrom EBImage as.Image
 #' @rdname BFImage-class
 #' @export

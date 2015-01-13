@@ -8,16 +8,16 @@ parameters = list (
   sizeT = 2L,
   dimOrder = "XYTZC",
   interleaved = TRUE,
-  indexed = TRUE
+  indexed = FALSE
 )
 
 img = read.image(do.call(mockFile, parameters))
 
-metadata = img@metadata$coreMetadata 
+metadata = coreMetadata(img)
 # metadata$indexed
 # metadata
-stopifnot(metadata$sizeC == 3L)
-stopifnot(metadata$rgb == 1L)
+stopifnot(metadata$sizeC == 1L)
+stopifnot(metadata$rgb == FALSE)
 # stopifnot(.jcall(reader, "Z", "isIndexed") == FALSE)
 # stopifnot(.jcall(reader, "I", "getImageCount") == 30)
 # stopifnot(.jcall(reader, "S", "getDimensionOrder") == "XYCZT")

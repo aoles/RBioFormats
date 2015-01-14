@@ -7,4 +7,5 @@
 #' @name RBioFormats
 #' @references \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats website}
 #' @import rJava
+#' @importMethodsFrom S4Vectors metadata
 NULL

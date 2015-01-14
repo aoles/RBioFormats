@@ -66,7 +66,7 @@ Use the `read.metadata` function to read the image metadata without loading the 
 f = system.file("images", "nuclei.tif", package = "EBImage")
 metadata = read.metadata(f)
 
-str(metadata)
+metadata
 ```
 
 Some core metadata which is guaranteed to exist for any image type is stored in `coreMetadata`.

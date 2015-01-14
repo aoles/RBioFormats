@@ -12,15 +12,17 @@
 \alias{show,BFImage-method}
 \title{Bio-Formats Image Class}
 \usage{
-BFImage(image = Image(), metadata = list(), omexml = "")
+BFImage(image = Image(), metadata = ImageMetadata(), omexml = "")
 
 \S4method{show}{BFImage}(object)
 
 \method{print}{BFImage}(x, short = FALSE, ...)
 
-coreMetadata(y, series = 1L)
+coreMetadata(y, series = 1L, ...)
 
-globalMetadata(y, series = 1L)
+globalMetadata(y, series = 1L, ...)
+
+seriesMetadata(y, series = 1L)
 
 seriesMetadata(y, series = 1L)
 
@@ -29,7 +31,7 @@ seriesMetadata(y, series = 1L)
 \arguments{
 \item{image}{an Image object}
 
-\item{metadata}{named list containing image metadata}
+\item{metadata}{an ImageMetadata object containing image metadata}
 
 \item{omexml}{a string containing a dumped OME-XML DOM tree}
 
@@ -44,6 +46,8 @@ seriesMetadata(y, series = 1L)
 \item{y}{A BFImage object or metadata list}
 
 \item{series}{series ID}
+
+\item{arguments}{passed to \code{grep}}
 }
 \value{
 Named list consisting of key value pairs.
@@ -54,8 +58,6 @@ Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
 \section{Slots}{
 
 \describe{
-\item{\code{metadata}}{named list containing image metadata}
-
 \item{\code{omexml}}{a string containing a dumped OME-XML DOM tree}
 }}
 \examples{

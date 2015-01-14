@@ -32,7 +32,7 @@ read.metadata <- function(file, filter.metadata = FALSE) {
   attr(metadata, "seriesCount") = length(metadata)
   
   ## if no series present
-  metadata
+  ImageMetadata(metadata)
 }
  
 #' @param metadata list containing image metadata obtained from a call to \code{read.metadata}
@@ -44,18 +44,18 @@ seriesCount <- function(metadata) {
   attr(metadata, "seriesCount")
 }
 
-#' Image Metadata
-#' 
-#' @rdname metadata
-#' @param x Object
-#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
-#' @export
-metadata <- function(x) UseMethod("metadata")
-
-#' @rdname metadata
-#' @export
-metadata.default = function(x) NULL
-
-#' @rdname metadata
-#' @export
-metadata.BFImage = function(x) x@metadata
+# #' Image Metadata
+# #' 
+# #' @rdname metadata
+# #' @param x Object
+# #' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
+# #' @export
+# metadata <- function(x) UseMethod("metadata")
+# 
+# #' @rdname metadata
+# #' @export
+# metadata.default = function(x) NULL
+# 
+# #' @rdname metadata
+# #' @export
+# metadata.BFImage = function(x) x@metadata

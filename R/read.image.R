@@ -124,7 +124,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     new("BFImage", 
         .Data = data,
         colormode = colormode,
-        metadata = metadata,
+        metadata = ImageMetadata(metadata),
         omexml = omexml)
   })
   
@@ -224,8 +224,8 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
            globalMetadata = globalMetadata)
   })
 
-  ## if no series present
-  #if ( length(metadata) == 1 ) metadata = metadata[[1]]
+#   ## if no series present
+#   if ( length(metadata) == 1 ) metadata = metadata[[1]]
     
   metadata
 }

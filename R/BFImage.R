@@ -2,26 +2,25 @@
 #' 
 #' Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
 #' 
-#' @slot metadata named list containing image metadata
 #' @slot omexml a string containing a dumped OME-XML DOM tree
 #' @importClassesFrom EBImage Image
+#' @importClassesFrom S4Vectors Annotated
 #' @export
 setClass ("BFImage",
-          contains = "Image",
+          contains = c("Annotated", "Image"),
           representation (
-            metadata = "list",
             omexml = "character"
           )
 )
 
 #' @param image an Image object
-#' @param metadata named list containing image metadata
+#' @param metadata an ImageMetadata object containing image metadata
 #' @param omexml a string containing a dumped OME-XML DOM tree
 #' @rdname BFImage-class
 #' @importFrom EBImage imageData colorMode
 #' @export
 BFImage = function(image = Image(), 
-                   metadata = list(),
+                   metadata = ImageMetadata(),
                    omexml = "") {
   return(
     new("BFImage", 
@@ -80,6 +79,7 @@ print.BFImage <- function(x, short=FALSE, ...) {
 #' @rdname BFImage-class
 #' @param y A BFImage object or metadata list
 #' @param series series ID
+#' @param arguments passed to \code{grep}
 #' @return Named list consisting of key value pairs.
 #' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
 #' @examples
@@ -88,19 +88,25 @@ print.BFImage <- function(x, short=FALSE, ...) {
 #' coreMetadata(img)
 #' 
 #' @export
-coreMetadata = function (y, series=1L) {
-  if (is(y, 'BFImage')) y@metadata$coreMetadata
-  else if (is.list(y)) y[[series]]$coreMetadata
-  else NULL
-}
+coreMetadata = function (y, series=1L, ...) .getMetadata(y, series, "coreMetadata", ...)
 
 #' @rdname BFImage-class
 #' @inheritParams coreMetadata
 #' @export
-globalMetadata = function (y, series=1L) {
-  if (is(y, 'BFImage')) y@metadata$globalMetadata
-  else if (is.list(y)) y[[series]]$globalMetadata
-  else NULL
+globalMetadata = function (y, series=1L, ...) .getMetadata(y, series, "globalMetadata", ...)
+
+#' @rdname BFImage-class
+#' @inheritParams coreMetadata
+#' @export
+seriesMetadata = function (y, series=1L, ...) .getMetadata(y, series, "seriesMetadata", ...)
+
+.getMetadata = function (x, series, type, ...) {
+  metadata = 
+    if (is(x, 'BFImage')) metadata(x)[[type]]
+    else if (is.list(x)) x[[series]][[type]]
+    else NULL
+  
+  metadata
 }
 
 #' @rdname BFImage-class

@@ -76,26 +76,31 @@ print.BFImage <- function(x, short=FALSE, ...) {
   printMetadata(x)
 }
 
-#' @rdname BFImage-class
+#' Metadata Accessor Functions
+#' 
+#' @rdname metadataAccessors
 #' @param y A BFImage object or metadata list
 #' @param series series ID
-#' @param arguments passed to \code{grep}
+#' @param ... arguments passed to \code{grep}
 #' @return Named list consisting of key value pairs.
 #' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
 #' @examples
-#' img = read.image(mockFile())
-#' 
+#' img = read.image(system.file("images", "nuclei.tif", package="EBImage"))
+#'  
 #' coreMetadata(img)
 #' 
+#' # subset for specific names 
+#' 
+#' globalMetadata(img, pattern="Image")
 #' @export
 coreMetadata = function (y, series=1L, ...) .getMetadata(y, series, "coreMetadata", ...)
 
-#' @rdname BFImage-class
+#' @rdname metadataAccessors
 #' @inheritParams coreMetadata
 #' @export
 globalMetadata = function (y, series=1L, ...) .getMetadata(y, series, "globalMetadata", ...)
 
-#' @rdname BFImage-class
+#' @rdname metadataAccessors
 #' @inheritParams coreMetadata
 #' @export
 seriesMetadata = function (y, series=1L, ...) .getMetadata(y, series, "seriesMetadata", ...)
@@ -106,16 +111,10 @@ seriesMetadata = function (y, series=1L, ...) .getMetadata(y, series, "seriesMet
     else if (is.list(x)) x[[series]][[type]]
     else NULL
   
+  if ( length(list(...)) > 0 )
+    metadata = metadata[grep(x=names(metadata), ...)]
+  
   metadata
-}
-
-#' @rdname BFImage-class
-#' @inheritParams coreMetadata
-#' @export
-seriesMetadata = function (y, series=1L) {
-  if (is(y, 'BFImage')) y@metadata$seriesMetadata
-  else if (is.list(y)) y[[series]]$seriesMetadata
-  else NULL
 }
 
 #' @param x a BFImage object

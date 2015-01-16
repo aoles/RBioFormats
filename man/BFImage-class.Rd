@@ -5,10 +5,7 @@
 \alias{BFImage}
 \alias{BFImage-class}
 \alias{as.Image.BFImage}
-\alias{coreMetadata}
-\alias{globalMetadata}
 \alias{print.BFImage}
-\alias{seriesMetadata}
 \alias{show,BFImage-method}
 \title{Bio-Formats Image Class}
 \usage{
@@ -17,14 +14,6 @@ BFImage(image = Image(), metadata = ImageMetadata(), omexml = "")
 \S4method{show}{BFImage}(object)
 
 \method{print}{BFImage}(x, short = FALSE, ...)
-
-coreMetadata(y, series = 1L, ...)
-
-globalMetadata(y, series = 1L, ...)
-
-seriesMetadata(y, series = 1L)
-
-seriesMetadata(y, series = 1L)
 
 \method{as.Image}{BFImage}(x)
 }
@@ -42,15 +31,6 @@ seriesMetadata(y, series = 1L)
 \item{short}{turns off image data preview}
 
 \item{...}{further arguments to be passed to other methods}
-
-\item{y}{A BFImage object or metadata list}
-
-\item{series}{series ID}
-
-\item{arguments}{passed to \code{grep}}
-}
-\value{
-Named list consisting of key value pairs.
 }
 \description{
 Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
@@ -60,12 +40,4 @@ Extends the \code{\link[EBImage]{Image}} class from the \pkg{EBImage} package.
 \describe{
 \item{\code{omexml}}{a string containing a dumped OME-XML DOM tree}
 }}
-\examples{
-img = read.image(mockFile())
-
-coreMetadata(img)
-}
-\author{
-Andrzej Oles \email{andrzej.oles@embl.de}, 2014
-}
 

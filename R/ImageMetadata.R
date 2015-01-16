@@ -21,7 +21,8 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
 })
 
 #' @rdname ImageMetadata-class
-#' @param object An ImageMetadata object
+#' @param x An ImageMetadata object
+#' @param ... further arguments to be passed to other methods
 #' @export
 print.ImageMetadata <- function(x, ...) {
   show(x)

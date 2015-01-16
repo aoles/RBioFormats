@@ -19,7 +19,9 @@ ImageMetadata(metadata = list())
 
 \item{object}{An ImageMetadata object}
 
-\item{object}{An ImageMetadata object}
+\item{x}{An ImageMetadata object}
+
+\item{...}{further arguments to be passed to other methods}
 }
 \description{
 Formal representation of image metadata.

@@ -16,12 +16,12 @@ read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
 
 \item{normalize}{logical, should the original image data be mapped to the [0,1] range}
 
-\item{series}{integer vector specifying series to be read; if set to NA all series included in the file are read}
+\item{series}{integer vector specifying series to read; if missing all series included in the file are read}
 
-\item{subset}{named list specifing the image subsetting}
+\item{subset}{named list specifing image subsetting}
 }
 \value{
-A \code{\link{BFImage-class}} object or a list of \code{\link{BFImage-class}} objects in case of multi-series data.
+A \code{\link{AnnotatedImage}} object or a \code{\link{AnnotatedImageList}} object in case of multi-series data.
 }
 \description{
 Read image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
@@ -34,6 +34,9 @@ img = read.image(f)
 img
 }
 \author{
-Andrzej Oles \email{andrzej.oles@embl.de}, 2014
+Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+}
+\seealso{
+\code{\link{read.metadata}} for reading image metadata, \code{\link{read.omexml}} for reading image metadata as OME-XML
 }
 

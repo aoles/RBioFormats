@@ -1,10 +1,9 @@
 #' Read Image Metadata
 #' 
-#' Read image metadata using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
+#' Read image metadata using the Bio-Formats library. The list of supported file formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
 #' 
-#' @param file character, file name
-#' @param filter.metadata logical, specifies whether ugly metadata (entries with unprintable characters, and extremely large entries) should be discarded from the metadata table
-#' @return A list containing image meta-data.
+#' @inheritParams read.image
+#' @return An \linkS4class{ImageMetadata} or \linkS4class{ImageMetadataList} object.
 #' @examples
 #' require(EBImage)
 #' f = system.file("images", "nuclei.tif", package="EBImage")
@@ -12,50 +11,23 @@
 #' metadata = read.metadata(f)
 #' str(metadata)
 #' 
-#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
+#' @template author
+#' @seealso \code{\link{read.omexml}} for reading image metadata as OME-XML, \code{\link{read.image}} for reading image data
 #' @export
-read.metadata <- function(file, filter.metadata = FALSE) {
-  # reduce verbosity
-  .jcall("loci.common.DebugTools", "Z", "enableLogging", "ERROR")
-  
+read.metadata <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE) {
   # setup reader
-  reader = .setupReader(file, filter.metadata)
+  reader = .setupReader(filter.metadata, proprietary.metadata)
   
   # initialize file
   .fileInit(reader, file)
-  
-  # harvest core metadata
+    
+  # harvest metadata
   metadata = .getMetadataList(reader)
   
-#   if ( (l=length(metadata)) == 1 ) metadata = metadata[[1]]
-#   else attr(metadata, "seriesCount") = length(metadata)
-  attr(metadata, "seriesCount") = length(metadata)
-  
-  ## if no series present
-  ImageMetadata(metadata)
+  if ( length(metadata)==1L ) 
+    # return ImageMetadata object
+    metadata[[1]]
+  else  
+    # return ImageMetadataList object
+    metadata
 }
- 
-#' @param metadata list containing image metadata obtained from a call to \code{read.metadata}
-#' @return The number of image series
-#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2015
-#' @rdname read.metadata
-#' @export
-seriesCount <- function(metadata) {
-  attr(metadata, "seriesCount")
-}
-
-# #' Image Metadata
-# #' 
-# #' @rdname metadata
-# #' @param x Object
-# #' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
-# #' @export
-# metadata <- function(x) UseMethod("metadata")
-# 
-# #' @rdname metadata
-# #' @export
-# metadata.default = function(x) NULL
-# 
-# #' @rdname metadata
-# #' @export
-# metadata.BFImage = function(x) x@metadata

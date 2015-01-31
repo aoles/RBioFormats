@@ -1,22 +1,27 @@
-<!-- rmarkdown v1 -->
+---
+title: "RBioFormats: an R interface to the Bio-Formats library"
+author: Andrzej Oles
+output:
+  BiocStyle::html_document:
+    toc: true
+---
 <!--
-%\VignetteIndexEntry{R interface to the Bio-Formats library}
+%\VignetteIndexEntry{RBioFormats: an R interface to the Bio-Formats library}
 %\VignettePackage{RBioFormats}
-%\VignetteEngine{knitr::knitr}
+%\VignetteEngine{knitr::rmarkdown}
 -->
 
 ```{r style, echo = FALSE, results = 'asis'}
 BiocStyle::markdown()
+library("knitr")
+#opts_chunk$set(eval = FALSE)
 ```
 
-# RBioFormats: an R interface to the Bio-Formats library
 
-## Basic use
+## Reading images
 
 ```{r library, message=FALSE}
 library("RBioFormats")
-library("EBImage")
-library("methods")
 ```
 
 Read a greyscale image
@@ -37,30 +42,68 @@ img = read.image(f)
 img
 ```
 
-To print just the dimension order use
+Object summary without the image data preview can be printed using the `short = TRUE` argument to `print`
+
+```{r printshort}
+print(img, short = TRUE)
+```
+
+For displaying only the dimension order use
 ```{r dimorder}
 dimorder(img)
 ```
 
-Loading images using `r Githubpkg('aoles/RBioFormats')` should give the same results as using the `r Biocpkg('EBImage')` package.
 
-```{r comparewithref}
-identical(readImage(f), as.Image(img))
-```
+## The *AnnotatedImage* class
 
-## The BFImage class
-
-`r Rpackage('RBioFormats')` stores image data in an *BFImage* class which extends the *Image* class from `r Biocpkg('EBImage')`.
+`r Rpackage('RBioFormats')` stores image data in an *AnnotatedImage* class which extends the *Image* class from `r Biocpkg('EBImage')`.
 
 ```{r classdef}
-getClassDef("BFImage")
+getClassDef("AnnotatedImage")
 ```
 
-Compared to the original *Image* class it features two additional slots containing image metadata: the `metadata` slot which holds the metadata organized in three sublists, namely coreMetadata, globalMetadata and seriesMetadata, and the OME-XML DOM tree representation of the metadata in the `omexml` slot.
+Compared to the original *Image* class the *AnnotatedImage* class features an additional `metadata` slot containing image metadata.
 
-## Working with metadata
+```{r metadata}
+meta = metadata(img)
+meta
+```
 
-Use the `read.metadata` function to read the image metadata without loading the pixel data.
+To alter the length of the printed output use the `list.len` attribute to `print`:
+
+```{r printmeta}
+print(meta, list.len=99L)
+```
+
+
+## Image metadata
+
+Image metadata is represented by an *ImageMetadata* class structured as a named list of coreMetadata, globalMetadata and seriesMetadata.
+
+```{r metaNames}
+names(meta)
+cMeta = meta$coreMetadata
+names( cMeta )
+```
+
+`coreMetadata` stores information which is guaranteed to exist for any image type, whereas the latter two metadata types are format-specific and can be empty. 
+
+Each of these metadata sublists has an correspodning accessor function, e.g.,
+
+```{r coreMetadata}
+identical( coreMetadata(meta), cMeta)
+```
+
+and similarly for `globalMetadata` and `seriesMetadata`. These accessors are useful for extracting the corresponding metadata directly from an *AnnotatedImage* object
+
+```{r coreMetadata2}
+identical( coreMetadata(img), cMeta )
+```
+
+
+## Reading image metadata
+
+Image metadata can be read without loading the corresponding pixel data.
 
 ```{r read.metadata}
 f = system.file("images", "nuclei.tif", package = "EBImage")
@@ -69,45 +112,34 @@ metadata = read.metadata(f)
 metadata
 ```
 
-Some core metadata which is guaranteed to exist for any image type is stored in `coreMetadata`.
+This is especially useful for large data sets.
 
-```{r coreMetadata}
-img = read.image(f)
 
-names(coreMetadata(img))
-```
+## OME-XML representation
 
-The `globalMetadata` and `seriesMetadata` are format-specific.
-
-```{r globalMetadata}
-str(globalMetadata(img))
-```
+and the OME-XML DOM tree representation of the metadata in the `omexml` slot.
 
 The OME-XML metadata can be accessed using tools from the `r CRANpkg('XML')` package.
 
 ```{r parseXML, message=FALSE}
 require("XML")
 
-xml = xmlTreeParse(img@omexml)
-xmlRoot(xml)
+omexml = xmlTreeParse(read.omexml(f))
+xmlRoot(omexml)
 ```
 
 For details on working with XML data in R see the `r Rpackage('XML')` package [documentation](http://www.omegahat.org/RSXML/ "XML package documentation").
 
-## Performance relative to *EBImage*
 
-```{r benchmark, message=FALSE, eval=FALSE}
-require("microbenchmark")
-microbenchmark(read.image(f), readImage(f), times = 10)
-```
-
-## Working with test images
+## Appendix A: Working with test images
 
 For development purposes it is useful to have images of a specific size or pixel type for testing. Mock files containing gradient images can be generated using
 
 ```{r mockFile, out.width='256px', out.height='256px'}
 f = mockFile(sizeX = 256, sizeY = 256)
 img = read.image(f)
+
+require("EBImage")
 display(img, method = "raster")
 ```
 
@@ -131,4 +163,21 @@ sapply(types, function(t) {
   img = read.image(mockFile(sizeX = 65536, sizeY = 11, pixelType = t), normalize = FALSE)
   setNames(range(img), c("min", "max"))  
 })
+```
+
+## Appendix B: Compared to *EBImage*
+
+Loading images using `r Githubpkg('aoles/RBioFormats')` should give the same results as using the `r Biocpkg('EBImage')` package.
+
+```{r comparewithref}
+require("EBImage")
+f = system.file("images", "sample-color.png", package = "EBImage")
+identical(readImage(f), as.Image(read.image(f)))
+```
+
+Performance relative to *EBImage*
+
+```{r benchmark, message=FALSE, eval=FALSE}
+require("microbenchmark")
+microbenchmark(read.image(f), readImage(f), times = 10)
 ```

@@ -2,27 +2,22 @@
 % Please edit documentation in R/read.metadata.R
 \name{read.metadata}
 \alias{read.metadata}
-\alias{seriesCount}
 \title{Read Image Metadata}
 \usage{
-read.metadata(file, filter.metadata = FALSE)
-
-seriesCount(metadata)
+read.metadata(file, filter.metadata = FALSE, proprietary.metadata = TRUE)
 }
 \arguments{
 \item{file}{character, file name}
 
 \item{filter.metadata}{logical, specifies whether ugly metadata (entries with unprintable characters, and extremely large entries) should be discarded from the metadata table}
 
-\item{metadata}{list containing image metadata obtained from a call to \code{read.metadata}}
+\item{proprietary.metadata}{logical, should proprietary metadata be populated to OME-XML}
 }
 \value{
-A list containing image meta-data.
-
-The number of image series
+An \linkS4class{ImageMetadata} or \linkS4class{ImageMetadataList} object.
 }
 \description{
-Read image metadata using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
+Read image metadata using the Bio-Formats library. The list of supported file formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
 }
 \examples{
 require(EBImage)
@@ -32,8 +27,9 @@ metadata = read.metadata(f)
 str(metadata)
 }
 \author{
-Andrzej Oles \email{andrzej.oles@embl.de}, 2014
-
-Andrzej Oles \email{andrzej.oles@embl.de}, 2015
+Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+}
+\seealso{
+\code{\link{read.omexml}} for reading image metadata as OME-XML, \code{\link{read.image}} for reading image data
 }
 

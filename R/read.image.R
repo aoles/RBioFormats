@@ -6,9 +6,9 @@
 #' @param filter.metadata logical, specifies whether ugly metadata (entries with unprintable characters, and extremely large entries) should be discarded from the metadata table
 #' @param proprietary.metadata logical, should proprietary metadata be populated to OME-XML
 #' @param normalize logical, should the original image data be mapped to the [0,1] range
-#' @param series integer vector specifying series to be read; if set to NA all series included in the file are read
-#' @param subset named list specifing the image subsetting
-#' @return A \code{\link{BFImage-class}} object or a list of \code{\link{BFImage-class}} objects in case of multi-series data.
+#' @param series integer vector specifying series to read; if missing all series included in the file are read
+#' @param subset named list specifing image subsetting
+#' @return A \code{\link{AnnotatedImage}} object or a \code{\link{AnnotatedImageList}} object in case of multi-series data.
 #' @importFrom EBImage Color normalize
 #' @examples
 #' require(EBImage)
@@ -17,28 +17,17 @@
 #' img = read.image(f)
 #' img
 #' 
-#' @author Andrzej Oles \email{andrzej.oles@@embl.de}, 2014
+#' @template author
+#' @seealso \code{\link{read.metadata}} for reading image metadata, \code{\link{read.omexml}} for reading image metadata as OME-XML
 #' @export
 read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, normalize = TRUE, series, subset) {
   if ( missing(subset) ) subset = list()
   
-  # reduce verbosity
-  .jcall("loci.common.DebugTools", "Z", "enableLogging", "ERROR")
-  
   # setup reader
   reader = .setupReader(filter.metadata, proprietary.metadata)
-  
-  # create OME-XML metadata store
-  factory = .jnew("loci.common.services.ServiceFactory")
-  service = .jcall(factory, "Lloci/common/services/Service;", "getInstance", J("loci.formats.services.OMEXMLService")$class)
-  meta = .jcall(service, "Lloci/formats/ome/OMEXMLMetadata;", "createOMEXMLMetadata")
-  .jcall(reader, , "setMetadataStore", .jcast(meta, "loci.formats.meta.MetadataStore"))
-  
+    
   # initialize file
   .fileInit(reader, file)
-  
-  # harvest core metadata
-  metadata = .getCoreMetadata(reader)
   
   # check series specification
   seriesCount = .jcall(reader, "I", "getSeriesCount") # number of series per file
@@ -56,9 +45,6 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
 
   metadata = .getMetadataList(reader)
   
-  # dump OME XML
-  omexml = .jcall(meta, "S", "dumpXML")
-
   ## pixel data redout
   FormatTools = J("loci.formats.FormatTools")
   DataTools = J("loci.common.DataTools")
@@ -121,18 +107,20 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
       if ( !signed && !fp ) range = c(0, 2^metadata$coreMetadata$bitsPerPixel-1)
       data = normalize(data, separate = FALSE, ft = c(0, 1), inputRange = range)
     }
-    new("BFImage", 
+    new("AnnotatedImage", 
         .Data = data,
         colormode = colormode,
-        metadata = ImageMetadata(metadata),
-        omexml = omexml)
+        metadata = ImageMetadata(metadata)
+    )
   })
   
   if ( length(res) == 1L) return(res[[1L]])
-  else return(res)
+  else return(AnnotatedImageList(res))
 }
 
-.setupReader <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE) {
+.setupReader <- function(filter.metadata = FALSE, proprietary.metadata = TRUE) {
+  # reduce verbosity
+  .jcall("loci.common.DebugTools", "Z", "enableLogging", "ERROR")
   
   # create a reader that will automatically handle any supported format
   reader = .jcast(.jnew("loci.formats.ImageReader"), "loci.formats.IFormatReader")
@@ -160,27 +148,6 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   invisible(NULL)
 }
 
-# retrieve core metadata needed to work with the planes in a file
-.getCoreMetadata = function (reader) {
-  metadata = list()
-  
-  # core metadata fields
-  metadata$sizeX = .jcall(reader, "I", "getSizeX") # image width
-  metadata$sizeY = .jcall(reader, "I", "getSizeY") # image height
-  metadata$sizeZ = .jcall(reader, "I", "getSizeZ") # number of slices in the current series
-  metadata$sizeC = .jcall(reader, "I", "getSizeC") # number of actual channels in the current series
-  metadata$sizeT = .jcall(reader, "I", "getSizeT") # number of timepoints in the current series
-  metadata$seriesCount = .jcall(reader, "I", "getSeriesCount") # number of series per file
-  metadata$imageCount = .jcall(reader, "I", "getImageCount") # total number of images per series
-  metadata$RGBChannelCount = .jcall(reader, "I", "getRGBChannelCount") # number of channels per image
-  metadata$dimensionOrder = .jcall(reader, "S", "getDimensionOrder") # the ordering of the images within the current series
-  metadata$isRGB = .jcall(reader, "Z", "isRGB") # whether each image is RGB
-  metadata$isLittleEndian = .jcall(reader, "Z", "isLittleEndian") # whether the pixel bytes are in little-endian order
-  metadata$isInterleaved = .jcall(reader, "Z", "isInterleaved") # whether the channels in an image are interleaved
-  metadata$pixelType = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", .jcall(reader, "I", "getPixelType")) # the type of pixel data in this file
-  
-  metadata
-}
 
 .getMetadataList = function (reader) {
   coreMetadataFields = list(
@@ -209,25 +176,24 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   coreMetadataList = .jcall(reader, "Ljava/util/List;", "getCoreMetadataList", use.true.class = TRUE)
   series = .jcall(coreMetadataList, "I", "size")
   
-  metadata = lapply(seq_len(series)-1L, function (i) {
-    seriesCoreMetadata = .jcall(coreMetadataList, "Ljava/lang/Object;", "get", i, use.true.class = TRUE)
-    coreMetadata = lapply(names(coreMetadataFields), function(field) {
-      .jfield(seriesCoreMetadata, coreMetadataFields$field, field)
+  ImageMetadataList(
+    lapply(seq_len(series)-1L, function (i) {
+      seriesCoreMetadata = .jcall(coreMetadataList, "Ljava/lang/Object;", "get", i, use.true.class = TRUE)
+      coreMetadata = lapply(names(coreMetadataFields), function(field) {
+        .jfield(seriesCoreMetadata, coreMetadataFields$field, field)
+      })
+      names(coreMetadata) = names(coreMetadataFields)
+      ## 
+      coreMetadata$pixelType = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata$pixelType)
+      seriesMetadata = .hashtableToList( .jfield(seriesCoreMetadata, "Ljava/util/Hashtable;", "seriesMetadata") )
+      
+      ImageMetadata( list(
+        coreMetadata = coreMetadata,
+        seriesMetadata = seriesMetadata,
+        globalMetadata = globalMetadata)
+      )
     })
-    names(coreMetadata) = names(coreMetadataFields)
-    ## 
-    coreMetadata$pixelType = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata$pixelType)
-    seriesMetadata = .hashtableToList( .jfield(seriesCoreMetadata, "Ljava/util/Hashtable;", "seriesMetadata") )
-    
-    list ( coreMetadata = coreMetadata,
-           seriesMetadata = seriesMetadata,
-           globalMetadata = globalMetadata)
-  })
-
-#   ## if no series present
-#   if ( length(metadata) == 1 ) metadata = metadata[[1]]
-    
-  metadata
+  )
 }
 
 .getGlobalMetadata = function (reader) {

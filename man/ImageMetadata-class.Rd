@@ -4,26 +4,39 @@
 \name{ImageMetadata-class}
 \alias{ImageMetadata}
 \alias{ImageMetadata-class}
+\alias{ImageMetadataList}
+\alias{ImageMetadataList-class}
 \alias{print.ImageMetadata}
+\alias{print.ImageMetadataList}
 \alias{show,ImageMetadata-method}
-\title{ImageMetadata Class}
+\alias{show,ImageMetadataList-method}
+\title{ImageMetadata and ImageMetadataList Class}
 \usage{
-ImageMetadata(metadata = list())
+ImageMetadata(...)
+
+ImageMetadataList(...)
+
+\method{print}{ImageMetadata}(x, list.len = 5L, ...)
 
 \S4method{show}{ImageMetadata}(object)
 
-\method{print}{ImageMetadata}(x, ...)
+\S4method{show}{ImageMetadataList}(object)
+
+\method{print}{ImageMetadataList}(x, ...)
 }
 \arguments{
-\item{metadata}{list containing image metadata}
-
-\item{object}{An ImageMetadata object}
+\item{...}{further arguments to be passed to other methods}
 
 \item{x}{An ImageMetadata object}
 
-\item{...}{further arguments to be passed to other methods}
+\item{list.len}{numeric; maximum number of metadata entries to display}
+
+\item{object}{an \code{ImageMetadata} object}
 }
 \description{
 Formal representation of image metadata.
+}
+\author{
+Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
 }
 

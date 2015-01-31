@@ -1,12 +1,29 @@
 Package: RBioFormats
-Version: 0.0.9
+Version: 0.0.10
 Title: R interface to Bio-Formats
 Description: R interface to the Bio-Formats library
 Author: Andrzej Oles
 Maintainer: Andrzej Oles <andrzej.oles@embl.de>
-Depends: rJava (>= 0.9-6)
-Imports: EBImage, S4Vectors
-Suggests: BiocStyle, knitr, methods, microbenchmark, XML
+Depends:
+    rJava (>= 0.9-6)
+Imports:
+    EBImage
+Suggests:
+    BiocStyle,
+    knitr,
+    methods,
+    microbenchmark,
+    XML
 SystemRequirements: Java (>= 1.5)
 License: GPL-3
 VignetteBuilder: knitr
+Collate:
+    'ImageMetadata.R'
+    'AnnotatedImage.R'
+    'RBioFormats.R'
+    'metadataAccessors.R'
+    'mockFile.R'
+    'read.image.R'
+    'read.metadata.R'
+    'read.omexml.R'
+    'zzz.R'

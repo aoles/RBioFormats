@@ -156,8 +156,6 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     sizeZ = "I",
     sizeC = "I",
     sizeT = "I",
-    thumbSizeX = "I",
-    thumbSizeY = "I",
     pixelType = "I",
     bitsPerPixel = "I",
     imageCount = "I",
@@ -168,7 +166,9 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     interleaved = "Z",
     falseColor = "Z",
     metadataComplete = "Z",
-    thumbnail = "Z"
+    thumbnail = "Z",
+    thumbSizeX = "I",
+    thumbSizeY = "I"
   )
     
   globalMetadata = .getGlobalMetadata(reader)

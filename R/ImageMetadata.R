@@ -55,7 +55,7 @@ print.ImageMetadata <- function(x, list.len=5L, ...) {
 #' @export
 setMethod ("show", signature(object = "ImageMetadata"), function(object) {
   cat("ImageMetadata\n")
-  .printMetadata(object, list.len=5L)
+  .printMetadata(object, list.len=7L)
 })
 
 .printMetadata <- function(x, list.len, ...) {
@@ -68,7 +68,14 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
     if ( list.len == 0L ) {
       list.len = 9999L
       1L
-    } else 2L
+    } else {
+      ## truncate to avoid huge horizontal spacing
+      metadata = lapply(metadata, function(y) { 
+        if ( list.len < length(y) ) names(y)[(list.len+1L):length(y)] = ""
+        y
+      })
+      2L
+    }
   str(metadata, no.list=TRUE, list.len=list.len, max.level=max.level, ...)
 #   for (s in c("coreMetadata", "globalMetadata", "seriesMetadata")) {
 #     meta = do.call(s, list(object))
@@ -84,16 +91,29 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
 setMethod ("show", signature(object = "ImageMetadataList"), function(object) {
   cat("ImageMetadata list of length", length(object), "\n\n")
   
-  cat("coreMetadata:\n")
+  #cat("coreMetadata:\n")
   
   m = do.call(rbind, coreMetadata(object))
-  
   m = m[, c("sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bitsPerPixel")]
-  #colnames(m) = c("X", "Y", "C", "Z", "T", "#frames", "pixelType", "bitsPerPixel")
+  m = cbind(seq_len(nrow(m)), m)
+  
+  cNames = c("#", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bpp")
+  
+  sMeta = vapply(seriesMetadata(object), length, integer(1), USE.NAMES=FALSE)
+  if ( any(sMeta>0) ) {
+    cNames = c(cNames, "seriesMetadata")
+    m = cbind(m, paste("List of", sMeta))
+  }
+  
+  colnames(m) = cNames 
+  rownames(m) = rep("", nrow(m))
+  
   print(m)
   
-  cat("\nglobalMetadata:")
-  str( globalMetadata(object)[[1L]], list.len=5L )
+  if ( length( (gMeta = globalMetadata(object)[[1L]]) ) > 0L ) {
+    cat("\nglobalMetadata:")
+    str( globalMetadata(object)[[1L]], list.len=5L )
+  }
   #callNextMethod()
   
   #str(setNames(object@.Data, names(object)), no.list=TRUE, list.len=5)

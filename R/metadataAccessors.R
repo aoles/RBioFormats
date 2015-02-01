@@ -42,11 +42,11 @@ seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
   }
   else metadata = list(metadata)
   
-  metadata = lapply(metadata, function(x) x[[type]])
+  metadata = setNames(lapply(metadata, function(x) x[[type]]), seq_along(metadata))
   
   ## grep
   if ( length(list(...)) > 0L )
-    metadata = metadata[grep(x=names(metadata), ...)]
+    metadata = lapply(metadata, function(y) y[rev(grep(x=names(y), ...))])
   
   if ( length(metadata)==1L ) metadata = metadata[[1L]]
   

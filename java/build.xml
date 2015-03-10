@@ -1,8 +1,9 @@
 <project name="RBioFormats" basedir="." default="main">
 
-    <property name="src.dir"     value="src"/>
-    <property name="lib.dir"     value="lib"/>
+    <property name="src.dir"     value="."/>
+    <property name="lib.dir"     value="../inst/java"/>
     <property name="jar.dir"     value="../inst/java"/>
+    <property name="bioformats.jar" value="bioformats_package.jar"/>
     
     <property name="classes.dir" value="${src.dir}/classes"/>
     
@@ -10,7 +11,7 @@
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
     
-    <target name="compile">
+    <target name="compile" depends="bioformats">
 	<mkdir dir="${classes.dir}"/>
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
     </target>
@@ -18,8 +19,15 @@
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
         <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-	  <zipgroupfileset dir="${lib.dir}" includes="*.jar" /> 
+	  <!--	  <zipgroupfileset dir="${lib.dir}" includes="*.jar" /> -->
 	</jar>
+    </target>
+    
+    <target name="bioformats">
+	  <get src="http://downloads.openmicroscopy.org/latest/bio-formats/artifacts/${bioformats.jar}" 
+	    dest="${jar.dir}/${bioformats.jar}"
+	    verbose="true"
+	    usetimestamp="true"/>
     </target>
     
     <target name="clean">

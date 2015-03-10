@@ -17,6 +17,12 @@ library("knitr")
 #opts_chunk$set(eval = FALSE)
 ```
 
+```{r RBioFormats, message=FALSE, echo=FALSE}
+library("RBioFormats")
+```
+
+Bio-Formats library version: `r BioFormats.version()`
+
 
 ## Reading images
 

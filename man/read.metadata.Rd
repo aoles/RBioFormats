@@ -27,7 +27,7 @@ metadata = read.metadata(f)
 str(metadata)
 }
 \author{
-Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2015
 }
 \seealso{
 \code{\link{read.omexml}} for reading image metadata as OME-XML, \code{\link{read.image}} for reading image data

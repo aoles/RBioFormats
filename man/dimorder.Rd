@@ -23,6 +23,6 @@ img = read.image(f)
 dimorder(img)
 }
 \author{
-Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2015
 }
 

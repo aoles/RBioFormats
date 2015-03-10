@@ -13,6 +13,6 @@ seriesCount(x)
 Get the number of image series
 }
 \author{
-Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2015
 }
 

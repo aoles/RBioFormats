@@ -35,7 +35,7 @@ Extends the \linkS4class{Image} class from the \pkg{EBImage} package.
 \item{\code{metadata}}{an \linkS4class{ImageMetadata} object containing image metadata}
 }}
 \author{
-Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2015
 }
 \seealso{
 \linkS4class{AnnotatedImageList}

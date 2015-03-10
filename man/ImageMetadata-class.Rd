@@ -37,6 +37,6 @@ ImageMetadataList(...)
 Formal representation of image metadata.
 }
 \author{
-Andrzej Oles <\email{andrzej.oles@embl.de}>, 2014-2015
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2015
 }
 

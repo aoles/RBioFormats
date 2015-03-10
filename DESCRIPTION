@@ -1,9 +1,10 @@
 Package: RBioFormats
-Version: 0.0.11
+Version: 0.0.12
 Title: R interface to Bio-Formats
 Description: R interface to the Bio-Formats library
-Author: Andrzej Oles
-Maintainer: Andrzej Oles <andrzej.oles@embl.de>
+Encoding: UTF-8
+Author: Andrzej Oleś
+Maintainer: Andrzej Oleś <andrzej.oles@embl.de>
 Depends:
     rJava (>= 0.9-6)
 Imports:
@@ -26,4 +27,5 @@ Collate:
     'read.image.R'
     'read.metadata.R'
     'read.omexml.R'
+    'utils.R'
     'zzz.R'

@@ -1,0 +1,12 @@
+.PHONY: all clean
+
+srcdir = ../java
+javadir = ../inst/java
+RBioFormats.jar = $(javadir)/RBioFormats.jar
+
+all:
+
+clean: $(RBioFormats.jar)
+
+$(RBioFormats.jar):
+	ant -f $(srcdir)/build.xml

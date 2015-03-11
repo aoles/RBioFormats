@@ -5,11 +5,11 @@
 devtools::install_github("aoles/RBioFormats")
 ```
 
-## Build Java Library
+## Caveats
 
-To re-compile and re-package Java libraries use `ant`.
+If you get the `java.lang.OutOfMemoryError: Java heap space` error, try increasing the maximum heap size by supplying the -Xmx parameter before the Java Virtual Machine is initialized. For example, use
 
-```
-cd java
-ant
-```
+    options( java.parameters = "-Xmx4g" )
+    library( "RBioFormats" )
+
+to override the default setting and assign 4 gigabytes of heap space to the Java environment.

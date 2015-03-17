@@ -85,7 +85,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     
     # seriesMetadata = metadata$.getSeriesMetadata(reader)  
     # data = .jcall(DataTools, "Ljava/lang/Object;", "makeDataArray", bytes, bpp, fp, little, use.true.class = TRUE, evalArray = TRUE)
-    
+
     # convert bytes to numbers
     data = readBin(bytes,
                    what = if (fp) "double" else "integer",
@@ -148,7 +148,6 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   invisible(NULL)
 }
 
-
 .getMetadataList = function (reader) {
   coreMetadataFields = list(
     sizeX = "I",
@@ -167,8 +166,8 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     falseColor = "Z",
     metadataComplete = "Z",
     thumbnail = "Z",
-    thumbSizeX = "I",
-    thumbSizeY = "I"
+    resolutionCount = "I",
+    thumbnail = "Z"
   )
     
   globalMetadata = .getGlobalMetadata(reader)

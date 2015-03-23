@@ -165,8 +165,6 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     interleaved = "Z",
     falseColor = "Z",
     metadataComplete = "Z",
-    thumbnail = "Z",
-    resolutionCount = "I",
     thumbnail = "Z"
   )
     

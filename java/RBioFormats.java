@@ -41,7 +41,7 @@ public final class RBioFormats {
     // set metadata options
     reader.setMetadataFiltered(filter);
     reader.setOriginalMetadataPopulated(proprietary);
-    //reader.setFlattenedResolutions(false);
+    reader.setFlattenedResolutions(false);
     
     // omexml
     if (xml) try {  
@@ -65,16 +65,6 @@ public final class RBioFormats {
     reader.setOutputOrder("XYCZT");
   }
   
-  public static int getSeriesCount() {
-    int seriesCount = reader.getSeriesCount();
-    int sum = 0;
-    for (int i=0; i<seriesCount; i++) {
-      reader.setSeries(i);
-      sum += reader.getResolutionCount();
-    }
-    return sum;
-  }
-
   /* strategy 1 */
   
   public static Object readPixels(int i, boolean normalize) throws FormatException, IOException {

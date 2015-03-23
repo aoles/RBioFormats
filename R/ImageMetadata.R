@@ -94,10 +94,10 @@ setMethod ("show", signature(object = "ImageMetadataList"), function(object) {
   #cat("coreMetadata:\n")
   
   m = do.call(rbind, coreMetadata(object))
-  m = m[, c("sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bitsPerPixel")]
+  m = m[, c("sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bitsPerPixel", "series", "resolutionLevel")]
   m = cbind(seq_len(nrow(m)), m)
   
-  cNames = c("#", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bpp")
+  cNames = c("#", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bpp", "series", "resLevel")
   
   sMeta = vapply(seriesMetadata(object), length, integer(1), USE.NAMES=FALSE)
   if ( any(sMeta>0) ) {

@@ -1,41 +1,94 @@
 .getReader = function() .jfield("RBioFormats", "Lloci/formats/DimensionSwapper;", "reader", true.class=FALSE, convert=TRUE)
 .closeReader = function(reader) .jcall(reader, "V", "close")
 
+.parseSeriesResolutions = function(reader, series, resolution) {
+  .integerIndices = function(x, max, name) {
+    # fail if not coercible to an integer within the (1, max) range
+    w = options(warn=2L)
+    x = tryCatch(as.integer(x), silent=TRUE)
+    options(w)
+    if ( inherits(x, "try-error") || !isTRUE(all(x > 0 & x <= max)) )
+      stop(sprintf("Invalid %s specification.", name))
+    else x
+  }
+  
+  # check series specification
+  seriesCount = .jcall(reader, "I", "getSeriesCount") # number of series per file
+  series = 
+    if ( missing(series) )
+      # dafault case: read all series
+      seq_len(seriesCount)
+  else
+    .integerIndices(series, seriesCount, "series")
+  
+  resolution = 
+    if ( missing(resolution) )
+      # dafault case: read all resolutions
+      lapply(series, function (s) {
+        .jcall(reader, , "setSeries", s-1L)
+        rc = .jcall(reader, "I", "getResolutionCount")
+        seq_len(rc)
+      })
+    else
+      mapply(function(s, r) {
+        .jcall(reader, , "setSeries", i-1L)
+        res = .integerIndices(r, .jcall(reader, "I", "getResolutionCount"), "resolution")
+        attr(res, "series") = s
+      }, series, resolution, , SIMPLIFY=FALSE, USE.NAMES=FALSE)
+  
+  setNames(resolution, series)
+}
+  
+
 #' @export
-read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, normalize = TRUE, series, subset, read.metadata = TRUE, strategy = 1L) {
+read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, normalize = TRUE, series, resolution, subset, read.metadata = TRUE, strategy = 1L) {
   reader = .getReader()
   on.exit(.closeReader(reader))
   .setupReader2(file, filter.metadata, proprietary.metadata)
   
   if ( missing(subset) ) subset = list()
   
-  # check series specification
-  seriesCount = .jcall(reader, "I", "getSeriesCount") # number of series per file
-  if ( missing(series) ) {
-    # dafault case: read all series
-    series = seq_len(seriesCount)
-  } else {
-    # fail if not coercible to an integer within the (1, seriesCount) range
-    w = options(warn=2)
-    series = tryCatch(as.integer(series), silent = TRUE)
-    options(w)
-    if ( inherits(series, "try-error") || !isTRUE(all(series > 0 & series <= seriesCount)) )
-      stop("Invalid series specification.")
-  }
+  resolutions = .parseSeriesResolutions(reader, series, resolution)
   
-  metadata = if (read.metadata) .getMetadataList2(reader) else .getCoreMetadata(reader)
+  metadata = 
+    if ( isTRUE(read.metadata)) 
+      .getMetadataList2(reader, resolutions)
+    else
+      .jcall(reader, "Ljava/util/List;", "getCoreMetadataList", use.true.class = TRUE)
+
   
-  # iterate over series
-  res = lapply(series, function(s) {
-    .jcall(reader, , "setSeries", s-1L)
-    metadata = metadata[[s]]
-    # read image planes as byte vector
-    imageCount = metadata$coreMetadata$imageCount
+  # create a list of (series, resolution) pairs
+  series_resolution = unlist(mapply(function(s, r) mapply(c, s, r, SIMPLIFY=FALSE), as.integer(names(resolutions)), resolutions, SIMPLIFY=FALSE, USE.NAMES=FALSE), recursive=FALSE)
+  
+  # iterate over series and resolutions
+  res = lapply(seq_along(series_resolution), function(i) {
+    sr = series_resolution[[i]]
+    .jcall(reader, , "setSeries", sr[1]-1L)
+    .jcall(reader, , "setResolution", sr[2]-1L)
+    
+    metadata =
+      if ( isTRUE(read.metadata) ) {
+        metadata[[i]]        
+      }
+      else {
+        coreMetadata = .jcall(metadata, "Ljava/lang/Object;", "get", .jcall(reader, "I", "getCoreIndex"), use.true.class = TRUE)
+        coreMetadata = lapply(names(.coreMetadataFields), function(field) {
+          .jfield(coreMetadata, .coreMetadataFields[[field]], field, true.class=FALSE)
+        })
+        names(coreMetadata) = names(.coreMetadataFields)
+        ImageMetadata( list(
+          coreMetadata = coreMetadata,
+          seriesMetadata = NULL,
+          globalMetadata = NULL
+        ))
+      }
+    
+    coreMetadata = metadata[["coreMetadata"]]
     
     ## get indices of image planes to read    
-    czt = c(C = metadata$coreMetadata$sizeC, Z = metadata$coreMetadata$sizeZ, T = metadata$coreMetadata$sizeT)
+    czt = c(C = coreMetadata[["sizeC"]], Z = coreMetadata[["sizeZ"]], T = coreMetadata[["sizeT"]])
     subset = setNames(lapply(names(czt), function(d) {
-      if ( is.null(subset[[d]]) ) 
+      if ( is.null(subset[[d]]) )
         seq_len(czt[d])
       else {
         sub = subset[[d]]
@@ -53,7 +106,7 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
     ## set Image parameters
     colormode = if (length(subset$C) == 1) 0L else 2L
     czt = sapply(subset, length)    
-    dim = c(X = metadata$coreMetadata$sizeX, Y = metadata$coreMetadata$sizeY, czt[czt > 1]) 
+    dim = c(X = coreMetadata[["sizeX"]], Y = coreMetadata[["sizeY"]], czt[czt > 1]) 
     
     new("AnnotatedImage", 
         .Data = array(
@@ -70,7 +123,7 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
           dimnames = setNames(vector("list", length(dim)), names(dim))
         ),
         colormode = colormode,
-        metadata = ImageMetadata(metadata)
+        metadata = metadata
     )
   })
   
@@ -83,7 +136,8 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
   .jcall("RBioFormats", "V", "setupReader", file, filter.metadata, proprietary.metadata, omexml)
 }
 
-.getMetadataList2 = function (reader) {
+.getMetadataList2 = function (reader, resolutions) {
+  if ( missing(resolutions) ) resolutions = .parseSeriesResolutions(reader)
   coreMetadataFields = list(
     sizeX = "I",
     sizeY = "I",
@@ -100,33 +154,41 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
     interleaved = "Z",
     falseColor = "Z",
     metadataComplete = "Z",
-    thumbnail = "Z",
-    resolutionCount = "I",
     thumbnail = "Z"
   )
+    
+  series = as.integer(names(resolutions))
   
   globalMetadata = .getGlobalMetadata2(reader)
-  
   coreMetadataList = .jcall(reader, "Ljava/util/List;", "getCoreMetadataList", use.true.class = TRUE)
-  series = .jcall(coreMetadataList, "I", "size")
   
-  ImageMetadataList(
-    lapply(seq_len(series)-1L, function (i) {
-      seriesCoreMetadata = .jcall(coreMetadataList, "Ljava/lang/Object;", "get", i, use.true.class = TRUE)
-      coreMetadata = lapply(names(coreMetadataFields), function(field) {
-        .jfield(seriesCoreMetadata, coreMetadataFields[[field]], field, FALSE)
-      })
-      names(coreMetadata) = names(coreMetadataFields)
-      ## 
-      coreMetadata$pixelType = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata$pixelType)
-      seriesMetadata = .hashtableToList2( .jfield(seriesCoreMetadata, "Ljava/util/Hashtable;", "seriesMetadata") )
+  # iterate over series and resolutions
+  
+  ImageMetadataList(unlist(
+    lapply(seq_along(series), function(i) {
+      s = series[[i]]
+      .jcall(reader, , "setSeries", s-1L)
+      seriesMetadata = .getSeriesMetadata2(reader)
       
-      ImageMetadata( list(
-        coreMetadata = coreMetadata,
-        seriesMetadata = seriesMetadata,
-        globalMetadata = globalMetadata)
-      )
-    })
+      lapply(resolutions[[i]], function(r) {
+        .jcall(reader, , "setResolution", r-1L)
+        coreMetadata = .jcall(coreMetadataList, "Ljava/lang/Object;", "get", .jcall(reader, "I", "getCoreIndex"), use.true.class = TRUE)
+        coreMetadata = lapply(names(coreMetadataFields), function(field) {
+          .jfield(coreMetadata, coreMetadataFields[[field]], field, FALSE)
+        })
+        names(coreMetadata) = names(coreMetadataFields)
+        
+        coreMetadata[["pixelType"]] = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata[["pixelType"]])
+        #coreMetadata[["series"]] = s
+        #coreMetadata[["resolutionLevel"]] = r
+        
+        ImageMetadata( list(
+          coreMetadata = coreMetadata,
+          seriesMetadata = seriesMetadata,
+          globalMetadata = globalMetadata
+        ))
+      })
+    }), recursive=FALSE)
   )
 }
 
@@ -149,46 +211,11 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
   )
 }
 
-.getCoreMetadata = function (reader) {
-  coreMetadataFields = list(
+.coreMetadataFields = list(
     sizeX = "I",
     sizeY = "I",
     sizeZ = "I",
     sizeC = "I",
-    sizeT = "I",
-    pixelType = "I",
-    bitsPerPixel = "I",
-    imageCount = "I",
-    dimensionOrder = "S",
-    orderCertain = "Z",
-    rgb = "Z",
-    littleEndian = "Z",
-    interleaved = "Z",
-    falseColor = "Z",
-    metadataComplete = "Z",
-    thumbnail = "Z",
-    resolutionCount = "I",
-    thumbnail = "Z"
+    sizeT = "I"
   )
-  
-  coreMetadataList = .jcall(reader, "Ljava/util/List;", "getCoreMetadataList", use.true.class = TRUE)
-  series = .jcall(coreMetadataList, "I", "size")
-  
-  ImageMetadataList(
-    lapply(seq_len(series)-1L, function (i) {
-      seriesCoreMetadata = .jcall(coreMetadataList, "Ljava/lang/Object;", "get", i, use.true.class = TRUE)
-      coreMetadata = lapply(names(coreMetadataFields), function(field) {
-        .jfield(seriesCoreMetadata, coreMetadataFields[[field]], field, FALSE)
-      })
-      names(coreMetadata) = names(coreMetadataFields)
-      ## 
-      coreMetadata$pixelType = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata$pixelType)
-      
-      ImageMetadata( list(
-        coreMetadata = coreMetadata,
-        seriesMetadata = NULL,
-        globalMetadata = NULL)
-      )
-    })
-  )
-}
+

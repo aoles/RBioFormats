@@ -31,7 +31,7 @@
       })
     else
       mapply(function(s, r) {
-        .jcall(reader, , "setSeries", i-1L)
+        .jcall(reader, , "setSeries", s-1L)
         res = .integerIndices(r, .jcall(reader, "I", "getResolutionCount"), "resolution")
         attr(res, "series") = s
       }, series, resolution, , SIMPLIFY=FALSE, USE.NAMES=FALSE)

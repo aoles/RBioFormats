@@ -55,7 +55,7 @@ print.ImageMetadata <- function(x, list.len=5L, ...) {
 #' @export
 setMethod ("show", signature(object = "ImageMetadata"), function(object) {
   cat("ImageMetadata\n")
-  .printMetadata(object, list.len=7L)
+  .printMetadata(object, list.len=6L)
 })
 
 .printMetadata <- function(x, list.len, ...) {
@@ -94,10 +94,9 @@ setMethod ("show", signature(object = "ImageMetadataList"), function(object) {
   #cat("coreMetadata:\n")
   
   m = do.call(rbind, coreMetadata(object))
-  m = m[, c("sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bitsPerPixel", "series", "resolutionLevel")]
-  m = cbind(seq_len(nrow(m)), m)
+  m = m[, c("series", "resolutionLevel", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount")]
   
-  cNames = c("#", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount", "pixelType", "bpp", "series", "resLevel")
+  cNames = c("series", "res", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "total")
   
   sMeta = vapply(seriesMetadata(object), length, integer(1), USE.NAMES=FALSE)
   if ( any(sMeta>0) ) {

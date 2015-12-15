@@ -20,24 +20,30 @@ import loci.formats.meta.DummyMetadata;
 import loci.formats.meta.MetadataStore;
 
 public final class RBioFormats {   
-  public static DimensionSwapper reader;
-  public static MetadataStore omexml;
+  private static DimensionSwapper reader = null;
   
-  private static byte[] buf = null;
-  
-  // initialize reader
   static {
-     // reduce verbosity
+    // reduce verbosity
     DebugTools.enableLogging("ERROR");
-  
+    
     // ChannelFiller: convert indexed color images to RGB images.  
     // ChannelSeparator: split RGB images into 3 separate grayscale images
     // DimensionSwapper: enable setting output dimension order
     reader = new DimensionSwapper(new ChannelSeparator(new ChannelFiller()));
+    }
+    
+  public static IFormatReader getReader() {
+    return reader;
+  }
+  
+  public static String getCurrentFile() { 
+    return reader.getCurrentFile();
   }
   
   // setup the reader
   public static void setupReader(String file, boolean filter, boolean proprietary, boolean xml) throws FormatException, IOException {
+    MetadataStore omexml;
+  
     // set metadata options
     reader.setMetadataFiltered(filter);
     reader.setOriginalMetadataPopulated(proprietary);
@@ -65,12 +71,11 @@ public final class RBioFormats {
     reader.setOutputOrder("XYCZT");
   }
   
-  /* strategy 1 */
-  
   public static Object readPixels(int i, boolean normalize) throws FormatException, IOException {
     int pixelType = reader.getPixelType();
     int size = reader.getSizeX() * reader.getSizeY() * FormatTools.getBytesPerPixel(pixelType) * reader.getRGBChannelCount();
-    if ( buf == null || buf.length != size ) buf = new byte[size];
+    
+    byte[] buf = new byte[size];
     
     reader.openBytes(i, buf);
     
@@ -79,80 +84,11 @@ public final class RBioFormats {
     boolean little = reader.isLittleEndian();
     
     if (normalize)
-      return normalizedDataArray(buf, bpp, fp, little); 
+      return normalizedDataArray(buf, bpp, fp, little, pixelType); 
     else
       return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little); 
      
   }  
-  
-  /* strategy 2 */
-  
-  public static double[] getNormalizedPixels(int i) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();
-    int bpp = FormatTools.getBytesPerPixel(pixelType);
-    boolean fp = FormatTools.isFloatingPoint(pixelType);
-    boolean little = reader.isLittleEndian();
-    
-    getPixels(i);
-    
-    return normalizedDataArray(buf, bpp, fp, little);      
-  }
-  
-  public static Object getRawPixels(int i) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();    
-    int bpp = FormatTools.getBytesPerPixel(pixelType);
-    boolean fp = FormatTools.isFloatingPoint(pixelType);
-    boolean little = reader.isLittleEndian();
-    
-    getPixels(i);
-    
-    return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little);      
-  }
-  
-  private static void getPixels(int i) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();
-    int size = reader.getSizeX() * reader.getSizeY() * FormatTools.getBytesPerPixel(pixelType) * reader.getRGBChannelCount();
-    
-    if ( buf == null || buf.length != size ) buf = new byte[size];
-    
-    reader.openBytes(i, buf);
-  }
-  
-  /* startegy 3 */
-  
-  public static double[] getNormalizedPixels2(int[] i) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();
-    int bpp = FormatTools.getBytesPerPixel(pixelType);
-    boolean fp = FormatTools.isFloatingPoint(pixelType);
-    boolean little = reader.isLittleEndian();
-    
-    return normalizedDataArray(getPixels2(i), bpp, fp, little);      
-  }
-  
-  public static Object getRawPixels2(int[] i) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();    
-    int bpp = FormatTools.getBytesPerPixel(pixelType);
-    boolean fp = FormatTools.isFloatingPoint(pixelType);
-    boolean little = reader.isLittleEndian();
-    
-    return rawDataArray(getPixels2(i), bpp, FormatTools.isSigned(pixelType), fp, little);      
-  }
-  
-  private static byte[] getPixels2(int[] planes) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();
-    int size = reader.getSizeX() * reader.getSizeY();
-    int bufsize = size * FormatTools.getBytesPerPixel(pixelType);
-    
-    if ( buf == null || buf.length != bufsize ) buf = new byte[bufsize];
-    byte[] res = new byte[bufsize * planes.length];
-    
-    for(int i = 0, offset = 0; i < planes.length; i++, offset += bufsize)
-      System.arraycopy(reader.openBytes(planes[i], buf), 0, res, offset, bufsize);
-      
-    return res; 
-  }
-  
-  /* common */
   
   private static Object rawDataArray(byte[] b, int bpp, boolean signed, boolean fp, boolean little) {
     // unsigned types need to be stored in a longer signed type
@@ -199,7 +135,7 @@ public final class RBioFormats {
     return null;
   }
 
-  private static double[] normalizedDataArray(byte[] b, int bpp, boolean fp, boolean little) {
+  private static double[] normalizedDataArray(byte[] b, int bpp, boolean fp, boolean little, int pixelType) {
     double[] data = new double[b.length / bpp];
     
     // floating point normalization 
@@ -239,7 +175,6 @@ public final class RBioFormats {
       }
     }
     else {
-      int pixelType = reader.getPixelType();
       long[] minmax = FormatTools.defaultMinMax(pixelType);
       double min = minmax[0], max = minmax[1];
        

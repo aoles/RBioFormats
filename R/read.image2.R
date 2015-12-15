@@ -1,4 +1,5 @@
-.getReader = function() .jfield("RBioFormats", "Lloci/formats/DimensionSwapper;", "reader", true.class=FALSE, convert=TRUE)
+.getReader = function() .jcall("RBioFormats", "Lloci/formats/IFormatReader;", "getReader")
+
 .closeReader = function(reader) .jcall(reader, "V", "close")
 
 .parseSeriesResolutions = function(reader, series, resolution) {
@@ -110,15 +111,7 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
     
     new("AnnotatedImage", 
         .Data = array(
-          data = switch(strategy,
-            unlist(lapply(indices-1L, function(i) .jcall("RBioFormats", "Ljava/lang/Object;", "readPixels", i, isTRUE(normalize), evalArray=TRUE, use.true.class=TRUE) )),
-            unlist(lapply(indices-1L, function(i)
-              if ( isTRUE(normalize) ) .jcall("RBioFormats", "[D", "getNormalizedPixels", i, evalArray=TRUE)
-              else .jcall("RBioFormats", "Ljava/lang/Object;", "getRawPixels", i, evalArray=TRUE, use.true.class=TRUE)
-            )),
-            if ( isTRUE(normalize) ) .jcall("RBioFormats", "[D", "getNormalizedPixels2", .jarray(indices-1L), evalArray=TRUE)
-            else .jcall("RBioFormats", "Ljava/lang/Object;", "getRawPixels2", .jarray(indices-1L), evalArray=TRUE, use.true.class=TRUE)
-          ),
+          data = unlist(lapply(indices-1L, function(i) .jcall("RBioFormats", "Ljava/lang/Object;", "readPixels", i, isTRUE(normalize), evalArray=TRUE, use.true.class=TRUE) )),
           dim = setNames(dim, NULL),
           dimnames = setNames(vector("list", length(dim)), names(dim))
         ),
@@ -179,8 +172,8 @@ read.image2 <- function(file, filter.metadata = FALSE, proprietary.metadata = TR
         names(coreMetadata) = names(coreMetadataFields)
         
         coreMetadata[["pixelType"]] = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata[["pixelType"]])
-        #coreMetadata[["series"]] = s
-        #coreMetadata[["resolutionLevel"]] = r
+        coreMetadata[["series"]] = s
+        coreMetadata[["resolutionLevel"]] = r
         
         ImageMetadata( list(
           coreMetadata = coreMetadata,

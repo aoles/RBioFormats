@@ -22,7 +22,7 @@
 #' @template author
 #' @seealso \code{\link{read.metadata}} for reading image metadata, \code{\link{read.omexml}} for reading image metadata as OME-XML
 #' @export
-read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, normalize = TRUE, series, resolution, subset, read.metadata = TRUE, strategy = 1L) {
+read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, normalize = TRUE, series, resolution, subset, read.metadata = TRUE) {
   reader = .getReader()
   on.exit(.closeReader(reader))
   .setupReader(file, filter.metadata, proprietary.metadata)

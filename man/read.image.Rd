@@ -5,8 +5,7 @@
 \title{Read Images}
 \usage{
 read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
-  normalize = TRUE, series, resolution, subset, read.metadata = TRUE,
-  strategy = 1L)
+  normalize = TRUE, series, resolution, subset, read.metadata = TRUE)
 }
 \arguments{
 \item{file}{character, file name}

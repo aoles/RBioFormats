@@ -14,10 +14,10 @@
 #' @template author
 #' @seealso \code{\link{read.omexml}} for reading image metadata as OME-XML, \code{\link{read.image}} for reading image data
 #' @export
-read.metadata <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, omexml = FALSE) {
+read.metadata <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE) {
   reader = .getReader()
   on.exit(.closeReader(reader))
-  .setupReader(file, filter.metadata, proprietary.metadata, omexml)
+  .setupReader(file, filter.metadata, proprietary.metadata, omexml = FALSE)
   
   # harvest metadata
   metadata = .getMetadataList(reader)

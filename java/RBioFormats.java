@@ -21,6 +21,7 @@ import loci.formats.meta.MetadataStore;
 
 public final class RBioFormats {   
   private static DimensionSwapper reader = null;
+  private static MetadataStore omexml = null;
   
   static {
     // reduce verbosity
@@ -36,13 +37,16 @@ public final class RBioFormats {
     return reader;
   }
   
+  public static MetadataStore getOMEXML() {
+    return omexml;
+  }
+  
   public static String getCurrentFile() { 
     return reader.getCurrentFile();
   }
   
   // setup the reader
   public static void setupReader(String file, boolean filter, boolean proprietary, boolean xml) throws FormatException, IOException {
-    MetadataStore omexml;
   
     // set metadata options
     reader.setMetadataFiltered(filter);

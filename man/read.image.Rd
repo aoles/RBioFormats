@@ -5,7 +5,8 @@
 \title{Read Images}
 \usage{
 read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
-  normalize = TRUE, series, subset)
+  normalize = TRUE, series, resolution, subset, read.metadata = TRUE,
+  strategy = 1L)
 }
 \arguments{
 \item{file}{character, file name}
@@ -18,7 +19,11 @@ read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
 
 \item{series}{integer vector specifying series to read; if missing all series included in the file are read}
 
+\item{resolution}{integer vector specifying resolution levels to read; if missing all levels read}
+
 \item{subset}{named list specifing image subsetting}
+
+\item{read.metadata}{logical, should image metadata be read}
 }
 \value{
 A \code{\link{AnnotatedImage}} object or a \code{\link{AnnotatedImageList}} object in case of multi-series data.

@@ -15,18 +15,11 @@
 #' @seealso \code{\link{read.metadata}} for reading image metadata, \code{\link{read.image}} for reading image data
 #' @export
 read.omexml <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE) {
-  # setup reader
-  reader = .setupReader(filter.metadata, proprietary.metadata)
+  on.exit(.closeReader(.getReader()))
   
-  # create OME-XML metadata store
-  factory = .jnew("loci.common.services.ServiceFactory")
-  service = .jcall(factory, "Lloci/common/services/Service;", "getInstance", J("loci.formats.services.OMEXMLService")$class)
-  meta = .jcall(service, "Lloci/formats/ome/OMEXMLMetadata;", "createOMEXMLMetadata")
-  .jcall(reader, , "setMetadataStore", .jcast(meta, "loci.formats.meta.MetadataStore"))
-  
-  # initialize file
-  .fileInit(reader, file)
+  .setupReader(file, filter.metadata, proprietary.metadata, omexml=TRUE)
   
   # dump OME XML
-  .jcall(meta, "S", "dumpXML")
+  .jcall(.jcall("RBioFormats", "Lloci/formats/meta/MetadataStore;", "getOMEXML"), "S", "dumpXML")
 }
+

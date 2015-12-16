@@ -20,25 +20,38 @@ import loci.formats.meta.DummyMetadata;
 import loci.formats.meta.MetadataStore;
 
 public final class RBioFormats {   
-  public static DimensionSwapper reader;
-  public static MetadataStore omexml;
+  private static DimensionSwapper reader = null;
+  private static MetadataStore omexml = null;
   
-  // initialize reader
   static {
-     // reduce verbosity
+    // reduce verbosity
     DebugTools.enableLogging("ERROR");
-  
+    
     // ChannelFiller: convert indexed color images to RGB images.  
     // ChannelSeparator: split RGB images into 3 separate grayscale images
     // DimensionSwapper: enable setting output dimension order
     reader = new DimensionSwapper(new ChannelSeparator(new ChannelFiller()));
+    }
+    
+  public static IFormatReader getReader() {
+    return reader;
+  }
+  
+  public static MetadataStore getOMEXML() {
+    return omexml;
+  }
+  
+  public static String getCurrentFile() { 
+    return reader.getCurrentFile();
   }
   
   // setup the reader
   public static void setupReader(String file, boolean filter, boolean proprietary, boolean xml) throws FormatException, IOException {
+  
     // set metadata options
     reader.setMetadataFiltered(filter);
     reader.setOriginalMetadataPopulated(proprietary);
+    reader.setFlattenedResolutions(false);
     
     // omexml
     if (xml) try {  
@@ -61,102 +74,124 @@ public final class RBioFormats {
     reader.setId(file);    
     reader.setOutputOrder("XYCZT");
   }
- 
-  private static double[] bytesToDoubles(byte[] b, int bpp, boolean fp, boolean little) {
-    double[] d = new double[b.length / bpp];
+  
+  public static Object readPixels(int i, boolean normalize) throws FormatException, IOException {
+    int pixelType = reader.getPixelType();
+    int size = reader.getSizeX() * reader.getSizeY() * FormatTools.getBytesPerPixel(pixelType) * reader.getRGBChannelCount();
     
-    /*
-    if (bpp == 1)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToShort(b, i, 1, little);
-    else if (bpp == 2)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToShort(b, i * 2, 2, little);
-    else if (bpp == 4 && fp)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToFloat(b, i * 4, 4, little);
-    else if (bpp == 4)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToInt(b, i * 4, 4, little);
-    else if (bpp == 8 && fp)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToDouble(b, i * 8, 8, little);
-    else if (bpp == 8)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToLong(b, i * 8, 8, little);
-    */
+    byte[] buf = new byte[size];
     
-    if (fp)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToDouble(b, i * bpp, bpp, little);
+    reader.openBytes(i, buf);
+    
+    int bpp = FormatTools.getBytesPerPixel(pixelType);
+    boolean fp = FormatTools.isFloatingPoint(pixelType);
+    boolean little = reader.isLittleEndian();
+    
+    if (normalize)
+      return normalizedDataArray(buf, bpp, fp, little, pixelType); 
     else
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToLong(b, i * bpp, bpp, little);
-    
-    return d;
-  }
+      return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little); 
+     
+  }  
   
-  
-  private static double[] bytesToDoubles2(byte[] b, int bpp, boolean fp, boolean little, int normalize) {
-    double[] d = new double[b.length / bpp];
+  private static Object rawDataArray(byte[] b, int bpp, boolean signed, boolean fp, boolean little) {
+    // unsigned types need to be stored in a longer signed type
+    int type = signed ? bpp : bpp * 2;
     
-    /*
-    if (bpp == 1)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToShort(b, i, 1, little);
-    else if (bpp == 2)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToShort(b, i * 2, 2, little);
-    else if (bpp == 4 && fp)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToFloat(b, i * 4, 4, little);
-    else if (bpp == 4)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToInt(b, i * 4, 4, little);
-    else if (bpp == 8 && fp)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToDouble(b, i * 8, 8, little);
-    else if (bpp == 8)
-      for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToLong(b, i * 8, 8, little);
-    */
-    
-    if (fp) {
-      for (int i=0; i<d.length; i++) d[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
+    if (type == 1) {
+      return b;
     }
-    else {
-      if (normalize > 0) {
-	double max = Math.pow(2, normalize) - 1;
-	for (int i=0; i<d.length; i++) d[i] = DataTools.bytesToLong(b, i * bpp, bpp, little) / max;
+    else if (type == 2) {
+      short[] s = new short[b.length / bpp];
+      for (int i=0; i<s.length; i++) {
+        s[i] = DataTools.bytesToShort(b, i * bpp, bpp, little);
       }
-      else {
-	for (int i=0; i<d.length; i++) d[i] = (double) DataTools.bytesToLong(b, i * bpp, bpp, little);
+      return s;
+    }
+    else if (type == 4 && fp) {
+      float[] f = new float[b.length / bpp];
+      for (int i=0; i<f.length; i++) {
+        f[i] = DataTools.bytesToFloat(b, i * bpp, bpp, little);
       }
+      return f;
     }
-    
-    return d;
-  }
-  
-  public static double[] readPixels(int[] planes, boolean normalize) throws FormatException, IOException {
-    
-    int size = reader.getSizeX() * reader.getSizeY();
-    int offset = 0;
-        
-    int pixelType = reader.getPixelType();
-    double[] res = new double[size * planes.length];
-    
-    for(int i = 0; i < planes.length; ++i, offset += size)
-      System.arraycopy(bytesToDoubles(reader.openBytes(planes[i]-1),
-				      FormatTools.getBytesPerPixel(pixelType),
-				      FormatTools.isFloatingPoint(pixelType),
-				      reader.isLittleEndian()), 0, res, offset, size);
-    
-    
-    
-    if (normalize) {
-      double max = Math.pow(2, reader.getBitsPerPixel()) - 1;
-      for(int i = 0; i < res.length; ++i) res[i] /= max;
+    else if (type == 4) {
+      int[] i = new int[b.length / bpp];
+      for (int j=0; j<i.length; j++) {
+        i[j] = DataTools.bytesToInt(b, j * bpp, bpp, little);
+      }
+      return i;
     }
-    
-    return res;
-  }
-  
-  public static double[] readPixels2(int i, boolean normalize) throws FormatException, IOException {
-    int pixelType = reader.getPixelType();
-    
-    return bytesToDoubles2(
-      reader.openBytes(i),
-      FormatTools.getBytesPerPixel(pixelType),
-      FormatTools.isFloatingPoint(pixelType),
-      reader.isLittleEndian(),
-      normalize ? reader.getBitsPerPixel() : 0
-    );
+    else if (type == 8 && fp) {
+      double[] d = new double[b.length / bpp];
+      for (int i=0; i<d.length; i++) {
+        d[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
+      }
+      return d;
+    }
+    else if (type == 8) {
+      long[] l = new long[b.length / bpp];
+      for (int i=0; i<l.length; i++) {
+        l[i] = DataTools.bytesToLong(b, i * bpp, bpp, little);
+      }
+      return l;
+    }
+    return null;
   }
 
+  private static double[] normalizedDataArray(byte[] b, int bpp, boolean fp, boolean little, int pixelType) {
+    double[] data = new double[b.length / bpp];
+    
+    // floating point normalization 
+    if (fp) {
+      double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
+      
+      if (bpp == 4) {
+	for (int i=0; i<data.length; i++) {
+	  data[i] = (double) DataTools.bytesToFloat(b, i * bpp, bpp, little);
+	  if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
+	    continue;
+	  else {
+	    if (data[i] < min) min = data[i];
+	    if (data[i] > max) max = data[i];
+	  }
+	}
+      }
+      else if (bpp == 8) {
+	for (int i=0; i<data.length; i++) {
+	  data[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
+	  if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
+	    continue;
+	  else {
+	    if (data[i] < min) min = data[i];
+	    if (data[i] > max) max = data[i];
+	  }
+	}      
+      }
+      else return null;
+      
+      // normalize min => 0.0, max => 1.0
+      double range = max - min;
+      for (int i=0; i<data.length; i++) {
+	if (data[i] == Double.POSITIVE_INFINITY) data[i] = 1.0;
+	else if (data[i] == Double.NEGATIVE_INFINITY) data[i] = 0.0;
+	else data[i] = (data[i] - min) / range;
+      }
+    }
+    else {
+      long[] minmax = FormatTools.defaultMinMax(pixelType);
+      double min = minmax[0], max = minmax[1];
+       
+      // true bpp value overrides the default
+      int bitsPerPixel = reader.getCoreMetadataList().get(reader.getCoreIndex()).bitsPerPixel;
+      if ( !FormatTools.isSigned(pixelType) &&  bitsPerPixel < FormatTools.getBytesPerPixel(pixelType) * 8) max = Math.pow(2, bitsPerPixel) - 1;	
+      
+      double range = max - min;
+      for(int i = 0; i < data.length; ++i) data[i] = ((double) DataTools.bytesToLong(b, i * bpp, bpp, little) - min) / range;      
+    }
+    
+    return data;
+  }
+  
 }
+

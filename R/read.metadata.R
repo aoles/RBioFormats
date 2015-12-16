@@ -15,18 +15,16 @@
 #' @seealso \code{\link{read.omexml}} for reading image metadata as OME-XML, \code{\link{read.image}} for reading image data
 #' @export
 read.metadata <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE) {
-  # setup reader
-  reader = .setupReader(filter.metadata, proprietary.metadata)
+  reader = .getReader()
+  on.exit(.closeReader(reader))
+  .setupReader(file, filter.metadata, proprietary.metadata, omexml = FALSE)
   
-  # initialize file
-  .fileInit(reader, file)
-    
   # harvest metadata
   metadata = .getMetadataList(reader)
   
   if ( length(metadata)==1L ) 
     # return ImageMetadata object
-    metadata[[1]]
+    metadata[[1L]]
   else  
     # return ImageMetadataList object
     metadata

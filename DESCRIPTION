@@ -1,5 +1,5 @@
 Package: RBioFormats
-Version: 0.0.12
+Version: 0.0.19
 Title: R interface to Bio-Formats
 Description: R interface to the Bio-Formats library
 Encoding: UTF-8
@@ -29,3 +29,4 @@ Collate:
     'read.omexml.R'
     'utils.R'
     'zzz.R'
+RoxygenNote: 5.0.1

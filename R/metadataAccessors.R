@@ -37,7 +37,7 @@ seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
   
   metadata = metadata(x)
   
-  if ( is.list(x) ) {
+  if ( inherits(x, "ImageMetadataList") ) {
     if ( !missing(series) ) metadata = metadata[series]    
   }
   else metadata = list(metadata)

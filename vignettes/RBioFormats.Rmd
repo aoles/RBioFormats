@@ -14,7 +14,6 @@ output:
 ```{r style, echo = FALSE, results = 'asis'}
 BiocStyle::markdown()
 library("knitr")
-#opts_chunk$set(eval = FALSE)
 ```
 
 ```{r RBioFormats, message=FALSE, echo=FALSE}
@@ -167,6 +166,7 @@ Image data returned by `r Rpackage('RBioFormats')` is by default scaled to the [
 ```{r range}
 sapply(types, function(t) {
   img = read.image(mockFile(sizeX = 65536, sizeY = 11, pixelType = t), normalize = FALSE)
+  if (typeof(img)=="raw") img = readBin(img, what = "int", n = length(img), size = 1L)
   setNames(range(img), c("min", "max"))  
 })
 ```

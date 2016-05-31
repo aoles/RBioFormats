@@ -1,15 +1,15 @@
 ---
 title: "RBioFormats: an R interface to the Bio-Formats library"
-author: Andrzej Oles
+author: Andrzej Oleś
+date: "`r doc_date()`"
+package: "`r paste(pkg_ver('RBioFormats'), sprintf('(Bio-Formats library version: %s)', RBioFormats::BioFormats.version()))`"
 output:
   BiocStyle::html_document:
-    toc: true
+vignette: >
+  %\VignetteIndexEntry{RBioFormats: an R interface to the Bio-Formats library}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
 ---
-<!--
-%\VignetteIndexEntry{RBioFormats: an R interface to the Bio-Formats library}
-%\VignettePackage{RBioFormats}
-%\VignetteEngine{knitr::rmarkdown}
--->
 
 ```{r style, echo = FALSE, results = 'asis'}
 BiocStyle::markdown()
@@ -20,10 +20,8 @@ library("knitr")
 library("RBioFormats")
 ```
 
-Bio-Formats library version: `r BioFormats.version()`
 
-
-## Reading images
+# Reading images
 
 ```{r library, message=FALSE}
 library("RBioFormats")
@@ -59,7 +57,7 @@ dimorder(img)
 ```
 
 
-## The *AnnotatedImage* class
+# The *AnnotatedImage* class
 
 `r Rpackage('RBioFormats')` stores image data in an *AnnotatedImage* class which extends the *Image* class from `r Biocpkg('EBImage')`.
 
@@ -81,7 +79,7 @@ print(meta, list.len=99L)
 ```
 
 
-## Image metadata
+# Image metadata
 
 Image metadata is represented by an *ImageMetadata* class structured as a named list of coreMetadata, globalMetadata and seriesMetadata.
 
@@ -106,7 +104,7 @@ identical( coreMetadata(img), cMeta )
 ```
 
 
-## Reading image metadata
+# Reading image metadata
 
 Image metadata can be read without loading the corresponding pixel data.
 
@@ -120,7 +118,7 @@ metadata
 This is especially useful for large data sets.
 
 
-## OME-XML representation
+# OME-XML representation
 
 and the OME-XML DOM tree representation of the metadata in the `omexml` slot.
 
@@ -136,7 +134,7 @@ xmlRoot(omexml)
 For details on working with XML data in R see the `r Rpackage('XML')` package [documentation](http://www.omegahat.org/RSXML/ "XML package documentation").
 
 
-## Appendix A: Working with test images
+# Appendix A: Working with test images
 
 For development purposes it is useful to have images of a specific size or pixel type for testing. Mock files containing gradient images can be generated using
 
@@ -171,7 +169,7 @@ sapply(types, function(t) {
 })
 ```
 
-## Appendix B: Compared to *EBImage*
+# Appendix B: Compared to *EBImage*
 
 Loading images using `r Githubpkg('aoles/RBioFormats')` should give the same results as using the `r Biocpkg('EBImage')` package.
 

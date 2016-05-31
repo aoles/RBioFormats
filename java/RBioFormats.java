@@ -18,22 +18,24 @@ import loci.formats.ome.OMEXMLMetadata;
 import loci.formats.MissingLibraryException;
 import loci.formats.meta.DummyMetadata;
 import loci.formats.meta.MetadataStore;
+import loci.formats.meta.IMetadata;
 
-public final class RBioFormats {   
-  private static DimensionSwapper reader = null;
-  private static MetadataStore omexml = null;
+public final class RBioFormats {
+  private static DimensionSwapper reader;
+  private static MetadataStore omexml;
   
   static {
     // reduce verbosity
     DebugTools.enableLogging("ERROR");
-    
-    // ChannelFiller: convert indexed color images to RGB images.  
-    // ChannelSeparator: split RGB images into 3 separate grayscale images
-    // DimensionSwapper: enable setting output dimension order
-    reader = new DimensionSwapper(new ChannelSeparator(new ChannelFiller()));
-    }
-    
+  }
+  
   public static IFormatReader getReader() {
+    if (reader==null) {
+      // ChannelFiller: convert indexed color images to RGB images.  
+      // ChannelSeparator: split RGB images into 3 separate grayscale images
+      // DimensionSwapper: enable setting output dimension order
+      reader = new DimensionSwapper(new ChannelSeparator(new ChannelFiller()));
+    }
     return reader;
   }
   
@@ -41,7 +43,7 @@ public final class RBioFormats {
     return omexml;
   }
   
-  public static String getCurrentFile() { 
+  public static String getCurrentFile() {
     return reader.getCurrentFile();
   }
   
@@ -54,16 +56,8 @@ public final class RBioFormats {
     reader.setFlattenedResolutions(false);
     
     // omexml
-    if (xml) try {  
-      ServiceFactory factory = new ServiceFactory();
-      OMEXMLService service = factory.getInstance(OMEXMLService.class);
-      omexml = service.createOMEXMLMetadata();
-    }
-    catch (DependencyException de) {
-      throw new MissingLibraryException(OMEXMLServiceImpl.NO_OME_XML_MSG, de);
-    }
-    catch (ServiceException se) {
-      throw new FormatException(se);
+    if (xml) {
+      omexml = (MetadataStore) getMetadataStore();
     }
     else {
       omexml = new DummyMetadata();
@@ -71,7 +65,7 @@ public final class RBioFormats {
     reader.setMetadataStore(omexml);
     
     // initialize file   
-    reader.setId(file);    
+    reader.setId(file);
     reader.setOutputOrder("XYCZT");
   }
   
@@ -88,11 +82,24 @@ public final class RBioFormats {
     boolean little = reader.isLittleEndian();
     
     if (normalize)
-      return normalizedDataArray(buf, bpp, fp, little, pixelType); 
+      return normalizedDataArray(buf, bpp, fp, little, pixelType);
     else
-      return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little); 
-     
-  }  
+      return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little);
+  }
+  
+  private static IMetadata getMetadataStore() throws FormatException {
+    try {
+      ServiceFactory factory = new ServiceFactory();
+      OMEXMLService service = factory.getInstance(OMEXMLService.class);
+      return service.createOMEXMLMetadata();
+    }
+    catch (DependencyException de) {
+      throw new MissingLibraryException(OMEXMLServiceImpl.NO_OME_XML_MSG, de);
+    }
+    catch (ServiceException se) {
+      throw new FormatException(se);
+    }
+  }
   
   private static Object rawDataArray(byte[] b, int bpp, boolean signed, boolean fp, boolean little) {
     // unsigned types need to be stored in a longer signed type
@@ -147,35 +154,35 @@ public final class RBioFormats {
       double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
       
       if (bpp == 4) {
-	for (int i=0; i<data.length; i++) {
-	  data[i] = (double) DataTools.bytesToFloat(b, i * bpp, bpp, little);
-	  if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
-	    continue;
-	  else {
-	    if (data[i] < min) min = data[i];
-	    if (data[i] > max) max = data[i];
-	  }
-	}
+        for (int i=0; i<data.length; i++) {
+          data[i] = (double) DataTools.bytesToFloat(b, i * bpp, bpp, little);
+          if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
+            continue;
+          else {
+            if (data[i] < min) min = data[i];
+            if (data[i] > max) max = data[i];
+          }
+        }
       }
       else if (bpp == 8) {
-	for (int i=0; i<data.length; i++) {
-	  data[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
-	  if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
-	    continue;
-	  else {
-	    if (data[i] < min) min = data[i];
-	    if (data[i] > max) max = data[i];
-	  }
-	}      
+        for (int i=0; i<data.length; i++) {
+          data[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
+          if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
+            continue;
+          else {
+            if (data[i] < min) min = data[i];
+            if (data[i] > max) max = data[i];
+          }
+        }      
       }
       else return null;
       
       // normalize min => 0.0, max => 1.0
       double range = max - min;
       for (int i=0; i<data.length; i++) {
-	if (data[i] == Double.POSITIVE_INFINITY) data[i] = 1.0;
-	else if (data[i] == Double.NEGATIVE_INFINITY) data[i] = 0.0;
-	else data[i] = (data[i] - min) / range;
+        if (data[i] == Double.POSITIVE_INFINITY) data[i] = 1.0;
+        else if (data[i] == Double.NEGATIVE_INFINITY) data[i] = 0.0;
+        else data[i] = (data[i] - min) / range;
       }
     }
     else {
@@ -194,4 +201,3 @@ public final class RBioFormats {
   }
   
 }
-

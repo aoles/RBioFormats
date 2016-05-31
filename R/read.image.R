@@ -24,7 +24,7 @@
 #' @export
 read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE, normalize = TRUE, series, resolution, subset, read.metadata = TRUE) {
   reader = .getReader()
-  on.exit(.closeReader(reader))
+  on.exit( .close(reader) )
   .setupReader(file, filter.metadata, proprietary.metadata)
   
   if ( missing(subset) ) subset = list()
@@ -194,7 +194,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
 
 .getReader = function() .jcall("RBioFormats", "Lloci/formats/IFormatReader;", "getReader")
 
-.closeReader = function(reader) .jcall(reader, "V", "close")
+.close = function(object) .jcall(object, "V", "close")
 
 .parseSeriesResolutions = function(reader, series, resolution) {
   .integerIndices = function(x, max, name) {

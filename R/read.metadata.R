@@ -16,7 +16,7 @@
 #' @export
 read.metadata <- function(file, filter.metadata = FALSE, proprietary.metadata = TRUE) {
   reader = .getReader()
-  on.exit(.closeReader(reader))
+  on.exit( .close(reader) )
   .setupReader(file, filter.metadata, proprietary.metadata, omexml = FALSE)
   
   # harvest metadata

@@ -67,31 +67,34 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     coreMetadata = metadata[["coreMetadata"]]
     
     ## get indices of image planes to read    
-    czt = c(C = coreMetadata[["sizeC"]], Z = coreMetadata[["sizeZ"]], T = coreMetadata[["sizeT"]])
-    subset = setNames(lapply(names(czt), function(d) {
+    xyczt = c(X = coreMetadata[["sizeX"]], Y = coreMetadata[["sizeY"]], C = coreMetadata[["sizeC"]], Z = coreMetadata[["sizeZ"]], T = coreMetadata[["sizeT"]])
+    subset = setNames(lapply(names(xyczt), function(d) {
       if ( is.null(subset[[d]]) )
-        seq_len(czt[d])
+        seq_len(xyczt[d])
       else {
         sub = subset[[d]]
-        sub[ sub >= 1 & sub <= czt[d] ]
+        sub[ sub >= 1L & sub <= xyczt[d] ]
       }
-    }), names(czt))
+    }), names(xyczt))
     
-    indices = subset[[1L]]
-    for (d in 2L:length(czt)) {
-      czt[d] = czt[d] * czt[d-1] # instead of cumprod to preserve integers
-      indices = as.vector(sapply( (subset[[d]] - 1L) * czt[d-1], function (i) i + indices))
+    indices = subset[[3L]]
+    for (d in 4:5) {
+      xyczt[d] = xyczt[d] * xyczt[d-1] # instead of cumprod to preserve integers
+      indices = as.vector(sapply( (subset[[d]] - 1L) * xyczt[d-1], function (i) i + indices))
     }
     indices = as.integer(indices)
     
     ## set Image parameters
     colormode = if (length(subset$C) == 1) 0L else 2L
-    czt = sapply(subset, length)    
-    dim = c(X = coreMetadata[["sizeX"]], Y = coreMetadata[["sizeY"]], czt[czt > 1]) 
+    xyczt = vapply(subset, length, integer(1L))
+    xy = vapply(subset[c("X", "Y")], function(x) x[1L], integer(1L)) - 1L
+    wh = xyczt[1:2]
+    czt = xyczt[3:5]
+    dim = c(wh, czt[czt > 1L])
     
     new("AnnotatedImage", 
         .Data = array(
-          data = unlist(lapply(indices-1L, function(i) .jcall("RBioFormats", "Ljava/lang/Object;", "readPixels", i, isTRUE(normalize), evalArray=TRUE, use.true.class=TRUE) )),
+          data = unlist(lapply(indices-1L, function(i) .jcall("RBioFormats", "Ljava/lang/Object;", "readPixels", i, xy[1L], xy[2L], wh[1L], wh[2L], isTRUE(normalize), evalArray=TRUE, use.true.class=TRUE) )),
           dim = setNames(dim, NULL),
           dimnames = setNames(vector("list", length(dim)), names(dim))
         ),

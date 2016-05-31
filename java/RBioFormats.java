@@ -69,13 +69,13 @@ public final class RBioFormats {
     reader.setOutputOrder("XYCZT");
   }
   
-  public static Object readPixels(int i, boolean normalize) throws FormatException, IOException {
+  public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
     int pixelType = reader.getPixelType();
-    int size = reader.getSizeX() * reader.getSizeY() * FormatTools.getBytesPerPixel(pixelType) * reader.getRGBChannelCount();
+    int size = w * h * FormatTools.getBytesPerPixel(pixelType) * reader.getRGBChannelCount();
     
     byte[] buf = new byte[size];
     
-    reader.openBytes(i, buf);
+    reader.openBytes(i, buf, x, y, w, h);
     
     int bpp = FormatTools.getBytesPerPixel(pixelType);
     boolean fp = FormatTools.isFloatingPoint(pixelType);

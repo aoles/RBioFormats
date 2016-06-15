@@ -105,9 +105,11 @@ public final class RBioFormats {
     // unsigned types need to be stored in a longer signed type
     int type = signed ? bpp : bpp * 2;
     
+    // int8
     if (type == 1) {
       return b;
     }
+    // uint8, int16
     else if (type == 2) {
       short[] s = new short[b.length / bpp];
       for (int i=0; i<s.length; i++) {
@@ -115,6 +117,7 @@ public final class RBioFormats {
       }
       return s;
     }
+    // float
     else if (type == 4 && fp) {
       float[] f = new float[b.length / bpp];
       for (int i=0; i<f.length; i++) {
@@ -122,13 +125,26 @@ public final class RBioFormats {
       }
       return f;
     }
-    else if (type == 4) {
+    // uint16
+    else if (type == 4 && !signed) {
       int[] i = new int[b.length / bpp];
       for (int j=0; j<i.length; j++) {
         i[j] = DataTools.bytesToInt(b, j * bpp, bpp, little);
       }
       return i;
     }
+    // int32
+    // we cannot use 32bit ints for signed values because
+    // the minimal int value in Java -2^31 = -2147483648 represents NA in R
+    // https://github.com/s-u/rJava/issues/39
+    else if (type == 4) {
+      double[] d = new double[b.length / bpp];
+      for (int j=0; j<d.length; j++) {
+        d[j] = (double) DataTools.bytesToInt(b, j * bpp, bpp, little);
+      }
+      return d;
+    }
+    // double
     else if (type == 8 && fp) {
       double[] d = new double[b.length / bpp];
       for (int i=0; i<d.length; i++) {
@@ -136,6 +152,8 @@ public final class RBioFormats {
       }
       return d;
     }
+    // uint32
+    // use Java long which is returned as double in R
     else if (type == 8) {
       long[] l = new long[b.length / bpp];
       for (int i=0; i<l.length; i++) {

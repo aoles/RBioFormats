@@ -136,7 +136,7 @@ public final class RBioFormats {
     // int32
     // we cannot use 32bit ints for signed values because
     // the minimal int value in Java -2^31 = -2147483648 represents NA in R
-    // https://github.com/s-u/rJava/issues/39
+    // https://github.com/s-u/rJava/issues/39#issuecomment-72207912
     else if (type == 4) {
       double[] d = new double[b.length / bpp];
       for (int j=0; j<d.length; j++) {

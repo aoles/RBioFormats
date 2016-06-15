@@ -1,18 +1,19 @@
 Package: RBioFormats
-Version: 0.0.22
+Version: 0.0.23
 Title: R interface to Bio-Formats
-Description: R interface to the Bio-Formats library
+Description: An R package which interfaces the OME Bio-Formats Java library to allow reading of proprietary image data and metadata.
 Encoding: UTF-8
 Author: Andrzej Oleś
 Maintainer: Andrzej Oleś <andrzej.oles@embl.de>
 Depends:
     rJava (>= 0.9-6)
 Imports:
-    EBImage
+    EBImage,
+    methods,
+    stats
 Suggests:
     BiocStyle,
     knitr,
-    methods,
     microbenchmark,
     XML
 SystemRequirements: Java (>= 1.5)

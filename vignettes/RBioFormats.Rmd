@@ -4,7 +4,8 @@ author: Andrzej Oleś
 date: "`r doc_date()`"
 package: "`r paste(pkg_ver('RBioFormats'), sprintf('(Bio-Formats library version: %s)', RBioFormats::BioFormats.version()))`"
 output:
-  BiocStyle::html_document:
+  BiocStyle::html_document2:
+    toc_float: yes
 vignette: >
   %\VignetteIndexEntry{RBioFormats: an R interface to the Bio-Formats library}
   %\VignetteEngine{knitr::rmarkdown}
@@ -45,13 +46,14 @@ img = read.image(f)
 img
 ```
 
-Object summary without the image data preview can be printed using the `short = TRUE` argument to `print`
+Object summary without the image data preview can be printed using the `short = TRUE` argument to `print`.
 
 ```{r printshort}
 print(img, short = TRUE)
 ```
 
 For displaying only the dimension order use
+
 ```{r dimorder}
 dimorder(img)
 ```
@@ -124,7 +126,7 @@ and the OME-XML DOM tree representation of the metadata in the `omexml` slot.
 
 The OME-XML metadata can be accessed using tools from the `r CRANpkg('XML')` package.
 
-```{r parseXML, message=FALSE}
+```{r parseXML, message=FALSE, results='hide'}
 require("XML")
 
 omexml = xmlTreeParse(read.omexml(f))

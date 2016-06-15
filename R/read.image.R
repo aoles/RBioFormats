@@ -213,26 +213,20 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   # check series specification
   seriesCount = .jcall(reader, "I", "getSeriesCount") # number of series per file
   series = 
-    if ( missing(series) )
-      # dafault case: read all series
+    if ( missing(series) )  # dafault case: read all series
       seq_len(seriesCount)
-  else
-    .integerIndices(series, seriesCount, "series")
+    else
+      .integerIndices(series, seriesCount, "series")
   
-  resolution = 
-    if ( missing(resolution) )
-      # dafault case: read all resolutions
-      lapply(series, function (s) {
-        .jcall(reader, , "setSeries", s-1L)
-        rc = .jcall(reader, "I", "getResolutionCount")
-        seq_len(rc)
-      })
-  else
-    mapply(function(s, r) {
-      .jcall(reader, , "setSeries", s-1L)
-      res = .integerIndices(r, .jcall(reader, "I", "getResolutionCount"), "resolution")
-      attr(res, "series") = s
-    }, series, resolution, , SIMPLIFY=FALSE, USE.NAMES=FALSE)
+  resolutions = lapply(series, function (s, r) {
+    .jcall(reader, , "setSeries", s-1L)
+    resolutionCount = .jcall(reader, "I", "getResolutionCount")
+    
+    if ( missing(r) ) # dafault case: read all resolutions
+      seq_len(resolutionCount)
+    else
+      .integerIndices(r, resolutionCount, "resolution")
+  }, resolution)
   
-  setNames(resolution, series)
+  setNames(resolutions, series)
 }

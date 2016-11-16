@@ -9,6 +9,10 @@ devtools::install_github("aoles/RBioFormats")
 
 For example use, see the [package vignette](https://rawgit.com/aoles/RBioFormats/master/vignettes/RBioFormats.html).
 
+## FAQ
+
+See my [answers on Stack Overflow](http://stackoverflow.com/search?q=user:A2792099+rbioformats).
+
 ## Caveats
 
 ### The `java.lang.OutOfMemoryError` error

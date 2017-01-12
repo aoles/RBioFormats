@@ -13,7 +13,7 @@
     
     <target name="compile" depends="bioformats">
 	<mkdir dir="${classes.dir}"/>
-	<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" compiler="modern" includeantruntime="false"/>
+	<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" compiler="modern" source="1.7" target="1.7" includeantruntime="false"/>
     </target>
     
     <target name="jar" depends="compile">

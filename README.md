@@ -1,8 +1,37 @@
 ## Installation
 
+First, make sure you have [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.7 or higher installed.
+To install *RBioFormats* use the `biocLite` installation script in order to resolve the dependency on the Bioconductor package *[EBImage](http://biocondcutor.org/packages/EBImage)*.
+
 ```
-# install.packages("devtools")
-devtools::install_github("aoles/RBioFormats")
+source("https://bioconductor.org/biocLite.R")
+biocLite("aoles/RBioFormats") # You might need to first run `install.packages("devtools")`
+```
+
+### Mac OS X
+
+Mac OS comes with a legacy Apple Java 6. In order to use *RBioFormats*, you will need to update your Java installation to a newer version provided by Oracle.
+
+1. Install [Oracle JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html).
+
+2. Update R Java configuration by executing from the command line (you might have to run it as a super user by prepending `sudo` depending on your installation).
+```
+R CMD javareconf
+```
+
+3. Re-install *rJava* from sources in order to properly link to the non-system
+Java installation.
+```
+install.packages("rJava", type="source")
+```
+
+You can verify your configuration by running the following commands. This should return the Java version string corresponding to the one downloaded and installed in step 1.
+
+```
+library(rJava)
+.jinit()
+.jcall("java/lang/System", "S", "getProperty", "java.runtime.version")
+## [1] "1.8.0_112-b16" 
 ```
 
 ## Documentation

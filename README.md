@@ -3,7 +3,7 @@
 First, make sure you have [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.7 or higher installed.
 To install *RBioFormats* use the `biocLite` installation script in order to resolve the dependency on the Bioconductor package *[EBImage](http://biocondcutor.org/packages/EBImage)*.
 
-```
+```r
 source("https://bioconductor.org/biocLite.R")
 biocLite("aoles/RBioFormats") # You might need to first run `install.packages("devtools")`
 ```
@@ -21,13 +21,13 @@ R CMD javareconf
 
 3. Re-install *rJava* from sources in order to properly link to the non-system
 Java installation.
-```
+```r
 install.packages("rJava", type="source")
 ```
 
 You can verify your configuration by running the following commands. This should return the Java version string corresponding to the one downloaded and installed in step 1.
 
-```
+```r
 library(rJava)
 .jinit()
 .jcall("java/lang/System", "S", "getProperty", "java.runtime.version")
@@ -48,8 +48,10 @@ See my [answers on Stack Overflow](http://stackoverflow.com/search?q=user:A27920
 
 If you get the `java.lang.OutOfMemoryError: Java heap space` error, try increasing the maximum heap size by supplying the -Xmx parameter before the Java Virtual Machine is initialized. For example, use
 
-    options( java.parameters = "-Xmx4g" )
-    library( "RBioFormats" )
+```r
+options( java.parameters = "-Xmx4g" )
+library( "RBioFormats" )
+```
 
 to override the default setting and assign 4 gigabytes of heap space to the Java environment.
 
@@ -57,8 +59,9 @@ to override the default setting and assign 4 gigabytes of heap space to the Java
 
 Each R process needs a separate JVM instance. For this, load the package in the parallelized function, e.g.,
 
-    bplapply (files, function(f) {
-      library(RBioFormats)
-      ...
-    })
-    
+```r
+bplapply (files, function(f) {
+  library(RBioFormats)
+  ...
+})
+```

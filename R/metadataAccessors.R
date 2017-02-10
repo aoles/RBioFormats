@@ -1,6 +1,6 @@
 #' Metadata Accessors
 #' 
-#' Get image metadata.
+#' Get and set image metadata.
 #' 
 #' The \ldots arguments are passed to \code{\link[base]{grep}} called on metadata names allowing for convenient subsetting.
 #' 
@@ -98,3 +98,75 @@ metadata.ImageMetadata = identity
 
 #' @export
 metadata.ImageMetadataList = identity
+
+## setters
+
+#' @rdname metadataAccessors
+#' @param y an \linkS4class{AnnotatedImage} or \linkS4class{ImageMetadata} object
+#' @param value depending on the context, an \linkS4class{ImageMetadata} object or a list
+#' @export
+setGeneric("metadata<-", function(y, value) standardGeneric("metadata<-"))
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("metadata", "AnnotatedImage", function (y, value) {
+  y@metadata = value
+  y
+})
+
+#' @rdname metadataAccessors
+#' @inheritParams metadata<-
+#' @export
+setGeneric("coreMetadata<-", function(y, value) standardGeneric("coreMetadata<-"))
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("coreMetadata", "AnnotatedImage", function (y, value) {
+  y@metadata$coreMetadata = value
+  y
+})
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("coreMetadata", "ImageMetadata", function (y, value) {
+  y$coreMetadata = value
+  y
+})
+
+#' @rdname metadataAccessors
+#' @inheritParams metadata<-
+#' @export
+setGeneric("globalMetadata<-", function(y, value) standardGeneric("globalMetadata<-"))
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("globalMetadata", "AnnotatedImage", function (y, value) {
+  y@metadata$globalMetadata = value
+  y
+})
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("globalMetadata", "ImageMetadata", function (y, value) {
+  y$globalMetadata = value
+  y
+})
+
+#' @rdname metadataAccessors
+#' @inheritParams metadata<-
+#' @export
+setGeneric("seriesMetadata<-", function(y, value) standardGeneric("seriesMetadata<-"))
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("seriesMetadata", "AnnotatedImage", function (y, value) {
+  y@metadata$seriesMetadata = value
+  y
+})
+
+#' @rdname metadataAccessors
+#' @export
+setReplaceMethod("seriesMetadata", "ImageMetadata", function (y, value) {
+  y$seriesMetadata = value
+  y
+})

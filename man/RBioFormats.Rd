@@ -9,7 +9,7 @@
 Interfaces the \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats} Java library.
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2015
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
 }
 \references{
 \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats website}

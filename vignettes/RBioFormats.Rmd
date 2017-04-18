@@ -136,7 +136,16 @@ xmlRoot(omexml)
 For details on working with XML data in R see the `r Rpackage('XML')` package [documentation](http://www.omegahat.org/RSXML/ "XML package documentation").
 
 
-# Appendix A: Working with test images
+# Session info {.unnumbered}
+
+Here is the output of `sessionInfo()` on the system on which this
+document was compiled:
+
+```{r sessionInfo, echo=FALSE}
+sessionInfo()
+```
+
+# Appendix A: Working with test images {.unnumbered}
 
 For development purposes it is useful to have images of a specific size or pixel type for testing. Mock files containing gradient images can be generated using
 
@@ -171,7 +180,7 @@ sapply(types, function(t) {
 })
 ```
 
-# Appendix B: Compared to *EBImage*
+# Appendix B: Compared to *EBImage* {.unnumbered}
 
 Loading images using `r Githubpkg('aoles/RBioFormats')` should give the same results as using the `r Biocpkg('EBImage')` package.
 
@@ -187,3 +196,5 @@ Performance relative to *EBImage*
 require("microbenchmark")
 microbenchmark(read.image(f), readImage(f), times = 10)
 ```
+
+

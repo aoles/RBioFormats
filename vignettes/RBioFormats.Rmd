@@ -4,7 +4,7 @@ author: Andrzej Oleś
 date: "`r doc_date()`"
 package: "`r paste(pkg_ver('RBioFormats'), sprintf('(Bio-Formats library version: %s)', RBioFormats::BioFormats.version()))`"
 output:
-  BiocStyle::html_document2:
+  BiocStyle::html_document:
     toc_float: yes
 vignette: >
   %\VignetteIndexEntry{RBioFormats: an R interface to the Bio-Formats library}

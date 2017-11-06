@@ -1,5 +1,5 @@
 Package: RBioFormats
-Version: 0.0.37
+Version: 0.0.38
 Title: R interface to Bio-Formats
 Description: An R package which interfaces the OME Bio-Formats Java library to
     allow reading of proprietary image data and metadata.
@@ -30,5 +30,6 @@ Collate:
     'read.metadata.R'
     'read.omexml.R'
     'utils.R'
+    'write.image.R'
     'zzz.R'
 RoxygenNote: 6.0.1

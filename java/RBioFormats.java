@@ -5,13 +5,17 @@ import loci.common.DataTools;
 import loci.common.services.DependencyException;
 import loci.common.services.ServiceException;
 import loci.common.services.ServiceFactory;
+import loci.formats.services.OMEXMLService;
 import loci.formats.FormatException;
 import loci.formats.IFormatReader;
+import loci.formats.IFormatWriter;
 import loci.formats.ImageReader;
+import loci.formats.ImageWriter;
 import loci.formats.ChannelFiller;
 import loci.formats.ChannelSeparator;
 import loci.formats.DimensionSwapper;
 import loci.formats.FormatTools;
+import loci.formats.MetadataTools;
 import loci.formats.services.OMEXMLService;
 import loci.formats.services.OMEXMLServiceImpl;
 import loci.formats.ome.OMEXMLMetadata;
@@ -19,6 +23,7 @@ import loci.formats.MissingLibraryException;
 import loci.formats.meta.DummyMetadata;
 import loci.formats.meta.MetadataStore;
 import loci.formats.meta.IMetadata;
+
 
 public final class RBioFormats {
   private static DimensionSwapper reader;
@@ -38,6 +43,10 @@ public final class RBioFormats {
       reader = new DimensionSwapper(new ChannelSeparator(new ChannelFiller()));
     }
     return reader;
+  }
+  
+  public static IFormatWriter getWriter() {
+    return new ImageWriter();
   }
   
   public static MetadataStore getOMEXML() {
@@ -223,6 +232,110 @@ public final class RBioFormats {
     }
     
     return data;
+  }
+  
+  public static void writePixels(String file, int[] data, int[] dim, int series, String mode) throws Exception {
+    int bpp = FormatTools.getBytesPerPixel(mode);
+    byte[] b = new byte[data.length * bpp];
+    
+    boolean little = false; //TODO: need to revise this
+    
+    switch (FormatTools.pixelTypeFromString(mode)) {
+      case FormatTools.INT8:
+      case FormatTools.UINT8:
+        for (int i=0; i<data.length; i++)
+          b[i] = (byte) data[i];
+        break;
+      case FormatTools.INT16:
+      case FormatTools.UINT16:
+        short[] s = new short[data.length];
+        for (int i=0; i<data.length; i++)
+          s[i] = (short) data[i];
+        b = DataTools.shortsToBytes(s, little);
+        break;
+      case FormatTools.INT32:
+      case FormatTools.UINT32:
+        b = DataTools.intsToBytes(data, little);
+      case FormatTools.FLOAT:
+        float[] f = new float[data.length];
+        for (int i=0; i<data.length; i++)
+          f[i] = (float) data[i];
+        b = DataTools.floatsToBytes(f, little);
+        break;
+      case FormatTools.DOUBLE:
+        double[] d = new double[data.length];
+        for (int i=0; i<data.length; i++)
+          d[i] = (double) data[i];
+        b = DataTools.doublesToBytes(d, little);
+        break;
+      default:
+        break;
+    }
+    
+    writeBytes(file, b, dim, series, mode);
+  }
+  
+  public static void writePixels(String file, double[] data, int[] dim, int series, String mode) throws Exception {
+    int bpp = FormatTools.getBytesPerPixel(mode);
+    byte[] b = new byte[data.length * bpp];
+    
+    boolean little = false; //TODO: need to revise this
+    
+    switch (FormatTools.pixelTypeFromString(mode)) {
+      case FormatTools.INT8:
+      case FormatTools.UINT8:
+        for (int i=0; i<data.length; i++)
+          b[i] = (byte) data[i];
+        break;
+      case FormatTools.INT16:
+      case FormatTools.UINT16:
+        short[] s = new short[data.length];
+        for (int i=0; i<data.length; i++)
+          s[i] = (short) data[i];
+        b = DataTools.shortsToBytes(s, little);
+        break;
+      case FormatTools.INT32:
+      case FormatTools.UINT32:
+        int[] l = new int[data.length];
+        for (int i=0; i<data.length; i++)
+          l[i] = (int) data[i];
+        b = DataTools.intsToBytes(l, little);
+        break;
+      case FormatTools.FLOAT:
+        float[] f = new float[data.length];
+        for (int i=0; i<data.length; i++)
+          f[i] = (float) data[i];
+        b = DataTools.floatsToBytes(f, little);
+        break;
+      case FormatTools.DOUBLE:
+        b = DataTools.doublesToBytes(data, little);
+        break;
+      default:
+        break;
+    }
+    
+    writeBytes(file, b, dim, series, mode);
+  }
+  
+  private static void writeBytes(String file, byte[] img, int[] dim, int series, String pixelType) throws FormatException, IOException, ServiceException, DependencyException {
+
+    int sizeX = dim[0];
+    int sizeY = dim[1];
+    int sizeZ = dim[3];
+    int sizeC = dim[2];
+    int sizeT = dim[4];
+    
+    ServiceFactory factory = new ServiceFactory();
+    OMEXMLService service = factory.getInstance(OMEXMLService.class);
+    IMetadata meta = service.createOMEXMLMetadata();
+
+    MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, sizeC);
+
+    IFormatWriter writer = new ImageWriter();
+    writer.setMetadataRetrieve(meta);
+    writer.setId(file);
+    writer.saveBytes(0, img);
+    writer.close();
   }
   
 }

@@ -23,6 +23,7 @@ import loci.formats.meta.IMetadata;
 public final class RBioFormats {
   private static DimensionSwapper reader;
   private static MetadataStore omexml;
+  private static String dimensionOrder = "XYCZT";
   
   static {
     // reduce verbosity
@@ -66,7 +67,7 @@ public final class RBioFormats {
     
     // initialize file   
     reader.setId(file);
-    reader.setOutputOrder("XYCZT");
+    reader.setOutputOrder(dimensionOrder);
   }
   
   public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
@@ -117,53 +118,53 @@ public final class RBioFormats {
     }
     // uint8, int16
     else if (type == 2) {
-      short[] s = new short[b.length / bpp];
-      for (int i=0; i<s.length; i++) {
-        s[i] = DataTools.bytesToShort(b, i * bpp, bpp, little);
+      short[] s = new short[len];
+      for (int i=0, j=0; i<len; i++, j+=bpp) {
+        s[i] = DataTools.bytesToShort(b, j, bpp, little);
       }
       return s;
     }
     // float
     else if (type == 4 && fp) {
-      float[] f = new float[b.length / bpp];
-      for (int i=0; i<f.length; i++) {
-        f[i] = DataTools.bytesToFloat(b, i * bpp, bpp, little);
+      float[] f = new float[len];
+      for (int i=0, j=0; i<len; i++, j+=bpp) {
+        f[i] = DataTools.bytesToFloat(b, j, bpp, little);
       }
       return f;
     }
     // uint16
     else if (type == 4 && !signed) {
-      int[] i = new int[b.length / bpp];
-      for (int j=0; j<i.length; j++) {
-        i[j] = DataTools.bytesToInt(b, j * bpp, bpp, little);
+      int[] l = new int[len];
+      for (int i=0, j=0; i<len; i++, j+=bpp) {
+        l[i] = DataTools.bytesToInt(b, j, bpp, little);
       }
-      return i;
+      return l;
     }
     // int32
     // we cannot use 32bit ints for signed values because
     // the minimal int value in Java -2^31 = -2147483648 represents NA in R
     // https://github.com/s-u/rJava/issues/39#issuecomment-72207912
     else if (type == 4) {
-      double[] d = new double[b.length / bpp];
-      for (int j=0; j<d.length; j++) {
-        d[j] = (double) DataTools.bytesToInt(b, j * bpp, bpp, little);
+      double[] d = new double[len];
+      for (int i=0, j=0; i<len; i++, j+=bpp) {
+        d[i] = (double) DataTools.bytesToInt(b, j, bpp, little);
       }
       return d;
     }
     // double
     else if (type == 8 && fp) {
-      double[] d = new double[b.length / bpp];
-      for (int i=0; i<d.length; i++) {
-        d[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
+      double[] d = new double[len];
+      for (int i=0, j=0; i<len; i++, j+=bpp) {
+        d[i] = DataTools.bytesToDouble(b, j, bpp, little);
       }
       return d;
     }
     // uint32
     // use Java long which is returned as double in R
     else if (type == 8) {
-      long[] l = new long[b.length / bpp];
-      for (int i=0; i<l.length; i++) {
-        l[i] = DataTools.bytesToLong(b, i * bpp, bpp, little);
+      long[] l = new long[len];
+      for (int i=0, j=0; i<len; i++, j+=bpp) {
+        l[i] = DataTools.bytesToLong(b, j, bpp, little);
       }
       return l;
     }

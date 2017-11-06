@@ -104,10 +104,16 @@ public final class RBioFormats {
   private static Object rawDataArray(byte[] b, int bpp, boolean signed, boolean fp, boolean little) {
     // unsigned types need to be stored in a longer signed type
     int type = signed ? bpp : bpp * 2;
+    int len = b.length / bpp;
     
     // int8
+    // convert bytes to shorts in order to have integer rather than raw vector in R
     if (type == 1) {
-      return b;
+      short[] s = new short[len];
+      for (int i=0; i<len; i++) {
+        s[i] = (short) b[i];
+      }
+      return s;
     }
     // uint8, int16
     else if (type == 2) {

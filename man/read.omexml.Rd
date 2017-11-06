@@ -27,10 +27,9 @@ omexml = read.omexml(f)
 omexml
 
 }
-\author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
-}
 \seealso{
 \code{\link{read.metadata}} for reading image metadata, \code{\link{read.image}} for reading image data
 }
-
+\author{
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+}

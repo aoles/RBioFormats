@@ -9,4 +9,3 @@ BioFormats.version()
 \description{
 Provides the version of the Bio-Formats library embedded in the package.
 }
-

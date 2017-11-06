@@ -20,7 +20,7 @@ Suggests:
 SystemRequirements: Java (>= 1.5)
 License: GPL-3
 VignetteBuilder: knitr
-Collate:
+Collate: 
     'ImageMetadata.R'
     'AnnotatedImage.R'
     'RBioFormats.R'
@@ -31,4 +31,4 @@ Collate:
     'read.omexml.R'
     'utils.R'
     'zzz.R'
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

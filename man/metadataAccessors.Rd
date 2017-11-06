@@ -3,16 +3,16 @@
 \docType{methods}
 \name{coreMetadata}
 \alias{coreMetadata}
+\alias{globalMetadata}
+\alias{seriesMetadata}
+\alias{metadata<-}
+\alias{metadata<-,AnnotatedImage-method}
 \alias{coreMetadata<-}
 \alias{coreMetadata<-,AnnotatedImage-method}
 \alias{coreMetadata<-,ImageMetadata-method}
-\alias{globalMetadata}
 \alias{globalMetadata<-}
 \alias{globalMetadata<-,AnnotatedImage-method}
 \alias{globalMetadata<-,ImageMetadata-method}
-\alias{metadata<-}
-\alias{metadata<-,AnnotatedImage-method}
-\alias{seriesMetadata}
 \alias{seriesMetadata<-}
 \alias{seriesMetadata<-,AnnotatedImage-method}
 \alias{seriesMetadata<-,ImageMetadata-method}
@@ -74,9 +74,7 @@ coreMetadata(img)
 # subset for specific names 
 
 globalMetadata(img, pattern="Image")
-
 }
 \author{
 Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
 }
-

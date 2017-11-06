@@ -2,14 +2,14 @@
 % Please edit documentation in R/ImageMetadata.R
 \docType{class}
 \name{ImageMetadata-class}
-\alias{ImageMetadata}
 \alias{ImageMetadata-class}
-\alias{ImageMetadataList}
 \alias{ImageMetadataList-class}
+\alias{ImageMetadata}
+\alias{ImageMetadataList}
 \alias{print.ImageMetadata}
-\alias{print.ImageMetadataList}
 \alias{show,ImageMetadata-method}
 \alias{show,ImageMetadataList-method}
+\alias{print.ImageMetadataList}
 \title{ImageMetadata and ImageMetadataList Class}
 \usage{
 ImageMetadata(...)
@@ -39,4 +39,3 @@ Formal representation of image metadata.
 \author{
 Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
 }
-

@@ -2,11 +2,11 @@
 % Please edit documentation in R/AnnotatedImage.R
 \docType{class}
 \name{AnnotatedImage-class}
-\alias{AnnotatedImage}
 \alias{AnnotatedImage-class}
-\alias{as.Image.AnnotatedImage}
+\alias{AnnotatedImage}
 \alias{print.AnnotatedImage}
 \alias{show,AnnotatedImage-method}
+\alias{as.Image.AnnotatedImage}
 \title{AnnotatedImage Class}
 \usage{
 AnnotatedImage(...)
@@ -34,10 +34,10 @@ Extends the \linkS4class{Image} class from the \pkg{EBImage} package.
 \describe{
 \item{\code{metadata}}{an \linkS4class{ImageMetadata} object containing image metadata}
 }}
-\author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
-}
+
 \seealso{
 \linkS4class{AnnotatedImageList}
 }
-
+\author{
+Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+}

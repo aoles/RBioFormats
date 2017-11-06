@@ -41,6 +41,7 @@ images. The desired parameters can be provided as key value pairs to the
   lutLength \tab 3 \tab number of entries in the color lookup table \cr
 }
 }
+
 \examples{
 f = mockFile(sizeX=256, sizeY=256)
 img = read.image(f)
@@ -50,4 +51,3 @@ img
 \author{
 Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
 }
-

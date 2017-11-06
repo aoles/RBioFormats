@@ -12,4 +12,3 @@ metadata(x)
 \description{
 Image Metadata
 }
-

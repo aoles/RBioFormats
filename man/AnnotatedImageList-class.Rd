@@ -2,8 +2,8 @@
 % Please edit documentation in R/AnnotatedImage.R
 \docType{class}
 \name{AnnotatedImageList-class}
-\alias{AnnotatedImageList}
 \alias{AnnotatedImageList-class}
+\alias{AnnotatedImageList}
 \title{AnnotatedImageList Class}
 \usage{
 AnnotatedImageList(...)
@@ -14,4 +14,3 @@ AnnotatedImageList(...)
 \description{
 A list of \linkS4class{AnnotatedImage} objects.
 }
-

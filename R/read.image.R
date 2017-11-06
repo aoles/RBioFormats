@@ -27,7 +27,10 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   on.exit( .close(reader) )
   .setupReader(file, filter.metadata, proprietary.metadata)
   
-  if ( missing(subset) ) subset = list()
+  if ( missing(subset) )
+    subset = list()
+  else
+    names(subset) = tolower(names(subset)) 
   
   resolutions = .parseSeriesResolutions(reader, series, resolution)
   
@@ -67,7 +70,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     coreMetadata = metadata[["coreMetadata"]]
     
     ## get indices of image planes to read    
-    xyczt = c(X = coreMetadata[["sizeX"]], Y = coreMetadata[["sizeY"]], C = coreMetadata[["sizeC"]], Z = coreMetadata[["sizeZ"]], T = coreMetadata[["sizeT"]])
+    xyczt = c(x = coreMetadata[["sizeX"]], y = coreMetadata[["sizeY"]], c = coreMetadata[["sizeC"]], z = coreMetadata[["sizeZ"]], t = coreMetadata[["sizeT"]])
     subset = setNames(lapply(names(xyczt), function(d) {
       if ( is.null(subset[[d]]) )
         seq_len(xyczt[d])
@@ -87,7 +90,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     ## set Image parameters
     colormode = if (length(subset$C) == 1) 0L else 2L
     xyczt = vapply(subset, length, integer(1L))
-    xy = vapply(subset[c("X", "Y")], function(x) x[1L], integer(1L)) - 1L
+    xy = vapply(subset[c("x", "y")], function(x) x[1L], integer(1L)) - 1L
     wh = xyczt[1:2]
     czt = xyczt[3:5]
     dim = c(wh, czt[czt > 1L])

@@ -70,25 +70,29 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     coreMetadata = metadata[["coreMetadata"]]
     
     ## get indices of image planes to read    
-    xyczt = c(x = coreMetadata[["sizeX"]], y = coreMetadata[["sizeY"]], c = coreMetadata[["sizeC"]], z = coreMetadata[["sizeZ"]], t = coreMetadata[["sizeT"]])
-    subset = setNames(lapply(names(xyczt), function(d) {
+    xyczt = c(x = coreMetadata[["sizeX"]],
+              y = coreMetadata[["sizeY"]],
+              c = coreMetadata[["sizeC"]],
+              z = coreMetadata[["sizeZ"]],
+              t = coreMetadata[["sizeT"]])
+    
+    subset = sapply(names(xyczt), function(d) {
       if ( is.null(subset[[d]]) )
         seq_len(xyczt[d])
       else {
-        sub = subset[[d]]
+        sub = as.integer(subset[[d]])
         sub[ sub >= 1L & sub <= xyczt[d] ]
       }
-    }), names(xyczt))
+    }, simplify = FALSE)
     
     indices = subset[[3L]]
     for (d in 4:5) {
       xyczt[d] = xyczt[d] * xyczt[d-1] # instead of cumprod to preserve integers
       indices = as.vector(sapply( (subset[[d]] - 1L) * xyczt[d-1], function (i) i + indices))
     }
-    indices = as.integer(indices)
     
     ## set Image parameters
-    colormode = if (length(subset$C) == 1) 0L else 2L
+    colormode = if (length(subset$c) == 1) 0L else 2L
     xyczt = vapply(subset, length, integer(1L))
     xy = vapply(subset[c("x", "y")], function(x) x[1L], integer(1L)) - 1L
     wh = xyczt[1:2]

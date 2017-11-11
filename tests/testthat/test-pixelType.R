@@ -1,5 +1,3 @@
-source("utils.R")
-
 context("Check pixel types")
 
 pixelTypes = within(pixelTypes, {

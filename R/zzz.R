@@ -1,10 +1,14 @@
 .onLoad <- function(lib, pkg) {
-  .jpackage(pkg, lib.loc = lib)
+  ## check whether called on a source package directory which has a different
+  ## path to .jar files compared to the installed package (this workaround is
+  ## needed, e.g., to run devtools::test)
+  pkg_dir = file.path(lib, pkg)
+  if (getwd() == pkg_dir)
+    jars = list.files(file.path(pkg_dir, "inst", "java"), pattern = ".*\\.jar", full.names = TRUE)
+  else
+    jars = ""
   
-  ## workaround needed to run devtools::test() as it is executed under the 
-  ## source directory structure which has a different path to .jar files
-  ## compared to the installed package
-  .jaddClassPath(dir(file.path(getwd(), "inst", "java"), full.names = TRUE))
+  .jpackage(pkg, lib.loc = lib, morePaths = jars)
   
   FormatTools <<- J("loci.formats.FormatTools")
 }

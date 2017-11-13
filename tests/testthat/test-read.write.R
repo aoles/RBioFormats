@@ -9,11 +9,17 @@ for(type in pixelTypes$pixelType) {
   write.image(img, filename, force = TRUE, pixelType = type)
 }
 
-test_that("Image reader", {
-  for(type in pixelTypes$pixelType) {
-    ref = as.vector(testImage(type))
-    filename = file.path(img_dir, paste0(type,".tif"))
-    res = as.vector(read.image(filename, normalize = FALSE))
-    expect_identical(res, ref)
-  }
-})
+for(type in pixelTypes$pixelType) {
+  with(pixelTypes[type,], {
+    test_that(sprintf('Image reader for pixel type "%s"', type), {
+      ref = as.vector(testImage(type))
+      filename = file.path(img_dir, paste0(type,".tif"))
+      res = as.vector(read.image(filename, normalize = FALSE))
+      if (!isFloatingPoint)
+        expect_identical(res, ref)
+      else
+        expect_equal(res, ref)
+    })
+  })
+}
+

@@ -235,40 +235,41 @@ public final class RBioFormats {
   }
   
   public static void writePixels(String file, int[] data, int[] dim, int series, String mode) throws Exception {
-    int bpp = FormatTools.getBytesPerPixel(mode);
-    byte[] b = new byte[data.length * bpp];
-    
     boolean little = false; //TODO: need to revise this
+    byte[] b;
     
     switch (FormatTools.pixelTypeFromString(mode)) {
       case FormatTools.INT8:
       case FormatTools.UINT8:
-        for (int i=0; i<data.length; i++)
-          b[i] = (byte) data[i];
+        b = new byte[data.length ];
+        for (int j=0; j<data.length; j++)
+          b[j] = (byte) data[j];
         break;
       case FormatTools.INT16:
       case FormatTools.UINT16:
         short[] s = new short[data.length];
-        for (int i=0; i<data.length; i++)
-          s[i] = (short) data[i];
+        for (int j=0; j<data.length; j++)
+          s[j] = (short) data[j];
         b = DataTools.shortsToBytes(s, little);
         break;
       case FormatTools.INT32:
       case FormatTools.UINT32:
         b = DataTools.intsToBytes(data, little);
+        break;
       case FormatTools.FLOAT:
         float[] f = new float[data.length];
-        for (int i=0; i<data.length; i++)
-          f[i] = (float) data[i];
+        for (int j=0; j<data.length; j++)
+          f[j] = (float) data[j];
         b = DataTools.floatsToBytes(f, little);
         break;
       case FormatTools.DOUBLE:
         double[] d = new double[data.length];
-        for (int i=0; i<data.length; i++)
-          d[i] = (double) data[i];
+        for (int j=0; j<data.length; j++)
+          d[j] = (double) data[j];
         b = DataTools.doublesToBytes(d, little);
         break;
       default:
+        b= null;
         break;
     }
     
@@ -276,41 +277,41 @@ public final class RBioFormats {
   }
   
   public static void writePixels(String file, double[] data, int[] dim, int series, String mode) throws Exception {
-    int bpp = FormatTools.getBytesPerPixel(mode);
-    byte[] b = new byte[data.length * bpp];
-    
     boolean little = false; //TODO: need to revise this
+    byte[] b;
     
     switch (FormatTools.pixelTypeFromString(mode)) {
       case FormatTools.INT8:
       case FormatTools.UINT8:
-        for (int i=0; i<data.length; i++)
-          b[i] = (byte) data[i];
+        b = new byte[data.length];
+        for (int j=0; j<data.length; j++)
+          b[j] = (byte) data[j];
         break;
       case FormatTools.INT16:
       case FormatTools.UINT16:
         short[] s = new short[data.length];
-        for (int i=0; i<data.length; i++)
-          s[i] = (short) data[i];
+        for (int j=0; j<data.length; j++)
+          s[j] = (short) data[j];
         b = DataTools.shortsToBytes(s, little);
         break;
       case FormatTools.INT32:
       case FormatTools.UINT32:
-        int[] l = new int[data.length];
-        for (int i=0; i<data.length; i++)
-          l[i] = (int) data[i];
-        b = DataTools.intsToBytes(l, little);
+        int[] i = new int[data.length];
+        for (int j=0; j<data.length; j++)
+          i[j] = (int) (long) data[j];
+        b = DataTools.intsToBytes(i, little);
         break;
       case FormatTools.FLOAT:
         float[] f = new float[data.length];
-        for (int i=0; i<data.length; i++)
-          f[i] = (float) data[i];
+        for (int j=0; j<data.length; j++)
+          f[j] = (float) data[j];
         b = DataTools.floatsToBytes(f, little);
         break;
       case FormatTools.DOUBLE:
         b = DataTools.doublesToBytes(data, little);
         break;
       default:
+        b = null;
         break;
     }
     

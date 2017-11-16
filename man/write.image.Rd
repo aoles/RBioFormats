@@ -15,6 +15,9 @@ write.image(x, file, force = FALSE, pixelType)
 
 \item{pixelType}{character(1), data type to store pixel values}
 }
+\value{
+File path to \code{file} is returned invisibly.
+}
 \description{
 Save image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
 }

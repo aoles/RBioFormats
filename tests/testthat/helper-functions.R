@@ -17,7 +17,7 @@ testImage = function(pixelType, ...)  {
   maxVal = minVal + n - 1
   minSeq = if (pixelType$isSigned) -128 else 0
   values = c(minVal, maxVal, seq_len(254L) + minSeq)
-  mode = if (isTRUE(pixelType$bytesPerPixel < 4)) "integer" else "double"
+  mode = if (isTRUE(pixelType$bytesPerPixel <= 2)) "integer" else "double"
   storage.mode(values) = mode 
   matrix(values, 16L, 16L)
 }

@@ -4,10 +4,10 @@ MAX_INT = min(.Machine$integer.max, 2147483647)
 
 pixelTypes = within(pixelTypes, {
   n = 256^bytesPerPixel
-  x = pmin(n, MAX_INT)
-  scaleFactor = ifelse(bytesPerPixel>2, bytesPerPixel/2, 1)
+  x = pmin(n, ifelse(isSigned & !isFloatingPoint, (MAX_INT+1)/2, MAX_INT))
+  scaleFactor = ifelse(bytesPerPixel>2, round(n/MAX_INT), 1)
   refMin = ifelse(isSigned & !isFloatingPoint, -n/2, 0)
-  refMax = refMin + n - scaleFactor
+  refMax = trunc(refMin + n - scaleFactor)
 })
 
 for(type in pixelTypes$pixelType) {
@@ -20,7 +20,10 @@ for(type in pixelTypes$pixelType) {
       ## maximal value allowed by pixel type modulo scaleFactor
       mockfile = mockFile(pixelType=pixelType, sizeX=x, scaleFactor=scaleFactor)
       res = as.double(read.image(mockfile, subset = list(x=x, y=16), normalize = FALSE))
-      expect_identical(res, refMax)
+      if (bytesPerPixel<=2)
+        expect_identical(res, refMax)
+      else
+        expect_equal(res, refMax)
     })
   })
 }

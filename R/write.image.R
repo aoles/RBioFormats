@@ -6,7 +6,7 @@
 #' @param file character, file name
 #' @param force logical(1), if \code{link} overwrite existing file
 #' @param pixelType character(1), data type to store pixel values
-#' 
+#' @return File path to \code{file} is returned invisibly.
 #' @template author
 #' @seealso \code{\link{read.image}} for reading images.
 #' @export
@@ -43,7 +43,7 @@ write.image <- function(x, file, force = FALSE, pixelType) {
   
   .jcall("RBioFormats", "V", "writePixels", file, .jarray(x), .jarray(dimargs), series, pixelType)
   
-  invisible()
+  invisible(file)
 }
 
 .getWriter = function() .jcall("RBioFormats", "Lloci/formats/IFormatWriter;", "getWriter")

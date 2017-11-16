@@ -1,7 +1,6 @@
 ---
 title: "RBioFormats: an R interface to the Bio-Formats library"
 author: Andrzej Oleś
-date: "`r doc_date()`"
 package: "`r paste(pkg_ver('RBioFormats'), sprintf('(Bio-Formats library version: %s)', RBioFormats::BioFormats.version()))`"
 output:
   BiocStyle::html_document:

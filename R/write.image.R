@@ -11,21 +11,17 @@
 #' @seealso \code{\link{read.image}} for reading images.
 #' @export
 write.image <- function(x, file, force = FALSE, pixelType) {
-  
-  #writer = .getWriter()
-  #on.exit( .close(writer) )
+  writer = .getWriter()
+  on.exit( .close(writer) )
 
-  ## setup writer
   file = normalizePath(file, mustWork = FALSE)
-  #.jcall(writer, "V", "setId", file)
-  
   if (file.exists(file))
     if (isTRUE(force))
       file.remove(file)
     else
       stop(sprintf('File %s already exists: use "force = TRUE" to overwrite', file))
   
-  dimargs = c(X = 1L, Y = 1L, C = 1L, Z = 1L, T = 1L)
+  dimargs = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
   d = dim(x)
   o = dimorder(x)
   if (is.null(o)) 
@@ -38,12 +34,16 @@ write.image <- function(x, file, force = FALSE, pixelType) {
     pixelType = "uint8"
   
   ## iterate over image series
-  ## this will require to initialize the writer outside of 'writePixels'
-  series = 0L
-  
-  .jcall("RBioFormats", "V", "writePixels", file, .jarray(x), .jarray(dimargs), series, pixelType)
+  for (series in seq_len(seriesCount(x))) {
+    .setupWriter(file, dimargs, series-1L, pixelType)
+    .jcall("RBioFormats", "V", "writePixels", file, .jarray(x), .jarray(dimargs), series-1L, pixelType)
+  }
   
   invisible(file)
 }
 
 .getWriter = function() .jcall("RBioFormats", "Lloci/formats/IFormatWriter;", "getWriter")
+
+.setupWriter <- function(file, dimargs, series, pixelType) {
+  .jcall("RBioFormats", "V", "setupWriter", file, .jarray(dimargs), series, pixelType)
+}

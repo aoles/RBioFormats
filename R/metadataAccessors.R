@@ -64,17 +64,24 @@ seriesCount = function(x) UseMethod("seriesCount")
 #' @export
 seriesCount.default = function(x) NA
 
-#' @export
-seriesCount.AnnotatedImage = function(x) 1L
+.singleSeries = function(x) 1L
+
+.seriesList = function(x) length(x)
 
 #' @export
-seriesCount.ImageMetadata = function(x) 1L
+seriesCount.matrix = .singleSeries
 
 #' @export
-seriesCount.AnnotatedImageList = function(x) length(x)
+seriesCount.array = .singleSeries
 
 #' @export
-seriesCount.ImageMetadataList = function(x) length(x)
+seriesCount.ImageMetadata = .singleSeries
+
+#' @export
+seriesCount.AnnotatedImageList = .seriesList
+
+#' @export
+seriesCount.ImageMetadataList = .seriesList
 
 
 #' Image Metadata

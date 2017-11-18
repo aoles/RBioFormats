@@ -21,3 +21,10 @@ testImage = function(pixelType, ...)  {
   storage.mode(values) = mode 
   matrix(values, 16L, 16L)
 }
+
+## convience function wich returns the result of reading a mockFile 
+mockImage = function(..., normalize=FALSE) {
+  read.image(mockFile(...), normalize=normalize)
+}
+
+tempimg = function() tempfile('',,'.tif')

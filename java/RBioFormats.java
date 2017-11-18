@@ -27,6 +27,7 @@ import loci.formats.meta.IMetadata;
 
 public final class RBioFormats {
   private static DimensionSwapper reader;
+  private static IFormatWriter writer;
   private static MetadataStore omexml;
   private static String dimensionOrder = "XYCZT";
   
@@ -46,7 +47,10 @@ public final class RBioFormats {
   }
   
   public static IFormatWriter getWriter() {
-    return new ImageWriter();
+    if (writer==null) {
+      writer = new ImageWriter();
+    }
+    return writer;
   }
   
   public static MetadataStore getOMEXML() {
@@ -77,6 +81,24 @@ public final class RBioFormats {
     // initialize file   
     reader.setId(file);
     reader.setOutputOrder(dimensionOrder);
+  }
+  
+  // setup the writer
+  public static void setupWriter(String file, int[] dim, int series, String pixelType) throws ServiceException, DependencyException, FormatException, IOException {
+    int sizeX = dim[0];
+    int sizeY = dim[1];
+    int sizeZ = dim[3];
+    int sizeC = dim[2];
+    int sizeT = dim[4];
+    
+    ServiceFactory factory = new ServiceFactory();
+    OMEXMLService service = factory.getInstance(OMEXMLService.class);
+    IMetadata meta = service.createOMEXMLMetadata();
+
+    MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, sizeC);
+    
+    writer.setMetadataRetrieve(meta);
+    writer.setId(file);
   }
   
   public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
@@ -318,25 +340,10 @@ public final class RBioFormats {
     writeBytes(file, b, dim, series, mode);
   }
   
-  private static void writeBytes(String file, byte[] img, int[] dim, int series, String pixelType) throws FormatException, IOException, ServiceException, DependencyException {
+  private static void writeBytes(String file, byte[] img, int[] dim, int series, String pixelType) throws IOException, FormatException {
 
-    int sizeX = dim[0];
-    int sizeY = dim[1];
-    int sizeZ = dim[3];
-    int sizeC = dim[2];
-    int sizeT = dim[4];
     
-    ServiceFactory factory = new ServiceFactory();
-    OMEXMLService service = factory.getInstance(OMEXMLService.class);
-    IMetadata meta = service.createOMEXMLMetadata();
-
-    MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, sizeC);
-
-    IFormatWriter writer = new ImageWriter();
-    writer.setMetadataRetrieve(meta);
-    writer.setId(file);
-    writer.saveBytes(0, img);
-    writer.close();
+    writer.saveBytes(series, img);
   }
   
 }

@@ -27,3 +27,15 @@ for(type in pixelTypes$pixelType) {
     })
   })
 }
+
+test_that('Read single image plane', {
+  img = read.image(mockFile(series=1L))
+  expect_s4_class(img, "AnnotatedImage")
+  expect_identical(seriesCount(img), 1L)
+})
+
+test_that('Read image series', {
+  img = read.image(mockFile(series=2L))
+  expect_s4_class(img, "AnnotatedImageList")
+  expect_identical(seriesCount(img), 2L)
+})

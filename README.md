@@ -55,6 +55,8 @@ library( "RBioFormats" )
 
 to override the default setting and assign 4 gigabytes of heap space to the Java environment.
 
+Information about the current Java heap space limit can be retrieved by `checkJavaMemory()`.
+
 ### Use with BiocParallel
 
 Each R process needs a separate JVM instance. For this, load the package in the parallelized function, e.g.,

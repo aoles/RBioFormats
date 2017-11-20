@@ -22,6 +22,6 @@ test_that('Write single image plane', {
 
 test_that('Write image series', {
   img = read.image(write.image(mockImage(series=2L), tempimg()))
-  expect_s4_class(img, "AnnotatedImage")
+  expect_s4_class(img, "AnnotatedImageList")
   expect_identical(seriesCount(img), 2L)
 })

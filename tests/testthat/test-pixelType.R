@@ -19,3 +19,7 @@ test_that("Extreme pixel values correspond to the range defined by pixelType", {
     })
   }
 })
+
+test_that("Normalized pixel values are in the (0,1) range", {
+  NULL
+})

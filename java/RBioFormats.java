@@ -28,6 +28,7 @@ import loci.formats.meta.IMetadata;
 public final class RBioFormats {
   private static DimensionSwapper reader;
   private static IFormatWriter writer;
+  private static IMetadata meta;
   private static MetadataStore omexml;
   private static String dimensionOrder = "XYCZT";
   
@@ -84,21 +85,23 @@ public final class RBioFormats {
   }
   
   // setup the writer
-  public static void setupWriter(String file, int[] dim, int series, String pixelType) throws ServiceException, DependencyException, FormatException, IOException {
+  public static void setupWriter(String file) throws FormatException, IOException {
+    writer.setMetadataRetrieve(meta);
+    writer.setId(file);
+  }
+  
+  public static void initializeMetadata() throws FormatException {
+    meta = getMetadataStore();
+  }
+  
+  public static void populateMetadata(int[] dim, int series, String pixelType) {
     int sizeX = dim[0];
     int sizeY = dim[1];
     int sizeZ = dim[3];
     int sizeC = dim[2];
     int sizeT = dim[4];
     
-    ServiceFactory factory = new ServiceFactory();
-    OMEXMLService service = factory.getInstance(OMEXMLService.class);
-    IMetadata meta = service.createOMEXMLMetadata();
-
     MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, sizeC);
-    
-    writer.setMetadataRetrieve(meta);
-    writer.setId(file);
   }
   
   public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
@@ -256,14 +259,14 @@ public final class RBioFormats {
     return data;
   }
   
-  public static void writePixels(String file, int[] data, int[] dim, int series, String mode) throws Exception {
+  public static void writePixels(int[] data, String mode) throws Exception {
     boolean little = false; //TODO: need to revise this
     byte[] b;
     
     switch (FormatTools.pixelTypeFromString(mode)) {
       case FormatTools.INT8:
       case FormatTools.UINT8:
-        b = new byte[data.length ];
+        b = new byte[data.length];
         for (int j=0; j<data.length; j++)
           b[j] = (byte) data[j];
         break;
@@ -295,10 +298,10 @@ public final class RBioFormats {
         break;
     }
     
-    writeBytes(file, b, dim, series, mode);
+    writer.saveBytes(0, b);
   }
   
-  public static void writePixels(String file, double[] data, int[] dim, int series, String mode) throws Exception {
+  public static void writePixels(double[] data, String mode) throws Exception {
     boolean little = false; //TODO: need to revise this
     byte[] b;
     
@@ -337,13 +340,7 @@ public final class RBioFormats {
         break;
     }
     
-    writeBytes(file, b, dim, series, mode);
-  }
-  
-  private static void writeBytes(String file, byte[] img, int[] dim, int series, String pixelType) throws IOException, FormatException {
-
-    
-    writer.saveBytes(series, img);
+    writer.saveBytes(0, b);
   }
   
 }

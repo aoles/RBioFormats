@@ -22,9 +22,9 @@ testImage = function(pixelType, ...)  {
   matrix(values, 16L, 16L)
 }
 
-## convience function wich returns the result of reading a mockFile 
+## convience function which returns the result of reading a mockFile 
 mockImage = function(..., normalize=FALSE) {
   read.image(mockFile(...), normalize=normalize)
 }
 
-tempimg = function() tempfile('',,'.tif')
+tempimg = function() tempfile('',,'.ome.tif')

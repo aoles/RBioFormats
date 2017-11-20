@@ -21,29 +21,43 @@ write.image <- function(x, file, force = FALSE, pixelType) {
     else
       stop(sprintf('File %s already exists: use "force = TRUE" to overwrite', file))
   
-  dimargs = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
-  d = dim(x)
-  o = dimorder(x)
-  if (is.null(o)) 
-    o = seq_along(d)
-  dimargs[o] = d
-  
-  if (missing(pixelType))
-    pixelType = coreMetadata(x)$pixelType
-  if (is.null(pixelType))
-    pixelType = "uint8"
+  .jcall("RBioFormats", "V", "initializeMetadata")
   
   ## iterate over image series
   for (series in seq_len(seriesCount(x))) {
-    .setupWriter(file, dimargs, series-1L, pixelType)
-    .jcall("RBioFormats", "V", "writePixels", file, .jarray(x), .jarray(dimargs), series-1L, pixelType)
+    y = if (is(x, "AnnotatedImageList")) x[[series]] else x
+    dimargs = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
+    d = dim(y)
+    o = dimorder(y)
+    if (is.null(o)) 
+      o = seq_along(d)
+    dimargs[o] = d
+    
+    if (missing(pixelType))
+      pixelType = coreMetadata(y)$pixelType
+    if (is.null(pixelType))
+      pixelType = "uint8"
+    
+    .jcall("RBioFormats", "V", "populateMetadata", .jarray(dimargs), series-1L, pixelType)
+    
+  }
+  
+  .jcall("RBioFormats", "V", "setupWriter", file)
+  
+  for (series in seq_len(seriesCount(x))) {
+    y = if (is(x, "AnnotatedImageList")) x[[series]] else x
+    if (missing(pixelType))
+      pixelType = coreMetadata(y)$pixelType
+    if (is.null(pixelType))
+      pixelType = "uint8"
+    
+    .jcall(writer, "V", "setSeries", series-1L)
+    
+    #itarate over image planes
+    .jcall("RBioFormats", "V", "writePixels", .jarray(y), pixelType)
   }
   
   invisible(file)
 }
 
 .getWriter = function() .jcall("RBioFormats", "Lloci/formats/IFormatWriter;", "getWriter")
-
-.setupWriter <- function(file, dimargs, series, pixelType) {
-  .jcall("RBioFormats", "V", "setupWriter", file, .jarray(dimargs), series, pixelType)
-}

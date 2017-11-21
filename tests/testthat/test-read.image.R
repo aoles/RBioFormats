@@ -28,6 +28,17 @@ for(type in pixelTypes$pixelType) {
   })
 }
 
+test_that('Read 5D image stack', {
+  img = mockImage(sizeX=16,
+                  sizeY=16,
+                  sizeC=3,
+                  sizeZ=5,
+                  sizeT=10,
+                  series=1)
+  expect_s4_class(img, "AnnotatedImage")
+  expect_identical(dim(img), c(16L, 16L, 3L, 5L, 10L))
+})
+
 test_that('Read single image plane', {
   img = read.image(mockFile(series=1L))
   expect_s4_class(img, "AnnotatedImage")

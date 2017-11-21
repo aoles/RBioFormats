@@ -26,26 +26,34 @@ write.image <- function(x, file, force = FALSE, pixelType) {
   ## iterate over image series
   for (series in seq_len(seriesCount(x))) {
     y = if (is(x, "AnnotatedImageList")) x[[series]] else x
-    dimargs = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
+    
+    dims = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
     d = dim(y)
     o = dimorder(y)
     if (is.null(o)) 
       o = seq_along(d)
-    dimargs[o] = d
+    dims[o] = d
     
     if (missing(pixelType))
       pixelType = coreMetadata(y)$pixelType
     if (is.null(pixelType))
       pixelType = "uint8"
     
-    .jcall("RBioFormats", "V", "populateMetadata", .jarray(dimargs), series-1L, pixelType)
-    
+    .jcall("RBioFormats", "V", "populateMetadata", .jarray(dims), series-1L, pixelType)
   }
   
   .jcall("RBioFormats", "V", "setupWriter", file)
   
   for (series in seq_len(seriesCount(x))) {
     y = if (is(x, "AnnotatedImageList")) x[[series]] else x
+    
+    dims = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
+    d = dim(y)
+    o = dimorder(y)
+    if (is.null(o)) 
+      o = seq_along(d)
+    dims[o] = d
+    
     if (missing(pixelType))
       pixelType = coreMetadata(y)$pixelType
     if (is.null(pixelType))
@@ -53,8 +61,7 @@ write.image <- function(x, file, force = FALSE, pixelType) {
     
     .jcall(writer, "V", "setSeries", series-1L)
     
-    #itarate over image planes
-    .jcall("RBioFormats", "V", "writePixels", .jarray(y), pixelType)
+    .jcall("RBioFormats", "V", "writePixels", .jarray(y), as.integer(prod(dims[3:5])), pixelType)
   }
   
   invisible(file)

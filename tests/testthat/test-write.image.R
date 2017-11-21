@@ -14,6 +14,18 @@ for(type in pixelTypes$pixelType) {
   })
 }
 
+test_that('Write 5D image stack', {
+  img = mockImage(sizeX=16,
+                  sizeY=16,
+                  sizeC=3,
+                  sizeZ=5,
+                  sizeT=10,
+                  series=1)
+  img = read.image(write.image(img, tempimg()))
+  expect_s4_class(img, "AnnotatedImage")
+  expect_identical(dim(img), c(16L, 16L, 3L, 5L, 10L))
+})
+
 test_that('Write single image plane', {
   img = read.image(write.image(mockImage(series=1L), tempimg()))
   expect_s4_class(img, "AnnotatedImage")

@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Arrays;
 
 import loci.common.DebugTools;
 import loci.common.DataTools;
@@ -101,7 +102,7 @@ public final class RBioFormats {
     int sizeC = dim[2];
     int sizeT = dim[4];
     
-    MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, sizeC);
+    MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, 1);
   }
   
   public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
@@ -259,7 +260,7 @@ public final class RBioFormats {
     return data;
   }
   
-  public static void writePixels(int[] data, String mode) throws Exception {
+  public static void writePixels(int[] data, int imageCount, String mode) throws Exception {
     boolean little = false; //TODO: need to revise this
     byte[] b;
     
@@ -298,10 +299,10 @@ public final class RBioFormats {
         break;
     }
     
-    writer.saveBytes(0, b);
+    savePlanes(b, imageCount);
   }
   
-  public static void writePixels(double[] data, String mode) throws Exception {
+  public static void writePixels(double[] data, int imageCount, String mode) throws Exception {
     boolean little = false; //TODO: need to revise this
     byte[] b;
     
@@ -340,7 +341,14 @@ public final class RBioFormats {
         break;
     }
     
-    writer.saveBytes(0, b);
+    savePlanes(b, imageCount);
+  }
+  
+  public static void savePlanes(byte[] bytes, int imageCount) throws Exception {
+    int planeSize = bytes.length / imageCount;
+    for (int i = 0; i < imageCount; i++) {
+      writer.saveBytes(i, Arrays.copyOf(bytes, planeSize));
+    }
   }
   
 }

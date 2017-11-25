@@ -23,8 +23,8 @@ testImage = function(pixelType, ...)  {
 }
 
 ## convience function which returns the result of reading a mockFile 
-mockImage = function(..., normalize=FALSE) {
-  read.image(mockFile(...), normalize=normalize)
+mockImage = function(sizeX=16, sizeY=16, ..., normalize=FALSE) {
+  read.image(mockFile(sizeX=sizeX, sizeY=sizeY, ...), normalize=normalize)
 }
 
-tempimg = function() tempfile('',,'.ome.tif')
+tempimg = function() tempfile('', , '.ome.tif')

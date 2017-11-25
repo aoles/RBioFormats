@@ -22,45 +22,50 @@ write.image <- function(x, file, force = FALSE, pixelType) {
       stop(sprintf('File %s already exists: use "force = TRUE" to overwrite', file))
   
   .jcall("RBioFormats", "V", "initializeMetadata")
-  
+
   ## iterate over image series
   for (series in seq_len(seriesCount(x))) {
     y = if (is(x, "AnnotatedImageList")) x[[series]] else x
-    
+
     dims = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
     d = dim(y)
     o = dimorder(y)
-    if (is.null(o)) 
+    if (is.null(o))
       o = seq_along(d)
     dims[o] = d
-    
+
     if (missing(pixelType))
       pixelType = coreMetadata(y)$pixelType
     if (is.null(pixelType))
       pixelType = "uint8"
-    
+
     .jcall("RBioFormats", "V", "populateMetadata", .jarray(dims), series-1L, pixelType)
   }
+
+  globalMetadata = globalMetadata(x)
+  
+  if (length(globalMetadata))
+    .jcall("RBioFormats", "V", "populateOriginalMetadata", .listToHashtable(globalMetadata))
   
   .jcall("RBioFormats", "V", "setupWriter", file)
-  
+
   for (series in seq_len(seriesCount(x))) {
     y = if (is(x, "AnnotatedImageList")) x[[series]] else x
-    
+
     dims = c(x = 1L, y = 1L, c = 1L, z = 1L, t = 1L)
     d = dim(y)
     o = dimorder(y)
-    if (is.null(o)) 
+    if (is.null(o))
       o = seq_along(d)
     dims[o] = d
-    
+
     if (missing(pixelType))
       pixelType = coreMetadata(y)$pixelType
     if (is.null(pixelType))
       pixelType = "uint8"
     
     .jcall(writer, "V", "setSeries", series-1L)
-    
+
     .jcall("RBioFormats", "V", "writePixels", .jarray(y), as.integer(prod(dims[3:5])), pixelType)
   }
   
@@ -68,3 +73,11 @@ write.image <- function(x, file, force = FALSE, pixelType) {
 }
 
 .getWriter = function() .jcall("RBioFormats", "Lloci/formats/IFormatWriter;", "getWriter")
+
+.listToHashtable = function(x) {
+  hashtable = .jcall("RBioFormats", "Ljava/util/Hashtable;", "getHashTable")
+  nx = names(x)
+  for (i in seq_along(x))
+    .jcall("RBioFormats", , "addMetaField", hashtable, nx[i], x[[i]])
+  hashtable
+}

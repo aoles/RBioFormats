@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Arrays;
 
 import loci.common.DebugTools;
@@ -23,13 +24,13 @@ import loci.formats.ome.OMEXMLMetadata;
 import loci.formats.MissingLibraryException;
 import loci.formats.meta.DummyMetadata;
 import loci.formats.meta.MetadataStore;
-import loci.formats.meta.IMetadata;
+import loci.formats.ome.OMEXMLMetadata;
 
 
 public final class RBioFormats {
   private static DimensionSwapper reader;
   private static IFormatWriter writer;
-  private static IMetadata meta;
+  private static OMEXMLMetadata meta;
   private static MetadataStore omexml;
   private static String dimensionOrder = "XYCZT";
   
@@ -49,10 +50,11 @@ public final class RBioFormats {
   }
   
   public static IFormatWriter getWriter() {
-    if (writer==null) {
-      writer = new ImageWriter();
-    }
-    return writer;
+    return writer = new ImageWriter();
+  }
+  
+  public static void initializeMetadata() throws Exception {
+    meta = getOMEXMLMetadata();
   }
   
   public static MetadataStore getOMEXML() {
@@ -73,7 +75,7 @@ public final class RBioFormats {
     
     // omexml
     if (xml) {
-      omexml = (MetadataStore) getMetadataStore();
+      omexml = (MetadataStore) getOMEXMLMetadata();
     }
     else {
       omexml = new DummyMetadata();
@@ -89,10 +91,6 @@ public final class RBioFormats {
   public static void setupWriter(String file) throws FormatException, IOException {
     writer.setMetadataRetrieve(meta);
     writer.setId(file);
-  }
-  
-  public static void initializeMetadata() throws FormatException {
-    meta = getMetadataStore();
   }
   
   public static void populateMetadata(int[] dim, int series, String pixelType) {
@@ -123,7 +121,7 @@ public final class RBioFormats {
       return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little);
   }
   
-  private static IMetadata getMetadataStore() throws FormatException {
+  public static OMEXMLMetadata getOMEXMLMetadata() throws FormatException {
     try {
       ServiceFactory factory = new ServiceFactory();
       OMEXMLService service = factory.getInstance(OMEXMLService.class);
@@ -349,6 +347,33 @@ public final class RBioFormats {
     for (int i = 0; i < imageCount; i++) {
       writer.saveBytes(i, Arrays.copyOf(bytes, planeSize));
     }
+  }
+  
+  public static void populateOriginalMetadata(Hashtable<String, Object> hashtable) throws Exception {
+    ServiceFactory factory = new ServiceFactory();
+    OMEXMLService service = factory.getInstance(OMEXMLService.class);
+    service.populateOriginalMetadata(meta, hashtable);
+  }
+  
+  /* Helper functions to construct metadata hashtable */
+  public static Hashtable<String, Object> getHashTable() {
+    return new Hashtable<String, Object>();
+  }
+  
+  public static void addMetaField(Hashtable<String, Object> hashtable, String key, boolean val) {
+    hashtable.put(key, val);
+  }
+  
+  public static void addMetaField(Hashtable<String, Object> hashtable, String key, int val) {
+    hashtable.put(key, val);
+  }
+  
+  public static void addMetaField(Hashtable<String, Object> hashtable, String key, double val) {
+    hashtable.put(key, val);
+  }
+  
+  public static void addMetaField(Hashtable<String, Object> hashtable, String key, String val) {
+    hashtable.put(key, val);
   }
   
 }

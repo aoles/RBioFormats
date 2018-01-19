@@ -5,7 +5,7 @@
 #' @docType package
 #' @name RBioFormats
 #' @import rJava
-#' @importFrom methods as callNextMethod
+#' @importFrom methods as callNextMethod is
 #' @importFrom stats setNames
 #' @template author
 #' @template bioformats

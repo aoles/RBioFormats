@@ -17,7 +17,7 @@ The maximum amount of memory that the JVM will attempt to use,
 Information about the Java heap space usage.
 }
 \examples{
-\\donotrun{
+\dontrun{
 ## assign 4 gigabytes of heap space to the Java environment.
 options( java.parameters = "-Xmx4g" )
 library( "RBioFormats" )

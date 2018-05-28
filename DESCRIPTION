@@ -1,5 +1,6 @@
 Package: RBioFormats
-Version: 0.0.49
+Version: 0.0.50
+BioFormats: 5.8.2
 Title: R interface to Bio-Formats
 Description: An R package which interfaces the OME Bio-Formats Java library to
     allow reading of proprietary image data and metadata.
@@ -18,7 +19,7 @@ Suggests:
     microbenchmark,
     testthat,
     XML
-SystemRequirements: Java (>= 1.5)
+SystemRequirements: Java (>= 1.7)
 License: GPL-3
 VignetteBuilder: knitr
 Collate:

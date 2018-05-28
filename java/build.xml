@@ -11,29 +11,55 @@
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
     
-    <target name="compile" depends="bioformats">
-	<mkdir dir="${classes.dir}"/>
-	<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" compiler="modern" source="1.7" target="1.7" includeantruntime="false"/>
+    <target name="version">
+      <loadfile srcfile="../DESCRIPTION" property="version">
+        <filterchain>
+          <linecontainsregexp>
+            <regexp pattern="^BioFormats:"/>
+          </linecontainsregexp>
+          <striplinebreaks/>
+          <tokenfilter>
+            <replacestring from="BioFormats:" to=""/>
+            <trim/>
+          </tokenfilter>
+        </filterchain>
+      </loadfile>
+      <echo message="${version}"/>
+    </target>
+    
+    <target name="check-bioformats">
+      <available file="${jar.dir}/${bioformats.jar}" property="bioformats-present"/>
+    </target>
+    
+    <target name="check-md5sum" depends="version,check-bioformats" if="bioformats-present">
+      <get src="https://downloads.openmicroscopy.org/bio-formats/${version}/artifacts/${bioformats.jar}.md5" 
+	    dest="${jar.dir}/${bioformats.jar}.md5"/>
+      <condition property="md5sum-equal">
+	      <checksum file="${jar.dir}/${bioformats.jar}" algorithm="md5" pattern="{0}  {1}"/>
+	    </condition>
+    </target>
+    
+    <target name="get-bioformats" depends="check-md5sum" unless="md5sum-equal">
+	    <get src="https://downloads.openmicroscopy.org/bio-formats/${version}/artifacts/${bioformats.jar}" 
+	    dest="${jar.dir}/${bioformats.jar}"
+	    verbose="true"/>
+    </target>
+    
+    <target name="compile" depends="get-bioformats">
+	    <mkdir dir="${classes.dir}"/>
+	    <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" compiler="modern" source="1.7" target="1.7" includeantruntime="false"/>
     </target>
     
     <target name="jar" depends="compile">
         <mkdir dir="${jar.dir}"/>
-        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-	  <!--	  <zipgroupfileset dir="${lib.dir}" includes="*.jar" /> -->
-	</jar>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}"/>
     </target>
-    
-    <target name="bioformats">
-	  <get src="http://downloads.openmicroscopy.org/latest/bio-formats/artifacts/${bioformats.jar}" 
-	    dest="${jar.dir}/${bioformats.jar}"
-	    verbose="true"
-	    usetimestamp="true"/>
-    </target>
-    
+
     <target name="clean">
         <delete dir="${classes.dir}"/>
+        <delete file="${jar.dir}/${bioformats.jar}.md5"/>
     </target>
     
     <target name="main" depends="jar,clean"/>
-
+      
 </project>

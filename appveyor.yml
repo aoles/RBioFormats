@@ -13,6 +13,13 @@ install:
 cache:
   - C:\RLibrary
 
+
+environment:
+  global:
+    USE_RTOOLS: true
+    R_CHECK_INSTALL_ARGS: "--install-args=--build --no-multiarch "
+    WARNINGS_ARE_ERRORS: 1
+
 # Adapt as necessary starting from here
 
 build_script:
@@ -20,10 +27,12 @@ build_script:
 
 test_script:
   - travis-tool.sh run_tests
-
 on_failure:
   - 7z a failure.zip *.Rcheck\*
   - appveyor PushArtifact failure.zip
+
+after_test:
+- 7z a testthat.zip *.Rcheck\**\*.Rout
 
 artifacts:
   - path: '*.Rcheck\**\*.log'
@@ -35,11 +44,8 @@ artifacts:
   - path: '*.Rcheck\**\*.fail'
     name: Logs
 
-  - path: '*.Rcheck\**\*.Rout'
+  - path: testthat.zip
     name: Logs
 
-  - path: '\*_*.tar.gz'
-    name: Bits
-
-  - path: '\*_*.zip'
+  - path: '\*_*_*.zip'
     name: Bits

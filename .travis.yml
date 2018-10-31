@@ -7,3 +7,48 @@ warnings_are_errors: true
 use_bioc: true
 bioc_required: true
 cran: http://cran.rstudio.com
+
+addons:
+  apt:
+    packages:
+    - libfftw3-dev
+    - libgsl0-dev
+    - libgsl0ldbl
+
+os:
+  - linux
+  - osx
+osx_image: xcode9 
+
+
+env:
+  global: 
+    - RGL_USE_NULL=TRUE
+    - DISPLAY=:99.0
+r_check_args: --as-cran --install-args=--build
+
+before_install:
+  - export PROJ_DIR=`basename $PWD`    
+  - fname=travis_helpers.sh
+  - wget -O ${fname} http://bit.ly/travis_helpers
+  - cat ${fname}; source ${fname}; rm ${fname}  
+  - cat DESCRIPTION
+  - start_xvfb ;
+  - export rver=`r_version`; echo $rver ;
+  - if [ "$TRAVIS_OS_NAME" = "osx" ];
+    then
+      no_open_mp ; 
+    fi
+  - jags_install  
+  - export PACKAGE_NAME=`package_name`
+  - echo "Package Name is $PACKAGE_NAME"
+  - fftw_install ;
+
+after_success:
+  - cat ${PACKAGE_NAME}.Rcheck/00install.out
+  - cat ${PACKAGE_NAME}.Rcheck/00check.log
+
+after_failure:
+  - cat ${PACKAGE_NAME}.Rcheck/00install.out
+  - cat ${PACKAGE_NAME}.Rcheck/00check.log
+

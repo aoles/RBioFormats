@@ -4,7 +4,8 @@
 \alias{read.metadata}
 \title{Read Image Metadata}
 \usage{
-read.metadata(file, filter.metadata = FALSE, proprietary.metadata = TRUE)
+read.metadata(file, filter.metadata = FALSE,
+  proprietary.metadata = TRUE)
 }
 \arguments{
 \item{file}{character, file name}

@@ -1,0 +1,2 @@
+#!/bin/bash
+rm -rf inst/bioformats_package.jar

@@ -35,6 +35,7 @@ Collate:
     'utils.R'
     'write.image.R'
     'zzz.R'
+biocViews:
 RoxygenNote: 6.1.0
 BugReports: https://github.com/aoles/RBioFormats/issues
 URL: https://github.com/aoles/RBioFormats

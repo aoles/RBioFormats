@@ -17,7 +17,7 @@ cache:
 environment:
   global:
     USE_RTOOLS: true
-    R_CHECK_INSTALL_ARGS: "--install-args=--build --no-multiarch "
+    R_CHECK_INSTALL_ARGS: "--no-multiarch --install-args=--build "
     WARNINGS_ARE_ERRORS: 1
 
 # Adapt as necessary starting from here

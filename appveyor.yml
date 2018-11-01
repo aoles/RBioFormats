@@ -13,6 +13,10 @@ install:
 cache:
   - C:\RLibrary
 
+platform: x64
+
+environment:
+  R_ARCH: x64
 
 environment:
   global:

@@ -25,6 +25,7 @@ environment:
 # Adapt as necessary starting from here
 
 build_script:
+  - Rscript -e "install.packages('rJava', type = 'source', repos=c(CRAN='https://cran.rstudio.com'))"
   - travis-tool.sh install_deps
 
 test_script:

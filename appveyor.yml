@@ -16,13 +16,11 @@ cache:
 platform: x64
 
 environment:
-  R_ARCH: x64
-
-environment:
   global:
     USE_RTOOLS: true
     R_CHECK_ARGS: "--no-multiarch --no-manual --as-cran"
     WARNINGS_ARE_ERRORS: 1
+    R_ARCH: x64
 
 # Adapt as necessary starting from here
 

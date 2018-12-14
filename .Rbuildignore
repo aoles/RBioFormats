@@ -1,1 +1,8 @@
+^\.Rhistory$
+^misc$
+^README\.Rmd$
+^appveyor\.yml$
+^\.travis\.yml$
+^RBioFormats\.Rproj$
+^\.Rproj\.user$
 ^man-roxygen$

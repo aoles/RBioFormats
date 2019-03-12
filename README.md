@@ -1,6 +1,6 @@
 ## Installation
 
-First, make sure you have [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.7 or higher installed.
+First, make sure you have [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.8 or higher installed.
 To install *RBioFormats* use the `biocLite` installation script in order to resolve the dependency on the Bioconductor package *[EBImage](http://biocondcutor.org/packages/EBImage)*.
 
 ```r

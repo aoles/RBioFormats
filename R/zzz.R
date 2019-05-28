@@ -24,10 +24,10 @@
   
   .jpackage(pkg, lib.loc = lib, morePaths = jars)
   
-  msg <- sprintf("BioFormats library version %s", BioFormats.version())
-  packageStartupMessage(msg)
-  
-  FormatTools <<- J("loci.formats.FormatTools")
+  # msg <- sprintf("BioFormats library version %s", BioFormats.version())
+  # packageStartupMessage(msg)
+  # 
+  # FormatTools <<- J("loci.formats.FormatTools")
 }
 
 download_bioformats <- function (pkg_dir, jar_dir) {

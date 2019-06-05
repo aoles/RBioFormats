@@ -1,3 +1,8 @@
+.onAttach <- function(lib, pkg) {
+  msg <- sprintf("BioFormats library version %s", BioFormats.version())
+  packageStartupMessage(msg)
+}
+
 .onLoad <- function(lib, pkg) {
   ## check whether called on a source package directory which has a different
   ## path to .jar files compared to the installed package (this workaround is
@@ -24,9 +29,6 @@
   
   .jpackage(pkg, lib.loc = lib, morePaths = jars)
   
-  msg <- sprintf("BioFormats library version %s", BioFormats.version())
-  packageStartupMessage(msg)
-  
   FormatTools <<- J("loci.formats.FormatTools")
 }
 
@@ -45,7 +47,7 @@ download_bioformats <- function (pkg_dir, jar_dir) {
       return(FALSE)
   }
   
-  utils::download.file(jar_url, jar_dst, quiet=FALSE)
+  utils::download.file(jar_url, jar_dst, mode = "wb", quiet = FALSE)
   
   return(TRUE)
 }

@@ -41,15 +41,10 @@ download_bioformats <- function (pkg_dir, jar_dir) {
   
   if ( file.exists(jar_dst) ) {
     md5_local <- tools::md5sum(jar_dst)
-    packageStartupMessage(sprintf("MD5 local:  %s", md5_local))
     md5_file <- readLines(paste(jar_url, "md5", sep="."))
-    md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file) 
-    packageStartupMessage(sprintf("MD5 remote: %s", md5_remote))
+    md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file)    
     if ( md5_local == md5_remote )
       return(FALSE)
-  }
-  else {
-    packageStartupMessage(sprintf("File %s not found, downloading", jar_dst))
   }
   
   utils::download.file(jar_url, jar_dst, mode = "wb", quiet = FALSE)

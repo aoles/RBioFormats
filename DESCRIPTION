@@ -1,5 +1,5 @@
 Package: RBioFormats
-Version: 0.0.56
+Version: 0.0.57
 BioFormats: 6.1.0
 Title: R interface to Bio-Formats
 Description: An R package which interfaces the OME Bio-Formats Java library to

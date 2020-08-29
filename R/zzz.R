@@ -40,9 +40,11 @@ download_bioformats <- function (pkg_dir, jar_dir) {
   jar_dst <- file.path(jar_dir, jar)
   
   if ( file.exists(jar_dst) ) {
+    md5_file <- suppressWarnings(tryCatch(readLines(paste(jar_url, "md5", sep=".")), error = function(e) ""))
+    if (nchar(md5_file)==0L)
+      return(FALSE)
+    md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file)
     md5_local <- tools::md5sum(jar_dst)
-    md5_file <- readLines(paste(jar_url, "md5", sep="."))
-    md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file)    
     if ( md5_local == md5_remote )
       return(FALSE)
   }

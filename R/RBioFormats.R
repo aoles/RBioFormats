@@ -1,6 +1,6 @@
 #' R Interface to Bio-Formats
 #'
-#' Interfaces the \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats} Java library.
+#' Interfaces the \href{http://www.openmicroscopy.org/bio-formats}{Bio-Formats} Java library.
 #'
 #' @docType package
 #' @name RBioFormats

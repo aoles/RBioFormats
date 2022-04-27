@@ -4,8 +4,16 @@
 \alias{read.image}
 \title{Read Images}
 \usage{
-read.image(file, filter.metadata = FALSE, proprietary.metadata = TRUE,
-  normalize = TRUE, series, resolution, subset, read.metadata = TRUE)
+read.image(
+  file,
+  filter.metadata = FALSE,
+  proprietary.metadata = TRUE,
+  normalize = TRUE,
+  series,
+  resolution,
+  subset,
+  read.metadata = TRUE
+)
 }
 \arguments{
 \item{file}{character, file name}
@@ -42,5 +50,5 @@ img
 \code{\link{read.metadata}} for reading image metadata, \code{\link{read.omexml}} for reading image metadata as OME-XML
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
 }

@@ -24,5 +24,5 @@ dimorder(img)
 
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
 }

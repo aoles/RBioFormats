@@ -4,7 +4,9 @@
 \name{FormatTools}
 \alias{FormatTools}
 \title{Bio-Formats FormatTools Class}
-\format{An object of class \code{jclassName} of length 1.}
+\format{
+An object of class \code{jclassName} of length 1.
+}
 \usage{
 FormatTools
 }
@@ -16,6 +18,6 @@ A utility class for format reader and writer implementations.
 sapply(0:7, FormatTools$getPixelTypeString)
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
 }
 \keyword{datasets}

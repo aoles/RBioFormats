@@ -1,1 +1,1 @@
-#' @references \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats website}
+#' @references \href{http://www.openmicroscopy.org/bio-formats}{Bio-Formats website}

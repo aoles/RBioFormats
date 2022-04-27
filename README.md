@@ -1,3 +1,7 @@
+# R interface to Bio-Formats
+
+*RBioFormats* is an R package which provides an interface to the OME [Bio-Formats](https://github.com/ome/bioformats) Java library. It facilitates reading of proprietary image data and metadata in R.
+
 ## Installation
 
 First, make sure you have [JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html) 1.8 or higher installed.
@@ -36,15 +40,15 @@ library(rJava)
 
 ## Documentation
 
-For example use, see the [package vignette](https://rawgit.com/aoles/RBioFormats/master/vignettes/RBioFormats.html).
+To get started with using *RBioFormats* have a look at the [package vignette](https://rawgit.com/aoles/RBioFormats/master/vignettes/RBioFormats.html) .
 
-## FAQ
+### FAQ
 
-See my [answers on Stack Overflow](http://stackoverflow.com/search?q=user:A2792099+rbioformats).
+See my [answers on Stack Overflow](http://stackoverflow.com/search?q=user:A2792099+rbioformats) for solutions to some common and less common questions.
 
-## Caveats
+### Caveats
 
-### The `java.lang.OutOfMemoryError` error
+#### The `java.lang.OutOfMemoryError` error
 
 If you get the `java.lang.OutOfMemoryError: Java heap space` error, try increasing the maximum heap size by supplying the -Xmx parameter before the Java Virtual Machine is initialized. For example, use
 
@@ -57,7 +61,7 @@ to override the default setting and assign 4 gigabytes of heap space to the Java
 
 Information about the current Java heap space limit can be retrieved by `checkJavaMemory()`.
 
-### Use with BiocParallel
+#### Use with BiocParallel
 
 Each R process needs a separate JVM instance. For this, load the package in the parallelized function, e.g.,
 

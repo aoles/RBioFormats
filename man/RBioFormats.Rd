@@ -3,14 +3,13 @@
 \docType{package}
 \name{RBioFormats}
 \alias{RBioFormats}
-\alias{RBioFormats-package}
 \title{R Interface to Bio-Formats}
 \description{
-Interfaces the \href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats} Java library.
+Interfaces the \href{http://www.openmicroscopy.org/bio-formats}{Bio-Formats} Java library.
 }
 \references{
-\href{http://www.openmicroscopy.org/site/products/bio-formats}{Bio-Formats website}
+\href{http://www.openmicroscopy.org/bio-formats}{Bio-Formats website}
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
 }

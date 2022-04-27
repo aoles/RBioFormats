@@ -39,5 +39,5 @@ Extends the \linkS4class{Image} class from the \pkg{EBImage} package.
 \linkS4class{AnnotatedImageList}
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@embl.de}>, 2014-2017
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
 }

@@ -58,6 +58,7 @@
     <target name="clean">
         <delete dir="${classes.dir}"/>
         <delete file="${jar.dir}/${bioformats.jar}.md5"/>
+        <delete file="${jar.dir}/${bioformats.jar}"/>
     </target>
     
     <target name="main" depends="jar,clean"/>

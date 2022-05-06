@@ -27,13 +27,10 @@ vignette: install
 update: check vignette
 
 commit:
-	git commit -am "Update to BioFormats ${BFVER}"
+	git commit -am "Update to BioFormats ${BFVER}"; git tag Bio-Formats_${BFVER}
 
-tag: commit
-	git tag Bio-Formats_${BFVER}
-
-push: tag
-	git push --tags
+push: commit
+	git push; git push --tags
 
 publish: push
 

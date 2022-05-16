@@ -93,14 +93,14 @@ public final class RBioFormats {
     writer.setId(file);
   }
 
-  public static void populateMetadata(int[] dim, int series, String pixelType) {
+  public static void populateMetadata(int[] dim, int series, String pixelType, boolean little) {
     int sizeX = dim[0];
     int sizeY = dim[1];
     int sizeZ = dim[3];
     int sizeC = dim[2];
     int sizeT = dim[4];
 
-    MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, 1);
+    MetadataTools.populateMetadata(meta, series, null, little, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, 1);
   }
 
   public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
@@ -258,8 +258,7 @@ public final class RBioFormats {
     return data;
   }
 
-  public static void writePixels(int[] data, int imageCount, String mode) throws Exception {
-    boolean little = false; //TODO: need to revise this
+  public static void writePixels(int[] data, int imageCount, String mode, boolean little) throws Exception {
     byte[] b;
 
     switch (FormatTools.pixelTypeFromString(mode)) {
@@ -300,8 +299,7 @@ public final class RBioFormats {
     savePlanes(b, imageCount);
   }
 
-  public static void writePixels(double[] data, int imageCount, String mode) throws Exception {
-    boolean little = false; //TODO: need to revise this
+  public static void writePixels(double[] data, int imageCount, String mode, boolean little) throws Exception {
     byte[] b;
 
     switch (FormatTools.pixelTypeFromString(mode)) {

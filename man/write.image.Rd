@@ -4,7 +4,7 @@
 \alias{write.image}
 \title{Write Images}
 \usage{
-write.image(x, file, force = FALSE, pixelType)
+write.image(x, file, force = FALSE, pixelType, littleEndian)
 }
 \arguments{
 \item{x}{an \code{Image} or \code{\link{AnnotatedImage}} object}
@@ -14,6 +14,8 @@ write.image(x, file, force = FALSE, pixelType)
 \item{force}{logical(1), if \code{link} overwrite existing file}
 
 \item{pixelType}{character(1), data type to store pixel values}
+
+\item{littleEndian}{boolean(1), pixel data endianness}
 }
 \value{
 File path to \code{file} is returned invisibly.

@@ -1,16 +1,17 @@
 #' Write Images
-#' 
+#'
 #' Save image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
-#' 
+#'
 #' @param x an \code{Image} or \code{\link{AnnotatedImage}} object
 #' @param file character, file name
 #' @param force logical(1), if \code{link} overwrite existing file
 #' @param pixelType character(1), data type to store pixel values
+#' @param littleEndian boolean(1), pixel data endianness
 #' @return File path to \code{file} is returned invisibly.
 #' @template author
 #' @seealso \code{\link{read.image}} for reading images.
 #' @export
-write.image <- function(x, file, force = FALSE, pixelType) {
+write.image <- function(x, file, force = FALSE, pixelType, littleEndian) {
   writer = .getWriter()
   on.exit( .close(writer) )
 
@@ -20,7 +21,7 @@ write.image <- function(x, file, force = FALSE, pixelType) {
       file.remove(file)
     else
       stop(sprintf('File %s already exists: use "force = TRUE" to overwrite', file))
-  
+
   .jcall("RBioFormats", "V", "initializeMetadata")
 
   ## iterate over image series
@@ -39,14 +40,19 @@ write.image <- function(x, file, force = FALSE, pixelType) {
     if (is.null(pixelType))
       pixelType = "uint8"
 
-    .jcall("RBioFormats", "V", "populateMetadata", .jarray(dims), series-1L, pixelType)
+    if (missing(littleEndian))
+    	littleEndian = coreMetadata(y)$littleEndian
+    if (is.null(littleEndian))
+    	littleEndian = FALSE
+
+    .jcall("RBioFormats", "V", "populateMetadata", .jarray(dims), series-1L, pixelType, littleEndian)
   }
 
   globalMetadata = globalMetadata(x)
-  
+
   if (length(globalMetadata))
     .jcall("RBioFormats", "V", "populateOriginalMetadata", .listToHashtable(globalMetadata))
-  
+
   .jcall("RBioFormats", "V", "setupWriter", file)
 
   for (series in seq_len(seriesCount(x))) {
@@ -59,16 +65,11 @@ write.image <- function(x, file, force = FALSE, pixelType) {
       o = seq_along(d)
     dims[o] = d
 
-    if (missing(pixelType))
-      pixelType = coreMetadata(y)$pixelType
-    if (is.null(pixelType))
-      pixelType = "uint8"
-    
     .jcall(writer, "V", "setSeries", series-1L)
 
-    .jcall("RBioFormats", "V", "writePixels", .jarray(y), as.integer(prod(dims[3:5])), pixelType)
+    .jcall("RBioFormats", "V", "writePixels", .jarray(y), as.integer(prod(dims[3:5])), pixelType, littleEndian)
   }
-  
+
   invisible(file)
 }
 

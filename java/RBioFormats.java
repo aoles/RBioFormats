@@ -33,46 +33,46 @@ public final class RBioFormats {
   private static OMEXMLMetadata meta;
   private static MetadataStore omexml;
   private static String dimensionOrder = "XYCZT";
-  
+
   static {
     // reduce verbosity
     DebugTools.enableLogging("ERROR");
   }
-  
+
   public static IFormatReader getReader() {
     if (reader==null) {
-      // ChannelFiller: convert indexed color images to RGB images.  
+      // ChannelFiller: convert indexed color images to RGB images.
       // ChannelSeparator: split RGB images into 3 separate grayscale images
       // DimensionSwapper: enable setting output dimension order
       reader = new DimensionSwapper(new ChannelSeparator(new ChannelFiller()));
     }
     return reader;
   }
-  
+
   public static IFormatWriter getWriter() {
     return writer = new ImageWriter();
   }
-  
+
   public static void initializeMetadata() throws Exception {
     meta = getOMEXMLMetadata();
   }
-  
+
   public static MetadataStore getOMEXML() {
     return omexml;
   }
-  
+
   public static String getCurrentFile() {
     return reader.getCurrentFile();
   }
-  
+
   // setup the reader
   public static void setupReader(String file, boolean filter, boolean proprietary, boolean xml) throws FormatException, IOException {
-  
+
     // set metadata options
     reader.setMetadataFiltered(filter);
     reader.setOriginalMetadataPopulated(proprietary);
     reader.setFlattenedResolutions(false);
-    
+
     // omexml
     if (xml) {
       omexml = (MetadataStore) getOMEXMLMetadata();
@@ -81,46 +81,46 @@ public final class RBioFormats {
       omexml = new DummyMetadata();
     }
     reader.setMetadataStore(omexml);
-    
-    // initialize file   
+
+    // initialize file
     reader.setId(file);
     reader.setOutputOrder(dimensionOrder);
   }
-  
+
   // setup the writer
   public static void setupWriter(String file) throws FormatException, IOException {
     writer.setMetadataRetrieve(meta);
     writer.setId(file);
   }
-  
+
   public static void populateMetadata(int[] dim, int series, String pixelType) {
     int sizeX = dim[0];
     int sizeY = dim[1];
     int sizeZ = dim[3];
     int sizeC = dim[2];
     int sizeT = dim[4];
-    
+
     MetadataTools.populateMetadata(meta, series, null, false, dimensionOrder, pixelType, sizeX, sizeY, sizeZ, sizeC, sizeT, 1);
   }
-  
+
   public static Object readPixels(int i, int x, int y, int w, int h, boolean normalize) throws FormatException, IOException {
     int pixelType = reader.getPixelType();
     int size = w * h * FormatTools.getBytesPerPixel(pixelType) * reader.getRGBChannelCount();
-    
+
     byte[] buf = new byte[size];
-    
+
     reader.openBytes(i, buf, x, y, w, h);
-    
+
     int bpp = FormatTools.getBytesPerPixel(pixelType);
     boolean fp = FormatTools.isFloatingPoint(pixelType);
     boolean little = reader.isLittleEndian();
-    
+
     if (normalize)
       return normalizedDataArray(buf, bpp, fp, little, pixelType);
     else
       return rawDataArray(buf, bpp, FormatTools.isSigned(pixelType), fp, little);
   }
-  
+
   public static OMEXMLMetadata getOMEXMLMetadata() throws FormatException {
     try {
       ServiceFactory factory = new ServiceFactory();
@@ -134,12 +134,12 @@ public final class RBioFormats {
       throw new FormatException(se);
     }
   }
-  
+
   private static Object rawDataArray(byte[] b, int bpp, boolean signed, boolean fp, boolean little) {
     // unsigned types need to be stored in a longer signed type
     int type = signed ? bpp : bpp * 2;
     int len = b.length / bpp;
-    
+
     // int8
     // convert bytes to shorts in order to have integer rather than raw vector in R
     if (type == 1) {
@@ -206,15 +206,15 @@ public final class RBioFormats {
 
   private static double[] normalizedDataArray(byte[] b, int bpp, boolean fp, boolean little, int pixelType) {
     double[] data = new double[b.length / bpp];
-    
-    // floating point normalization 
+
+    // floating point normalization
     if (fp) {
       double min = Double.MAX_VALUE, max = Double.MIN_VALUE;
-      
+
       if (bpp == 4) {
         for (int i=0; i<data.length; i++) {
           data[i] = (double) DataTools.bytesToFloat(b, i * bpp, bpp, little);
-          if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
+          if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY)
             continue;
           else {
             if (data[i] < min) min = data[i];
@@ -225,16 +225,16 @@ public final class RBioFormats {
       else if (bpp == 8) {
         for (int i=0; i<data.length; i++) {
           data[i] = DataTools.bytesToDouble(b, i * bpp, bpp, little);
-          if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY) 
+          if (data[i] == Double.POSITIVE_INFINITY || data[i] == Double.NEGATIVE_INFINITY)
             continue;
           else {
             if (data[i] < min) min = data[i];
             if (data[i] > max) max = data[i];
           }
-        }      
+        }
       }
       else return null;
-      
+
       // normalize min => 0.0, max => 1.0
       double range = max - min;
       for (int i=0; i<data.length; i++) {
@@ -246,22 +246,22 @@ public final class RBioFormats {
     else {
       long[] minmax = FormatTools.defaultMinMax(pixelType);
       double min = minmax[0], max = minmax[1];
-       
+
       // true bpp value overrides the default
       int bitsPerPixel = reader.getCoreMetadataList().get(reader.getCoreIndex()).bitsPerPixel;
-      if ( !FormatTools.isSigned(pixelType) &&  bitsPerPixel < FormatTools.getBytesPerPixel(pixelType) * 8) max = Math.pow(2, bitsPerPixel) - 1;	
-      
+      if ( !FormatTools.isSigned(pixelType) &&  bitsPerPixel < FormatTools.getBytesPerPixel(pixelType) * 8) max = Math.pow(2, bitsPerPixel) - 1;
+
       double range = max - min;
-      for(int i = 0; i < data.length; ++i) data[i] = ((double) DataTools.bytesToLong(b, i * bpp, bpp, little) - min) / range;      
+      for(int i = 0; i < data.length; ++i) data[i] = ((double) DataTools.bytesToLong(b, i * bpp, bpp, little) - min) / range;
     }
-    
+
     return data;
   }
-  
+
   public static void writePixels(int[] data, int imageCount, String mode) throws Exception {
     boolean little = false; //TODO: need to revise this
     byte[] b;
-    
+
     switch (FormatTools.pixelTypeFromString(mode)) {
       case FormatTools.INT8:
       case FormatTools.UINT8:
@@ -296,14 +296,14 @@ public final class RBioFormats {
         b= null;
         break;
     }
-    
+
     savePlanes(b, imageCount);
   }
-  
+
   public static void writePixels(double[] data, int imageCount, String mode) throws Exception {
     boolean little = false; //TODO: need to revise this
     byte[] b;
-    
+
     switch (FormatTools.pixelTypeFromString(mode)) {
       case FormatTools.INT8:
       case FormatTools.UINT8:
@@ -338,42 +338,42 @@ public final class RBioFormats {
         b = null;
         break;
     }
-    
+
     savePlanes(b, imageCount);
   }
-  
+
   public static void savePlanes(byte[] bytes, int imageCount) throws Exception {
     int planeSize = bytes.length / imageCount;
     for (int i = 0; i < imageCount; i++) {
       writer.saveBytes(i, Arrays.copyOf(bytes, planeSize));
     }
   }
-  
+
   public static void populateOriginalMetadata(Hashtable<String, Object> hashtable) throws Exception {
     ServiceFactory factory = new ServiceFactory();
     OMEXMLService service = factory.getInstance(OMEXMLService.class);
     service.populateOriginalMetadata(meta, hashtable);
   }
-  
+
   /* Helper functions to construct metadata hashtable */
   public static Hashtable<String, Object> getHashTable() {
     return new Hashtable<String, Object>();
   }
-  
+
   public static void addMetaField(Hashtable<String, Object> hashtable, String key, boolean val) {
     hashtable.put(key, val);
   }
-  
+
   public static void addMetaField(Hashtable<String, Object> hashtable, String key, int val) {
     hashtable.put(key, val);
   }
-  
+
   public static void addMetaField(Hashtable<String, Object> hashtable, String key, double val) {
     hashtable.put(key, val);
   }
-  
+
   public static void addMetaField(Hashtable<String, Object> hashtable, String key, String val) {
     hashtable.put(key, val);
   }
-  
+
 }

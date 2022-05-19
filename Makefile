@@ -12,7 +12,7 @@ document:
 ant:
 	cd java; ant
 
-build: ant
+build:
 	cd ..; R CMD build ${PKGDIR}
 
 install: build
@@ -25,6 +25,8 @@ vignette: install
 	cd vignettes; R CMD Sweave ${PKGNAME}.Rmd
 
 update: check vignette
+
+upgrade: ant update
 
 commit:
 	git commit -am "Update to BioFormats ${BFVER}"; git tag Bio-Formats_${BFVER}

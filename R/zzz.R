@@ -9,47 +9,62 @@
   ## needed, e.g., to run devtools::test)
   pkg_dir <- file.path(lib, pkg)
   installed <- getwd() != pkg_dir
-  
+
   jar_dir <-
     if (installed)
       file.path(pkg_dir, "java")
     else
       jar_dir = file.path(pkg_dir, "inst", "java")
-  
-  tryCatch(download_bioformats(pkg_dir, jar_dir),
-           error = function(e) 
+
+  tryCatch(bf_jar <- .download_bioformats(pkg_dir),
+           error = function(e)
              stop("failed to download Bio-Formats Java library.\n  Check your internet connection and try again.", call.=FALSE)
            )
-  
+
   jars =
     if (installed)
-      "" 
+      ""
     else
       list.files(jar_dir, pattern = ".*\\.jar", full.names = TRUE)
-  
-  .jpackage(pkg, lib.loc = lib, morePaths = jars)
-  
+
+  .jpackage(pkg, lib.loc = lib, morePaths = c(jars, bf_jar))
+
   FormatTools <<- J("loci.formats.FormatTools")
 }
 
-download_bioformats <- function (pkg_dir, jar_dir) {
+.download_bioformats <- function(pkg_dir){
+  bf_url <- .bioformats_jar_url(pkg_dir)
+  bf_jar <- .bioformats_jar_dst()
+
+  if ( !file.exists(bf_jar) || !.verify_md5sum(bf_url, bf_jar) )
+    utils::download.file(bf_url, bf_jar, mode = "wb", quiet = FALSE)
+
+  bf_jar
+}
+
+.bioformats_jar_url <- function (pkg_dir) {
+  url_template <- "https://downloads.openmicroscopy.org/bio-formats/%s/artifacts/%s"
   ver <- read.dcf(file.path(pkg_dir, "DESCRIPTION"), "BioFormats")
   jar <- "bioformats_package.jar"
-  url_template <- "https://downloads.openmicroscopy.org/bio-formats/%s/artifacts/%s"
-  jar_url <- sprintf(url_template, ver, jar)
-  jar_dst <- file.path(jar_dir, jar)
-  
-  if ( file.exists(jar_dst) ) {
-    md5_file <- suppressWarnings(tryCatch(readLines(paste(jar_url, "md5", sep=".")), error = function(e) ""))
-    if (nchar(md5_file)==0L)
-      return(FALSE)
-    md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file)
-    md5_local <- tools::md5sum(jar_dst)
-    if ( md5_local == md5_remote )
-      return(FALSE)
-  }
-  
-  utils::download.file(jar_url, jar_dst, mode = "wb", quiet = FALSE)
-  
-  return(TRUE)
+  sprintf(url_template, ver, jar)
+}
+
+.bioformats_jar_dst <- function() {
+  jar_filename <- "bioformats_package.jar"
+  cache_dir <- tools::R_user_dir("RBioFormats", which = "cache")
+  file.path(cache_dir, jar_filename)
+}
+
+.verify_md5sum <- function(bf_url, bf_jar) {
+  md5_file <-  suppressWarnings(
+    tryCatch(readLines(paste(bf_url, "md5", sep=".")), error = function(e) "")
+  )
+
+  if (nchar(md5_file)==0L)
+    return(FALSE)
+
+  md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file)
+  md5_local <- tools::md5sum(bf_jar)
+
+  return(md5_local == md5_remote)
 }

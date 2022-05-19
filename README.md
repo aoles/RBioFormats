@@ -8,8 +8,8 @@ First, make sure you have [JDK](http://www.oracle.com/technetwork/java/javase/do
 To install *RBioFormats* use the `biocLite` installation script in order to resolve the dependency on the Bioconductor package *[EBImage](http://biocondcutor.org/packages/EBImage)*.
 
 ```r
-source("https://bioconductor.org/biocLite.R")
-biocLite("aoles/RBioFormats") # You might need to first run `install.packages("devtools")`
+if (!require("BiocManager", quietly=TRUE)) install.packages("BiocManager")
+BiocManager::install("aoles/RBioFormats")
 ```
 
 ### Mac OS X

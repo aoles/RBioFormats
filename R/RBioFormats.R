@@ -4,7 +4,7 @@
 #'
 #' @docType package
 #' @name RBioFormats
-#' @import rJava
+#' @import rJava BiocFileCache
 #' @importFrom methods as callNextMethod is
 #' @importFrom stats setNames
 #' @template author

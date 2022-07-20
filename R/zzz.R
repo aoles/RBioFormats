@@ -52,6 +52,8 @@
 .bioformats_jar_dst <- function() {
   jar_filename <- "bioformats_package.jar"
   cache_dir <- tools::R_user_dir("RBioFormats", which = "cache")
+  if (!dir.exists(cache_dir))
+    dir.create(cache_dir, recursive = TRUE)
   file.path(cache_dir, jar_filename)
 }
 

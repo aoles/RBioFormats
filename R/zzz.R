@@ -16,12 +16,10 @@
     else
       jar_dir = file.path(pkg_dir, "inst", "java")
 
-  bf_jar <- .bioformats_jar_dst()
+  bf_ver <- read.dcf(file.path(pkg_dir, "DESCRIPTION"), "BioFormats")
+  bf_jar <- .bioformats_jar_dst(bf_ver)
 
-  tryCatch(.download_bioformats(pkg_dir, bf_jar),
-           error = function(e)
-             stop("failed to download Bio-Formats Java library.\n  Check your internet connection and try again.", call.=FALSE)
-  )
+  .download_bioformats(bf_ver, bf_jar)
 
   jars =
     if (installed)
@@ -34,22 +32,28 @@
   FormatTools <<- J("loci.formats.FormatTools")
 }
 
-.download_bioformats <- function(pkg_dir, bf_jar){
-  bf_url <- .bioformats_jar_url(pkg_dir)
+.download_bioformats <- function(ver, bf_jar){
+  bf_url <- .bioformats_jar_url(ver)
 
-  if ( !file.exists(bf_jar) )
-    utils::download.file(bf_url, bf_jar, mode = "wb", quiet = FALSE)
+  if ( !file.exists(bf_jar) ) {
+    tryCatch(utils::download.file(bf_url, bf_jar, mode = "wb", quiet = FALSE),
+             error = function(e) {
+               file.remove(bf_jar)
+               stop("failed to download Bio-Formats Java library.\n  Check your internet connection and try again.", call.=FALSE)
+             }
+    )
+  }
+
 }
 
-.bioformats_jar_url <- function (pkg_dir) {
+.bioformats_jar_url <- function (ver) {
   url_template <- "https://downloads.openmicroscopy.org/bio-formats/%s/artifacts/%s"
-  ver <- read.dcf(file.path(pkg_dir, "DESCRIPTION"), "BioFormats")
   jar <- "bioformats_package.jar"
   sprintf(url_template, ver, jar)
 }
 
-.bioformats_jar_dst <- function() {
-  jar_filename <- "bioformats_package.jar"
+.bioformats_jar_dst <- function(ver) {
+  jar_filename <- sprintf("bioformats_package_%s.jar", ver)
   cache_dir <- tools::R_user_dir("RBioFormats", which = "cache")
   if (!dir.exists(cache_dir))
     dir.create(cache_dir, recursive = TRUE)

@@ -16,10 +16,12 @@
     else
       jar_dir = file.path(pkg_dir, "inst", "java")
 
-  tryCatch(bf_jar <- .download_bioformats(pkg_dir),
+  bf_jar <- .bioformats_jar_dst()
+
+  tryCatch(.download_bioformats(pkg_dir, bf_jar),
            error = function(e)
              stop("failed to download Bio-Formats Java library.\n  Check your internet connection and try again.", call.=FALSE)
-           )
+  )
 
   jars =
     if (installed)
@@ -32,14 +34,11 @@
   FormatTools <<- J("loci.formats.FormatTools")
 }
 
-.download_bioformats <- function(pkg_dir){
+.download_bioformats <- function(pkg_dir, bf_jar){
   bf_url <- .bioformats_jar_url(pkg_dir)
-  bf_jar <- .bioformats_jar_dst()
 
-  if ( !file.exists(bf_jar) || !.verify_md5sum(bf_url, bf_jar) )
+  if ( !file.exists(bf_jar) )
     utils::download.file(bf_url, bf_jar, mode = "wb", quiet = FALSE)
-
-  bf_jar
 }
 
 .bioformats_jar_url <- function (pkg_dir) {

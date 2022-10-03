@@ -23,6 +23,13 @@ File path to \code{file} is returned invisibly.
 \description{
 Save image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
 }
+\examples{
+f = mockFile(sizeX = 256, sizeY = 256)
+img = read.image(f)
+
+tempfile = tempfile("", , ".png")
+write.image(img, tempfile)
+}
 \seealso{
 \code{\link{read.image}} for reading images.
 }

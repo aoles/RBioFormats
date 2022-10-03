@@ -1,14 +1,14 @@
 #' Generate Test Images
-#' 
+#'
 #' Create a mock image of specific parameters for testing.
-#' 
-#' Generates mock files of specific size or pixel type containing gradient 
-#' images. The desired parameters can be provided as key value pairs to the 
+#'
+#' Generates mock files of specific size or pixel type containing gradient
+#' images. The desired parameters can be provided as key value pairs to the
 #' \code{mockFile} function. For a list of available parameters see below.
-#' 
+#'
 #' @param name File name.
 #' @param ... File parameters; available parameters are listed below.
-#' 
+#'
 #' @section Parameters:
 #' \tabular{lll}{
 #'   \strong{Name} \tab \strong{Default} \tab \strong{Description} \cr
@@ -29,13 +29,12 @@
 #'   series \tab 1 \tab number of series (Images) \cr
 #'   lutLength \tab 3 \tab number of entries in the color lookup table \cr
 #' }
-#'   
+#'
 #' @template author
+#' @return A character string.
+#' @example man-roxygen/ex-mockFile.R
 #' @examples
-#' f = mockFile(sizeX=256, sizeY=256)
-#' img = read.image(f)
 #' img
-#' 
 #' @export
 mockFile = function(name = "mockfile", ...) {
   args = list(...)

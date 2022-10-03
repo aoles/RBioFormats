@@ -25,7 +25,6 @@ f = system.file("images", "nuclei.tif", package="EBImage")
 
 metadata = read.metadata(f)
 str(metadata)
-
 }
 \seealso{
 \code{\link{read.omexml}} for reading image metadata as OME-XML, \code{\link{read.image}} for reading image data

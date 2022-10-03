@@ -7,10 +7,21 @@
 seriesCount(x)
 }
 \arguments{
-\item{x}{an \code{AnnotatedImage} or \code{ImageMetadataList} object}
+\item{x}{an \code{AnnotatedImageList} or \code{ImageMetadataList} object}
+}
+\value{
+The number of image series.
 }
 \description{
 Get the number of image series
+}
+\examples{
+f = mockFile(sizeX = 256, sizeY = 256, series = 2)
+img = read.image(f)
+seriesCount(img)
+
+meta <- metadata(img)
+seriesCount(meta)
 }
 \author{
 Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022

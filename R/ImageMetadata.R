@@ -1,7 +1,10 @@
 #' ImageMetadata and ImageMetadataList Class
-#' 
+#'
 #' Formal representation of image metadata.
 #' @template author
+#' @example man-roxygen/ex-mockFile.R
+#' @examples
+#' metadata(img)
 #' @export
 setClass ("ImageMetadata",
           contains = "list",
@@ -12,11 +15,11 @@ setClass ("ImageMetadata",
               return( 'ImageMetadata must be a list of length 3' )
             if ( !all(names(object) %in% c("coreMetadata", "globalMetadata", "seriesMetadata")))
               return( 'ImageMetadata list must be a named list containing coreMetadata, globalMetadata, and seriesMetadata')
-            
+
             TRUE
           },
           prototype = prototype(
-            list(coreMetadata = NULL, globalMetadata = NULL, seriesMetadata = NULL) 
+            list(coreMetadata = NULL, globalMetadata = NULL, seriesMetadata = NULL)
           )
 )
 
@@ -29,7 +32,7 @@ setClass ("ImageMetadataList",
               return( 'ImageMetadataList must be a list' )
             if ( !all(vapply(object, function(x) is(x, "ImageMetadata"), logical(1), USE.NAMES = FALSE)) )
               return( 'ImageMetadataList must be a list of ImageMetadata objects' )
-            
+
             TRUE
           }
 )
@@ -70,7 +73,7 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
       1L
     } else {
       ## truncate to avoid huge horizontal spacing
-      metadata = lapply(metadata, function(y) { 
+      metadata = lapply(metadata, function(y) {
         if ( list.len < length(y) ) names(y)[(list.len+1L):length(y)] = ""
         y
       })
@@ -82,7 +85,7 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
 #     if ( (l=length(meta)) > 0 ) {
 #       cat(s, ': ')
 #       str(meta, max.level = 0, list.len = l)
-#     } 
+#     }
 #   }
 }
 
@@ -90,31 +93,31 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
 #' @export
 setMethod ("show", signature(object = "ImageMetadataList"), function(object) {
   cat("ImageMetadata list of length", length(object), "\n\n")
-  
+
   #cat("coreMetadata:\n")
-  
+
   m = do.call(rbind, coreMetadata(object))
   m = m[, c("series", "resolutionLevel", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount")]
-  
+
   cNames = c("series", "res", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "total")
-  
+
   sMeta = vapply(seriesMetadata(object), length, integer(1), USE.NAMES=FALSE)
   if ( any(sMeta>0) ) {
     cNames = c(cNames, "seriesMetadata")
     m = cbind(m, paste("List of", sMeta))
   }
-  
-  colnames(m) = cNames 
+
+  colnames(m) = cNames
   rownames(m) = rep("", nrow(m))
-  
+
   print(m)
-  
+
   if ( length( (gMeta = globalMetadata(object)[[1L]]) ) > 0L ) {
     cat("\nglobalMetadata:")
     str( globalMetadata(object)[[1L]], list.len=5L )
   }
   #callNextMethod()
-  
+
   #str(setNames(object@.Data, names(object)), no.list=TRUE, list.len=5)
 })
 

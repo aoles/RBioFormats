@@ -35,6 +35,11 @@ Extends the \linkS4class{Image} class from the \pkg{EBImage} package.
 \item{\code{metadata}}{an \linkS4class{ImageMetadata} object containing image metadata}
 }}
 
+\examples{
+f = mockFile(sizeX = 256, sizeY = 256)
+img = read.image(f)
+img
+}
 \seealso{
 \linkS4class{AnnotatedImageList}
 }

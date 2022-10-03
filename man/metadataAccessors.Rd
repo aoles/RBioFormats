@@ -4,6 +4,7 @@
 \alias{coreMetadata}
 \alias{globalMetadata}
 \alias{seriesMetadata}
+\alias{metadata}
 \alias{metadata<-}
 \alias{metadata<-,AnnotatedImage-method}
 \alias{coreMetadata<-}
@@ -22,6 +23,8 @@ coreMetadata(x, series, ...)
 globalMetadata(x, series, ...)
 
 seriesMetadata(x, series, ...)
+
+metadata(x)
 
 metadata(y) <- value
 
@@ -67,10 +70,10 @@ The \ldots arguments are passed to \code{\link[base]{grep}} called on metadata n
 }
 \examples{
 img = read.image(system.file("images", "nuclei.tif", package="EBImage"))
- 
+
 coreMetadata(img)
 
-# subset for specific names 
+# subset for specific names
 
 globalMetadata(img, pattern="Image")
 }

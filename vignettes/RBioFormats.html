@@ -11,7 +11,7 @@
 
 <meta name="author" content="Andrzej Oleś" />
 
-<meta name="date" content="2022-08-21" />
+<meta name="date" content="2022-10-03" />
 
 <title>RBioFormats: an R interface to the Bio-Formats library</title>
 
@@ -1851,9 +1851,9 @@ function toggle_visibility(id1) {
 
 <h1 class="title toc-ignore">RBioFormats: an R interface to the Bio-Formats library</h1>
 <p class="author-name">Andrzej Oleś</p>
-<h4 class="date">21 August 2022</h4>
+<h4 class="date">3 October 2022</h4>
 <h4 class="package">Package</h4>
-<p>RBioFormats 0.0.79 (Bio-Formats library version: 6.10.1)</p>
+<p>RBioFormats 0.99.0 (Bio-Formats library version: 6.10.1)</p>
 
 </div>
 
@@ -1939,7 +1939,7 @@ img</code></pre>
 </div>
 <div id="the-annotatedimage-class" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> The <em>AnnotatedImage</em> class</h1>
-<p><em>RBioFormats</em> stores image data in an <em>AnnotatedImage</em> class which extends the <em>Image</em> class from <em><a href="https://bioconductor.org/packages/3.15/EBImage">EBImage</a></em>.</p>
+<p><em>RBioFormats</em> stores image data in an <em>AnnotatedImage</em> class which extends the <em>Image</em> class from <em><a href="https://bioconductor.org/packages/3.16/EBImage">EBImage</a></em>.</p>
 <pre class="r"><code>getClassDef(&quot;AnnotatedImage&quot;)</code></pre>
 <pre><code>## Class &quot;AnnotatedImage&quot; [package &quot;RBioFormats&quot;]
 ## 
@@ -2048,7 +2048,7 @@ xmlRoot(omexml)</code></pre>
 <h1>Session info</h1>
 <p>Here is the output of <code>sessionInfo()</code> on the system on which this
 document was compiled:</p>
-<pre><code>## R version 4.2.0 (2022-04-22)
+<pre><code>## R version 4.2.1 (2022-06-23)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
 ## Running under: macOS High Sierra 10.13.6
 ## 
@@ -2063,22 +2063,22 @@ document was compiled:</p>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] XML_3.99-0.9       RBioFormats_0.0.79 rJava_1.0-6        knitr_1.39        
-## [5] BiocStyle_2.25.1  
+## [1] XML_3.99-0.10      RBioFormats_0.99.0 rJava_1.0-6        knitr_1.40        
+## [5] BiocStyle_2.25.0  
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] magrittr_2.0.3      BiocGenerics_0.42.0 EBImage_4.38.0     
-##  [4] lattice_0.20-45     R6_2.5.1            jpeg_0.1-9         
-##  [7] rlang_1.0.4         fastmap_1.1.0       stringr_1.4.0      
-## [10] tools_4.2.0         grid_4.2.0          xfun_0.31          
-## [13] png_0.1-7           cli_3.3.0           jquerylib_0.1.4    
-## [16] htmltools_0.5.3     yaml_2.3.5          abind_1.4-5        
-## [19] digest_0.6.29       bookdown_0.26       BiocManager_1.30.18
-## [22] htmlwidgets_1.5.4   bitops_1.0-7        fftwtools_0.9-11   
-## [25] sass_0.4.1          RCurl_1.98-1.8      evaluate_0.15      
-## [28] tiff_0.1-11         rmarkdown_2.14      stringi_1.7.6      
-## [31] compiler_4.2.0      bslib_0.3.1         locfit_1.5-9.6     
-## [34] jsonlite_1.8.0</code></pre>
+##  [1] bslib_0.4.0         compiler_4.2.1      BiocManager_1.30.18
+##  [4] jquerylib_0.1.4     bitops_1.0-7        tools_4.2.1        
+##  [7] digest_0.6.29       jsonlite_1.8.1      evaluate_0.16      
+## [10] lattice_0.20-45     png_0.1-7           rlang_1.0.6        
+## [13] cli_3.4.1           yaml_2.3.5          xfun_0.33          
+## [16] fastmap_1.1.0       stringr_1.4.1       sass_0.4.2         
+## [19] fftwtools_0.9-11    htmlwidgets_1.5.4   locfit_1.5-9.6     
+## [22] grid_4.2.1          R6_2.5.1            jpeg_0.1-9         
+## [25] rmarkdown_2.16      bookdown_0.29       magrittr_2.0.3     
+## [28] htmltools_0.5.3     BiocGenerics_0.43.4 abind_1.4-5        
+## [31] EBImage_4.39.0      tiff_0.1-11         stringi_1.7.8      
+## [34] RCurl_1.98-1.8      cachem_1.0.6</code></pre>
 </div>
 <div id="appendix-a-working-with-test-images" class="section level1 unnumbered" number>
 <h1>Appendix A: Working with test images</h1>
@@ -2089,7 +2089,7 @@ img = read.image(f)
 require(&quot;EBImage&quot;)</code></pre>
 <pre><code>## Loading required package: EBImage</code></pre>
 <pre class="r"><code>display(img, method = &quot;raster&quot;)</code></pre>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA7wAAAPACAAAAAAzyCpRAAAAAmJLR0QA/4ePzL8AAAAHdElNRQfmCBUAHjJH6NAMAAAL8ElEQVR42u3XwW7aQBRA0XkUqcv+/9fSBRAwBtJ00eoq50gEYo+HMeZCMivr+OvXca211qw1pznfX/ZdHl5v501zWvOw+f64u2nWbdBsppv1fMTtNuu0eZLtEp4uYzPHxxJe7P3Xxx5entHr8z1sX6unr+Sa22q2V2HWac1ljleLPLxcxmH/RKdZM0+f6Pbz3fnur/5h/855eGX2U818evrbazTbU79b66zz3sP/ThD4O+KFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8ULU8fWu+co8Xxr8xwe8HXT0wcO39hHv3FJ5uH8oaJ49nNN8NuhhwGneTHd5OOtu2t3ew0/18p0d1/oId673a63Z5XUX4Zu6L9Wd1tzvnde1Xg+Y9XjA2g+c8y+X2X+Il+/s3Z/NT+Od/aY151rvNh3WY4sf/11va33xkXD5/Lh+827i3R0L35IvL4gSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8EPUblGsv9KNbwx0AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMDgtMjFUMDA6MzA6NTArMDA6MDCAO9vEAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTA4LTIxVDAwOjMwOjUwKzAwOjAw8WZjeAAAAD10RVh0aWNjOmNvcHlyaWdodABDb3B5cmlnaHQgMjAwNyBBcHBsZSBJbmMuLCBhbGwgcmlnaHRzIHJlc2VydmVkLp5m3CkAAAAjdEVYdGljYzpkZXNjcmlwdGlvbgBHZW5lcmljIFJHQiBQcm9maWxlGqc4jgAAAABJRU5ErkJggg==" width="256px" height="256px" /></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA7wAAAPACAAAAAAzyCpRAAAAAmJLR0QA/4ePzL8AAAAHdElNRQfmCgMUJQXXesq0AAAL8ElEQVR42u3XwW7aQBRA0XkUqcv+/9fSBRAwBtJ00eoq50gEYo+HMeZCMivr+OvXca211qw1pznfX/ZdHl5v501zWvOw+f64u2nWbdBsppv1fMTtNuu0eZLtEp4uYzPHxxJe7P3Xxx5entHr8z1sX6unr+Sa22q2V2HWac1ljleLPLxcxmH/RKdZM0+f6Pbz3fnur/5h/855eGX2U818evrbazTbU79b66zz3sP/ThD4O+KFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8ULU8fWu+co8Xxr8xwe8HXT0wcO39hHv3FJ5uH8oaJ49nNN8NuhhwGneTHd5OOtu2t3ew0/18p0d1/oId673a63Z5XUX4Zu6L9Wd1tzvnde1Xg+Y9XjA2g+c8y+X2X+Il+/s3Z/NT+Od/aY151rvNh3WY4sf/11va33xkXD5/Lh+827i3R0L35IvL4gSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8ECVeiBIvRIkXosQLUeKFKPFClHghSrwQJV6IEi9EiReixAtR4oUo8UKUeCFKvBAlXogSL0SJF6LEC1HihSjxQpR4IUq8EPUblGsv9KNbwx0AAAAldEVYdGRhdGU6Y3JlYXRlADIwMjItMTAtMDNUMjA6Mzc6MDUrMDA6MDCmC7a0AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDIyLTEwLTAzVDIwOjM3OjA1KzAwOjAw11YOCAAAAD10RVh0aWNjOmNvcHlyaWdodABDb3B5cmlnaHQgMjAwNyBBcHBsZSBJbmMuLCBhbGwgcmlnaHRzIHJlc2VydmVkLp5m3CkAAAAjdEVYdGljYzpkZXNjcmlwdGlvbgBHZW5lcmljIFJHQiBQcm9maWxlGqc4jgAAAABJRU5ErkJggg==" width="256px" height="256px" /></p>
 <p>Note that the native image data range is different depending on pixel type:</p>
 <div class='horizontal-scroll'><table>
 <thead>
@@ -2142,7 +2142,7 @@ require(&quot;EBImage&quot;)</code></pre>
 </div>
 <div id="appendix-b-compared-to-ebimage" class="section level1 unnumbered" number>
 <h1>Appendix B: Compared to <em>EBImage</em></h1>
-<p>Loading images using <em><a href="https://github.com/aoles/RBioFormats">RBioFormats</a></em> should give the same results as using the <em><a href="https://bioconductor.org/packages/3.15/EBImage">EBImage</a></em> package.</p>
+<p>Loading images using <em><a href="https://github.com/aoles/RBioFormats">RBioFormats</a></em> should give the same results as using the <em><a href="https://bioconductor.org/packages/3.16/EBImage">EBImage</a></em> package.</p>
 <pre class="r"><code>require(&quot;EBImage&quot;)
 f = system.file(&quot;images&quot;, &quot;sample-color.png&quot;, package = &quot;EBImage&quot;)
 identical(readImage(f), as.Image(read.image(f)))</code></pre>

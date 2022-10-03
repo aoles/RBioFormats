@@ -1,7 +1,7 @@
 #' Read Images
-#' 
+#'
 #' Read image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.
-#' 
+#'
 #' @param file character, file name
 #' @param filter.metadata logical, specifies whether ugly metadata (entries with unprintable characters, and extremely large entries) should be discarded from the metadata table
 #' @param proprietary.metadata logical, should proprietary metadata be populated to OME-XML
@@ -15,10 +15,9 @@
 #' @examples
 #' require(EBImage)
 #' f = system.file("images", "sample-color.png", package="EBImage")
-#' 
+#'
 #' img = read.image(f)
 #' img
-#' 
 #' @template author
 #' @seealso \code{\link{read.metadata}} for reading image metadata, \code{\link{read.omexml}} for reading image metadata as OME-XML
 #' @export
@@ -26,33 +25,33 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
   reader = .getReader()
   on.exit( .close(reader) )
   .setupReader(file, filter.metadata, proprietary.metadata)
-  
+
   if ( missing(subset) )
     subset = list()
   else
-    names(subset) = tolower(names(subset)) 
-  
+    names(subset) = tolower(names(subset))
+
   resolutions = .parseSeriesResolutions(reader, series, resolution)
-  
-  metadata = 
-    if ( isTRUE(read.metadata)) 
+
+  metadata =
+    if ( isTRUE(read.metadata))
       .getMetadataList(reader, resolutions)
   else
     .jcall(reader, "Ljava/util/List;", "getCoreMetadataList", use.true.class = TRUE)
-  
-  
+
+
   # create a list of (series, resolution) pairs
   series_resolution = unlist(mapply(function(s, r) mapply(c, s, r, SIMPLIFY=FALSE), as.integer(names(resolutions)), resolutions, SIMPLIFY=FALSE, USE.NAMES=FALSE), recursive=FALSE)
-  
+
   # iterate over series and resolutions
   res = lapply(seq_along(series_resolution), function(i) {
     sr = series_resolution[[i]]
     .jcall(reader, , "setSeries", sr[1]-1L)
     .jcall(reader, , "setResolution", sr[2]-1L)
-    
+
     metadata =
       if ( isTRUE(read.metadata) ) {
-        metadata[[i]]        
+        metadata[[i]]
       }
     else {
       coreMetadata = .jcall(metadata, "Ljava/lang/Object;", "get", .jcall(reader, "I", "getCoreIndex"), use.true.class = TRUE)
@@ -66,16 +65,16 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
         globalMetadata = NULL
       ))
     }
-    
+
     coreMetadata = metadata[["coreMetadata"]]
-    
-    ## get indices of image planes to read    
+
+    ## get indices of image planes to read
     xyczt = c(x = coreMetadata[["sizeX"]],
               y = coreMetadata[["sizeY"]],
               c = coreMetadata[["sizeC"]],
               z = coreMetadata[["sizeZ"]],
               t = coreMetadata[["sizeT"]])
-    
+
     subset = sapply(names(xyczt), function(d) {
       if ( is.null(subset[[d]]) )
         seq_len(xyczt[d])
@@ -84,13 +83,13 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
         sub[ sub >= 1L & sub <= xyczt[d] ]
       }
     }, simplify = FALSE)
-    
+
     indices = subset[[3L]]
     for (d in 4:5) {
       xyczt[d] = xyczt[d] * xyczt[d-1] # instead of cumprod to preserve integers
       indices = as.vector(sapply( (subset[[d]] - 1L) * xyczt[d-1], function (i) i + indices))
     }
-    
+
     ## set Image parameters
     colormode = if (length(subset$c) == 1) 0L else 2L
     xyczt = vapply(subset, length, integer(1L))
@@ -98,8 +97,8 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     wh = xyczt[1:2]
     czt = xyczt[3:5]
     dim = c(wh, czt[czt > 1L])
-    
-    new("AnnotatedImage", 
+
+    new("AnnotatedImage",
         .Data = array(
           data = unlist(lapply(indices-1L, function(i) .jcall("RBioFormats", "Ljava/lang/Object;", "readPixels", i, xy[1L], xy[2L], wh[1L], wh[2L], isTRUE(normalize), evalArray=TRUE, use.true.class=TRUE) )),
           dim = setNames(dim, NULL),
@@ -109,7 +108,7 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
         metadata = metadata
     )
   })
-  
+
   if ( length(res) == 1L) return(res[[1L]])
   else return(AnnotatedImageList(res))
 }
@@ -139,20 +138,20 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
     metadataComplete = "Z",
     thumbnail = "Z"
   )
-  
+
   series = as.integer(names(resolutions))
-  
+
   globalMetadata = .getGlobalMetadata(reader)
   coreMetadataList = .jcall(reader, "Ljava/util/List;", "getCoreMetadataList", use.true.class = TRUE)
-  
+
   # iterate over series and resolutions
-  
+
   ImageMetadataList(unlist(
     lapply(seq_along(series), function(i) {
       s = series[[i]]
       .jcall(reader, , "setSeries", s-1L)
       seriesMetadata = .getSeriesMetadata(reader)
-      
+
       lapply(resolutions[[i]], function(r) {
         .jcall(reader, , "setResolution", r-1L)
         coreMetadata = .jcall(coreMetadataList, "Ljava/lang/Object;", "get", .jcall(reader, "I", "getCoreIndex"), use.true.class = TRUE)
@@ -160,11 +159,11 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
           .jfield(coreMetadata, coreMetadataFields[[field]], field, FALSE)
         })
         names(coreMetadata) = names(coreMetadataFields)
-        
+
         coreMetadata[["pixelType"]] = .jcall("loci/formats/FormatTools", "S", "getPixelTypeString", coreMetadata[["pixelType"]])
         coreMetadata[["series"]] = s
         coreMetadata[["resolutionLevel"]] = r
-        
+
         ImageMetadata( list(
           coreMetadata = coreMetadata,
           seriesMetadata = seriesMetadata,
@@ -216,24 +215,24 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
       stop(sprintf("Invalid %s specification.", name))
     else x
   }
-  
+
   # check series specification
   seriesCount = .jcall(reader, "I", "getSeriesCount") # number of series per file
-  series = 
+  series =
     if ( missing(series) )  # dafault case: read all series
       seq_len(seriesCount)
     else
       .integerIndices(series, seriesCount, "series")
-  
+
   resolutions = lapply(series, function (s, r) {
     .jcall(reader, , "setSeries", s-1L)
     resolutionCount = .jcall(reader, "I", "getResolutionCount")
-    
+
     if ( missing(r) ) # dafault case: read all resolutions
       seq_len(resolutionCount)
     else
       .integerIndices(r, resolutionCount, "resolution")
   }, resolution)
-  
+
   setNames(resolutions, series)
 }

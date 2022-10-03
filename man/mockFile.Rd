@@ -11,12 +11,15 @@ mockFile(name = "mockfile", ...)
 
 \item{...}{File parameters; available parameters are listed below.}
 }
+\value{
+A character string.
+}
 \description{
 Create a mock image of specific parameters for testing.
 }
 \details{
-Generates mock files of specific size or pixel type containing gradient 
-images. The desired parameters can be provided as key value pairs to the 
+Generates mock files of specific size or pixel type containing gradient
+images. The desired parameters can be provided as key value pairs to the
 \code{mockFile} function. For a list of available parameters see below.
 }
 \section{Parameters}{
@@ -43,10 +46,9 @@ images. The desired parameters can be provided as key value pairs to the
 }
 
 \examples{
-f = mockFile(sizeX=256, sizeY=256)
+f = mockFile(sizeX = 256, sizeY = 256)
 img = read.image(f)
 img
-
 }
 \author{
 Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022

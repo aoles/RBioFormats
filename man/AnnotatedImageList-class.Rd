@@ -14,3 +14,8 @@ AnnotatedImageList(...)
 \description{
 A list of \linkS4class{AnnotatedImage} objects.
 }
+\examples{
+f = mockFile(sizeX = 256, sizeY = 256, series = 2)
+img = read.image(f)
+img
+}

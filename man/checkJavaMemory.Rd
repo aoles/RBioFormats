@@ -21,9 +21,9 @@ Information about the Java heap space usage.
 ## assign 4 gigabytes of heap space to the Java environment.
 options( java.parameters = "-Xmx4g" )
 library( "RBioFormats" )
+}
 
 checkJavaMemory()
-}
 }
 \author{
 Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022

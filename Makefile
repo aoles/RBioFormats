@@ -19,7 +19,11 @@ install: build
 	R CMD INSTALL ../${PKGNAME}_${PKGVER}.tar.gz
 
 check: build
-	cd ..; R CMD check --no-manual ${PKGNAME}_${PKGVER}.tar.gz
+	export R_CHECK_ENVIRON=/Users/oles/.bioc_check.Renviron
+	cd ..; R CMD check ${PKGNAME}_${PKGVER}.tar.gz
+
+bioccheck: check
+	cd ..; ${RSCRIPT} -e "BiocCheck::BiocCheck('${PKGNAME}_${PKGVER}.tar.gz', 'new-package'=TRUE)"
 
 vignette: install
 	cd vignettes; R CMD Sweave ${PKGNAME}.Rmd

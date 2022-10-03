@@ -19,7 +19,7 @@
   bf_ver <- read.dcf(file.path(pkg_dir, "DESCRIPTION"), "BioFormats")
   bf_jar <- .bioformats_jar_dst(bf_ver)
 
-  .download_bioformats(bf_ver, bf_jar)
+  .get_bioformats(bf_ver, bf_jar)
 
   jars =
     if (installed)
@@ -32,7 +32,7 @@
   FormatTools <<- J("loci.formats.FormatTools")
 }
 
-.download_bioformats <- function(ver, bf_jar){
+.get_bioformats <- function(ver, bf_jar){
   bf_url <- .bioformats_jar_url(ver)
 
   if ( !file.exists(bf_jar) ) {

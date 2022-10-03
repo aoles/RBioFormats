@@ -1,9 +1,9 @@
 #' Metadata Accessors
-#' 
+#'
 #' Get and set image metadata.
-#' 
+#'
 #' The \ldots arguments are passed to \code{\link[base]{grep}} called on metadata names allowing for convenient subsetting.
-#' 
+#'
 #' @rdname metadataAccessors
 #' @param x an \linkS4class{AnnotatedImage}, \linkS4class{AnnotatedImageList}, \linkS4class{ImageMetadata}, or \linkS4class{ImageMetadataList} object
 #' @param series series ID
@@ -11,11 +11,11 @@
 #' @return Named list consisting of key value pairs.
 #' @examples
 #' img = read.image(system.file("images", "nuclei.tif", package="EBImage"))
-#'  
+#'
 #' coreMetadata(img)
-#' 
-#' # subset for specific names 
-#' 
+#'
+#' # subset for specific names
+#'
 #' globalMetadata(img, pattern="Image")
 #' @template author
 #' @export
@@ -34,30 +34,37 @@ seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 .getMetadata = function (x, series, ...) {
   ## metadata type equals accessor name
   type = as.character(sys.call(-1L)[[1L]])
-  
+
   metadata = metadata(x)
-  
+
   if ( inherits(x, "ImageMetadataList") ) {
-    if ( !missing(series) ) metadata = metadata[series]    
+    if ( !missing(series) ) metadata = metadata[series]
   }
   else metadata = list(metadata)
-  
+
   metadata = setNames(lapply(metadata, function(x) x[[type]]), seq_along(metadata))
-  
+
   ## grep
   if ( length(list(...)) > 0L )
     metadata = lapply(metadata, function(y) y[rev(grep(x=names(y), ...))])
-  
+
   if ( length(metadata)==1L ) metadata = metadata[[1L]]
-  
+
   metadata
 }
 
 #' Number of Image Series
-#' 
+#'
 #' Get the number of image series
-#' @param x an \code{AnnotatedImage} or \code{ImageMetadataList} object
+#' @param x an \code{AnnotatedImageList} or \code{ImageMetadataList} object
+#' @return The number of image series.
 #' @template author
+#' @example man-roxygen/ex-mockFileSeries.R
+#' @examples
+#' seriesCount(img)
+#'
+#' meta <- metadata(img)
+#' seriesCount(meta)
 #' @export
 seriesCount = function(x) UseMethod("seriesCount")
 
@@ -83,10 +90,7 @@ seriesCount.AnnotatedImageList = .seriesList
 #' @export
 seriesCount.ImageMetadataList = .seriesList
 
-
-#' Image Metadata
-#' 
-#' @rdname metadata
+#' @rdname metadataAccessors
 #' @inheritParams seriesCount
 #' @export
 metadata <- function(x) UseMethod("metadata")

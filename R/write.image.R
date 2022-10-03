@@ -10,6 +10,11 @@
 #' @return File path to \code{file} is returned invisibly.
 #' @template author
 #' @seealso \code{\link{read.image}} for reading images.
+#' @example man-roxygen/ex-mockFile.R
+#' @examples
+#'
+#' tempfile = tempfile("", , ".png")
+#' write.image(img, tempfile)
 #' @export
 write.image <- function(x, file, force = FALSE, pixelType, littleEndian) {
   writer = .getWriter()

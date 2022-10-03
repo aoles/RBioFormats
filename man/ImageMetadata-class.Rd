@@ -36,6 +36,11 @@ ImageMetadataList(...)
 \description{
 Formal representation of image metadata.
 }
+\examples{
+f = mockFile(sizeX = 256, sizeY = 256)
+img = read.image(f)
+metadata(img)
+}
 \author{
 Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
 }

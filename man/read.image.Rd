@@ -44,7 +44,6 @@ f = system.file("images", "sample-color.png", package="EBImage")
 
 img = read.image(f)
 img
-
 }
 \seealso{
 \code{\link{read.metadata}} for reading image metadata, \code{\link{read.omexml}} for reading image metadata as OME-XML

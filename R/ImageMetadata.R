@@ -81,22 +81,14 @@ setMethod ("show", signature(object = "ImageMetadata"), function(object) {
       })
       2L
     }
+
   str(metadata, no.list=TRUE, list.len=list.len, max.level=max.level, ...)
-#   for (s in c("coreMetadata", "globalMetadata", "seriesMetadata")) {
-#     meta = do.call(s, list(object))
-#     if ( (l=length(meta)) > 0 ) {
-#       cat(s, ': ')
-#       str(meta, max.level = 0, list.len = l)
-#     }
-#   }
 }
 
 #' @rdname ImageMetadata-class
 #' @export
 setMethod ("show", signature(object = "ImageMetadataList"), function(object) {
   cat("ImageMetadata list of length", length(object), "\n\n")
-
-  #cat("coreMetadata:\n")
 
   m = do.call(rbind, coreMetadata(object))
   m = m[, c("series", "resolutionLevel", "sizeX", "sizeY", "sizeC", "sizeZ", "sizeT", "imageCount")]
@@ -118,9 +110,6 @@ setMethod ("show", signature(object = "ImageMetadataList"), function(object) {
     cat("\nglobalMetadata:")
     str( globalMetadata(object)[[1L]], list.len=5L )
   }
-  #callNextMethod()
-
-  #str(setNames(object@.Data, names(object)), no.list=TRUE, list.len=5)
 })
 
 #' @rdname ImageMetadata-class

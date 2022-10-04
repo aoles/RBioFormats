@@ -59,17 +59,3 @@
     dir.create(cache_dir, recursive = TRUE)
   file.path(cache_dir, jar_filename)
 }
-
-.verify_md5sum <- function(bf_url, bf_jar) {
-  md5_file <-  suppressWarnings(
-    tryCatch(readLines(paste(bf_url, "md5", sep=".")), error = function(e) "")
-  )
-
-  if (nchar(md5_file)==0L)
-    return(FALSE)
-
-  md5_remote <- sub("([0-9a-z]+).*", "\\1", md5_file)
-  md5_local <- tools::md5sum(bf_jar)
-
-  return(md5_local == md5_remote)
-}

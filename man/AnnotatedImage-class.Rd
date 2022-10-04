@@ -24,7 +24,12 @@ AnnotatedImage(...)
 
 \item{short}{logical, turns off image data preview.}
 
-\item{object}{an \code{AnnotatedImage} object}
+\item{object}{an \linkS4class{AnnotatedImage} object}
+}
+\value{
+\code{AnnotatedImage} returns a new \linkS4class{AnnotatedImage} object.
+
+\code{as.Image} returns an \linkS4class{Image} object.
 }
 \description{
 Extends the \linkS4class{Image} class from the \pkg{EBImage} package.

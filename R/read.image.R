@@ -10,7 +10,7 @@
 #' @param resolution integer vector specifying resolution levels to read; if missing all levels read
 #' @param subset named list specifing image subsetting
 #' @param read.metadata logical, should image metadata be read
-#' @return A \code{\link{AnnotatedImage}} object or a \code{\link{AnnotatedImageList}} object in case of multi-series data.
+#' @return An \linkS4class{AnnotatedImage} object or an \linkS4class{AnnotatedImageList} object in case of multi-series data.
 #' @importFrom EBImage Color normalize
 #' @examples
 #' require(EBImage)

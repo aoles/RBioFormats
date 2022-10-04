@@ -33,6 +33,11 @@ ImageMetadataList(...)
 
 \item{object}{an \code{ImageMetadata} object}
 }
+\value{
+\code{ImageMetadata} returns a new \linkS4class{ImageMetadata} object.
+
+\code{ImageMetadataList} returns a new \linkS4class{ImageMetadataList} object.
+}
 \description{
 Formal representation of image metadata.
 }

@@ -33,7 +33,7 @@ read.image(
 \item{read.metadata}{logical, should image metadata be read}
 }
 \value{
-A \code{\link{AnnotatedImage}} object or a \code{\link{AnnotatedImageList}} object in case of multi-series data.
+An \linkS4class{AnnotatedImage} object or an \linkS4class{AnnotatedImageList} object in case of multi-series data.
 }
 \description{
 Read image files using the Bio-Formats library. A list of supported formats can be found on the \href{http://www.openmicroscopy.org/site/support/bio-formats5/supported-formats.html}{Bio-Formats website}.

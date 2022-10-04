@@ -11,6 +11,9 @@ AnnotatedImageList(...)
 \arguments{
 \item{...}{a list of \linkS4class{AnnotatedImage} objects to include in the new object.}
 }
+\value{
+\code{AnnotatedImageList} returns a new \linkS4class{AnnotatedImageList} object.
+}
 \description{
 A list of \linkS4class{AnnotatedImage} objects.
 }

@@ -30,6 +30,7 @@ setClass ("AnnotatedImage",
 
 #' @rdname AnnotatedImage-class
 #' @param ... data to include in the new object. Named arguments correspond to slots in the class definition. Unnamed arguments must be objects from classes that this class extends.
+#' @return \code{AnnotatedImage} returns a new \linkS4class{AnnotatedImage} object.
 #' @export
 AnnotatedImage = function(...) new("AnnotatedImage", ...)
 
@@ -54,6 +55,7 @@ setClass ("AnnotatedImageList",
 
 #' @rdname AnnotatedImageList-class
 #' @param ... a list of \linkS4class{AnnotatedImage} objects to include in the new object.
+#' @return \code{AnnotatedImageList} returns a new \linkS4class{AnnotatedImageList} object.
 #' @export
 AnnotatedImageList = function(...) new("AnnotatedImageList", ...)
 
@@ -84,7 +86,7 @@ print.AnnotatedImage <- function(x, short=FALSE, ...) {
 }
 
 #' @rdname AnnotatedImage-class
-#' @param object an \code{AnnotatedImage} object
+#' @param object an \linkS4class{AnnotatedImage} object
 #' @export
 setMethod ("show", signature(object = "AnnotatedImage"), function(object) {
   callNextMethod()
@@ -98,6 +100,7 @@ setMethod ("show", signature(object = "AnnotatedImage"), function(object) {
 
 #' @rdname AnnotatedImage-class
 #' @importFrom EBImage as.Image
+#' @return \code{as.Image} returns an \linkS4class{Image} object.
 #' @export
 as.Image.AnnotatedImage = function(x) {
   y = as(x, "Image")

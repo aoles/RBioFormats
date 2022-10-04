@@ -38,10 +38,12 @@ setClass ("ImageMetadataList",
 )
 
 #' @rdname ImageMetadata-class
+#' @return \code{ImageMetadata} returns a new \linkS4class{ImageMetadata} object.
 #' @export
 ImageMetadata = function(...) new("ImageMetadata", ...)
 
 #' @rdname ImageMetadata-class
+#' @return \code{ImageMetadataList} returns a new \linkS4class{ImageMetadataList} object.
 #' @export
 ImageMetadataList = function(...) new("ImageMetadataList", ...)
 

@@ -29,7 +29,7 @@
 
   .jpackage(pkg, lib.loc = lib, morePaths = c(jars, bf_jar))
 
-  FormatTools <<- J("loci.formats.FormatTools")
+  .init_formattools()
 }
 
 .get_bioformats <- function(ver, bf_jar){
@@ -58,4 +58,10 @@
   if (!dir.exists(cache_dir))
     dir.create(cache_dir, recursive = TRUE)
   file.path(cache_dir, jar_filename)
+}
+
+.init_formattools <- function() {
+  FormatTools <- J("loci.formats.FormatTools")
+  package_environment <- parent.env(environment())
+  assign("FormatTools", FormatTools, envir = package_environment)
 }

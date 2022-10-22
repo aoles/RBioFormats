@@ -1,7 +1,7 @@
 context("Check read.metadata")
 
 test_that("Metadata can be read",{
-  f = system.file("images", "nuclei.tif", package="EBImage")
+  f = mockFile(sizeX=16, sizeY=16)
   metadata = read.metadata(f)
 
   expect_true("coreMetadata" %in% names(metadata))

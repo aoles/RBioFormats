@@ -1,16 +1,20 @@
 Package: RBioFormats
-Version: 0.99.3
+Version: 0.99.4
 BioFormats: 6.10.1
 Title: R interface to Bio-Formats
 Description: An R package which interfaces the OME Bio-Formats Java library to
     allow reading of proprietary microscopy image data and metadata.
 Encoding: UTF-8
 Authors@R:
-    person("Andrzej", "Oleś", role = c("aut", "cre"),
+    c(person("Andrzej", "Oleś", role = c("aut", "cre"),
         email = "andrzej.oles@gmail.com",
         comment = c(ORCID = "0000-0003-0285-2787")
-    )
+    ),
+    person("John", "Lee", role = c("ctb"),
+        comment = c(ORCID = "0000-0001-5884-4247")
+    ))
 biocViews: DataImport
+URL: https://github.com/aoles/RBioFormats
 BugReports: https://github.com/aoles/RBioFormats/issues
 Depends:
     rJava (>= 0.9-6)

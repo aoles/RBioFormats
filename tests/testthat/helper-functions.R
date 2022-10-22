@@ -18,11 +18,11 @@ testImage = function(pixelType, ...)  {
   minSeq = if (pixelType$isSigned) -128 else 0
   values = c(minVal, maxVal, seq_len(254L) + minSeq)
   mode = if (isTRUE(pixelType$bytesPerPixel <= 2)) "integer" else "double"
-  storage.mode(values) = mode 
+  storage.mode(values) = mode
   matrix(values, 16L, 16L)
 }
 
-## convience function which returns the result of reading a mockFile 
+## convience function which returns the result of reading a mockFile
 mockImage = function(sizeX=16, sizeY=16, ..., normalize=FALSE) {
   read.image(mockFile(sizeX=sizeX, sizeY=sizeY, ...), normalize=normalize)
 }

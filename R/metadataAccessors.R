@@ -18,16 +18,15 @@
 #'
 #' globalMetadata(img, pattern="Image")
 #' @template author
+#' @importMethodsFrom S4Vectors metadata "metadata<-"
 #' @export
 coreMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 
 #' @rdname metadataAccessors
-#' @inheritParams coreMetadata
 #' @export
 globalMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 
 #' @rdname metadataAccessors
-#' @inheritParams coreMetadata
 #' @export
 seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 
@@ -91,42 +90,38 @@ seriesCount.AnnotatedImageList = .seriesList
 seriesCount.ImageMetadataList = .seriesList
 
 #' @rdname metadataAccessors
-#' @inheritParams seriesCount
 #' @export
-metadata <- function(x) UseMethod("metadata")
+setMethod("metadata", "ANY", function(x) NULL)
 
+#' @rdname metadataAccessors
 #' @export
-metadata.default = function(x) NULL
+setMethod("metadata", "AnnotatedImage", function(x) x@metadata)
 
+#' @rdname metadataAccessors
 #' @export
-metadata.AnnotatedImage = function(x) x@metadata
+setMethod("metadata", "AnnotatedImageList", function(x) ImageMetadataList(lapply(x, metadata)))
 
+#' @rdname metadataAccessors
 #' @export
-metadata.AnnotatedImageList = function(x) ImageMetadataList(lapply(x, metadata))
+setMethod("metadata", "ImageMetadata", identity)
 
+#' @rdname metadataAccessors
 #' @export
-metadata.ImageMetadata = identity
-
-#' @export
-metadata.ImageMetadataList = identity
+setMethod("metadata", "ImageMetadataList", identity)
 
 ## setters
 
 #' @rdname metadataAccessors
 #' @param y an \linkS4class{AnnotatedImage} or \linkS4class{ImageMetadata} object
 #' @param value depending on the context, an \linkS4class{ImageMetadata} object or a list
+#' @importMethodsFrom S4Vectors metadata "metadata<-"
 #' @export
-setGeneric("metadata<-", function(y, value) standardGeneric("metadata<-"))
-
-#' @rdname metadataAccessors
-#' @export
-setReplaceMethod("metadata", "AnnotatedImage", function (y, value) {
-  y@metadata = value
-  y
+setReplaceMethod("metadata", "AnnotatedImage", function (x, value) {
+  x@metadata = value
+  x
 })
 
 #' @rdname metadataAccessors
-#' @inheritParams metadata<-
 #' @export
 setGeneric("coreMetadata<-", function(y, value) standardGeneric("coreMetadata<-"))
 
@@ -145,7 +140,6 @@ setReplaceMethod("coreMetadata", "ImageMetadata", function (y, value) {
 })
 
 #' @rdname metadataAccessors
-#' @inheritParams metadata<-
 #' @export
 setGeneric("globalMetadata<-", function(y, value) standardGeneric("globalMetadata<-"))
 
@@ -164,7 +158,6 @@ setReplaceMethod("globalMetadata", "ImageMetadata", function (y, value) {
 })
 
 #' @rdname metadataAccessors
-#' @inheritParams metadata<-
 #' @export
 setGeneric("seriesMetadata<-", function(y, value) standardGeneric("seriesMetadata<-"))
 

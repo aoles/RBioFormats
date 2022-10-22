@@ -4,8 +4,11 @@
 \alias{coreMetadata}
 \alias{globalMetadata}
 \alias{seriesMetadata}
-\alias{metadata}
-\alias{metadata<-}
+\alias{metadata,ANY-method}
+\alias{metadata,AnnotatedImage-method}
+\alias{metadata,AnnotatedImageList-method}
+\alias{metadata,ImageMetadata-method}
+\alias{metadata,ImageMetadataList-method}
 \alias{metadata<-,AnnotatedImage-method}
 \alias{coreMetadata<-}
 \alias{coreMetadata<-,AnnotatedImage-method}
@@ -24,11 +27,17 @@ globalMetadata(x, series, ...)
 
 seriesMetadata(x, series, ...)
 
-metadata(x)
+\S4method{metadata}{ANY}(x)
 
-metadata(y) <- value
+\S4method{metadata}{AnnotatedImage}(x)
 
-\S4method{metadata}{AnnotatedImage}(y) <- value
+\S4method{metadata}{AnnotatedImageList}(x)
+
+\S4method{metadata}{ImageMetadata}(x)
+
+\S4method{metadata}{ImageMetadataList}(x)
+
+\S4method{metadata}{AnnotatedImage}(x) <- value
 
 coreMetadata(y) <- value
 
@@ -55,9 +64,9 @@ seriesMetadata(y) <- value
 
 \item{...}{arguments passed to \code{\link[base]{grep}}}
 
-\item{y}{an \linkS4class{AnnotatedImage} or \linkS4class{ImageMetadata} object}
-
 \item{value}{depending on the context, an \linkS4class{ImageMetadata} object or a list}
+
+\item{y}{an \linkS4class{AnnotatedImage} or \linkS4class{ImageMetadata} object}
 }
 \value{
 Named list consisting of key value pairs.

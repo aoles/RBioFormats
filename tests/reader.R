@@ -1,4 +1,5 @@
 library("RBioFormats")
+library("rJava")
 
 parameters = list (
   sizeX = 32L,

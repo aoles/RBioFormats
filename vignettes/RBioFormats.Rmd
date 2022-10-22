@@ -159,7 +159,6 @@ display(img, method = "raster")
 Note that the native image data range is different depending on pixel type:
 
 ```{r defaultRange, echo=FALSE, results='asis', R.options=list(digits = 15)}
-FormatTools = J("loci.formats.FormatTools")
 types = c("int8", "uint8", "int16", "uint16", "int32", "uint32", "float", "double")
 
 ranges = sapply(types, function(t) {

@@ -1,5 +1,5 @@
 Package: RBioFormats
-Version: 0.99.4
+Version: 0.99.5
 BioFormats: 6.10.1
 Title: R interface to Bio-Formats
 Description: An R package which interfaces the OME Bio-Formats Java library to
@@ -16,11 +16,10 @@ Authors@R:
 biocViews: DataImport
 URL: https://github.com/aoles/RBioFormats
 BugReports: https://github.com/aoles/RBioFormats/issues
-Depends:
-    rJava (>= 0.9-6)
 Imports:
     EBImage,
     methods,
+    rJava (>= 0.9-6),
     stats
 Suggests:
     BiocStyle,

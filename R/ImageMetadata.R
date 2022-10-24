@@ -9,7 +9,6 @@
 .ImageMetadata <- setClass ("ImageMetadata",
           contains = "list",
           validity = function(object) {
-            cat("Valid ImageMetadata\n")
             if ( !is.list(object) )
               return( 'ImageMetadata must be a list' )
             if ( length(object)!=3L )
@@ -26,7 +25,6 @@
 .ImageMetadataList <- setClass ("ImageMetadataList",
           contains = "list",
           validity = function(object) {
-            cat("Valid ImageMetadataList\n")
             if ( !is.list(object) )
               return( 'ImageMetadataList must be a list' )
             if ( !all(vapply(object, function(x) is(x, "ImageMetadata"), logical(1), USE.NAMES = FALSE)) )

@@ -16,7 +16,6 @@
           contains = "Image",
           slots = c(metadata = "ImageMetadata"),
           validity = function(object) {
-            cat("Valid AnnotatedImage\n")
             if ( !is(object, "Image") )
               return( 'AnnotatedImage must be an Image' )
             if ( !is(object@metadata, "ImageMetadata") )
@@ -45,7 +44,6 @@ AnnotatedImage <- function(..., metadata = ImageMetadata()) {
 .AnnotatedImageList <- setClass ("AnnotatedImageList",
           contains = "list",
           validity = function(object) {
-            cat("Valid AnnotatedImageList\n")
             if ( !is.list(object) )
               return( 'AnnotatedImageList must be a list' )
             if ( !all(vapply(object, function(x) is(x, "AnnotatedImage"), logical(1), USE.NAMES = FALSE)) )

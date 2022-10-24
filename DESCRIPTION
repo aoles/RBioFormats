@@ -1,5 +1,5 @@
 Package: RBioFormats
-Version: 0.99.7
+Version: 0.99.8
 BioFormats: 6.10.1
 Title: R interface to Bio-Formats
 Description: An R package which interfaces the OME Bio-Formats Java library to
@@ -25,9 +25,8 @@ Imports:
 Suggests:
     BiocStyle,
     knitr,
-    microbenchmark,
     testthat,
-    XML
+    xml2
 SystemRequirements: Java (>= 1.7)
 License: GPL-3
 VignetteBuilder: knitr

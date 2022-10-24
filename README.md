@@ -40,7 +40,7 @@ library(rJava)
 
 ## Documentation
 
-To get started with using *RBioFormats* have a look at the [package vignette](https://rawgit.com/aoles/RBioFormats/master/vignettes/RBioFormats.html) .
+To get started with using *RBioFormats* have a look at the package vignette.
 
 ### FAQ
 

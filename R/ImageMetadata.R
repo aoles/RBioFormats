@@ -5,10 +5,11 @@
 #' @example man-roxygen/ex-mockFile.R
 #' @examples
 #' metadata(img)
-#' @export
-setClass ("ImageMetadata",
+#' @exportClass ImageMetadata
+.ImageMetadata <- setClass ("ImageMetadata",
           contains = "list",
           validity = function(object) {
+            cat("Valid ImageMetadata\n")
             if ( !is.list(object) )
               return( 'ImageMetadata must be a list' )
             if ( length(object)!=3L )
@@ -17,17 +18,15 @@ setClass ("ImageMetadata",
               return( 'ImageMetadata list must be a named list containing coreMetadata, globalMetadata, and seriesMetadata')
 
             TRUE
-          },
-          prototype = prototype(
-            list(coreMetadata = NULL, globalMetadata = NULL, seriesMetadata = NULL)
-          )
+          }
 )
 
 #' @rdname ImageMetadata-class
-#' @export
-setClass ("ImageMetadataList",
+#' @exportClass ImageMetadataList
+.ImageMetadataList <- setClass ("ImageMetadataList",
           contains = "list",
           validity = function(object) {
+            cat("Valid ImageMetadataList\n")
             if ( !is.list(object) )
               return( 'ImageMetadataList must be a list' )
             if ( !all(vapply(object, function(x) is(x, "ImageMetadata"), logical(1), USE.NAMES = FALSE)) )
@@ -38,14 +37,22 @@ setClass ("ImageMetadataList",
 )
 
 #' @rdname ImageMetadata-class
+#' @param coreMetadata a list of core metadata entries
+#' @param globalMetadata a list of global metadata entries
+#' @param seriesMetadata a list of series metadata entries
 #' @return \code{ImageMetadata} returns a new \linkS4class{ImageMetadata} object.
 #' @export
-ImageMetadata = function(...) new("ImageMetadata", ...)
+ImageMetadata <- function(coreMetadata = NULL, globalMetadata = NULL, seriesMetadata = NULL) {
+  .ImageMetadata(list(coreMetadata = coreMetadata,
+                      globalMetadata = globalMetadata,
+                      seriesMetadata = seriesMetadata))
+}
 
 #' @rdname ImageMetadata-class
+#' @param ... a list of \linkS4class{ImageMetadata} objects to include in the new object.
 #' @return \code{ImageMetadataList} returns a new \linkS4class{ImageMetadataList} object.
 #' @export
-ImageMetadataList = function(...) new("ImageMetadataList", ...)
+ImageMetadataList = function(...) .ImageMetadataList(...)
 
 #' @rdname ImageMetadata-class
 #' @param list.len numeric; maximum number of metadata entries to display

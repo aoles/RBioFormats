@@ -3,6 +3,7 @@
 \docType{class}
 \name{AnnotatedImageList-class}
 \alias{AnnotatedImageList-class}
+\alias{.AnnotatedImageList}
 \alias{AnnotatedImageList}
 \title{AnnotatedImageList Class}
 \usage{

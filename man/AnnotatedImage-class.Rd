@@ -3,13 +3,14 @@
 \docType{class}
 \name{AnnotatedImage-class}
 \alias{AnnotatedImage-class}
+\alias{.AnnotatedImage}
 \alias{AnnotatedImage}
 \alias{print.AnnotatedImage}
 \alias{show,AnnotatedImage-method}
 \alias{as.Image.AnnotatedImage}
 \title{AnnotatedImage Class}
 \usage{
-AnnotatedImage(...)
+AnnotatedImage(..., metadata = ImageMetadata())
 
 \method{print}{AnnotatedImage}(x, short = FALSE, ...)
 
@@ -18,7 +19,9 @@ AnnotatedImage(...)
 \method{as.Image}{AnnotatedImage}(x)
 }
 \arguments{
-\item{...}{data to include in the new object. Named arguments correspond to slots in the class definition. Unnamed arguments must be objects from classes that this class extends.}
+\item{...}{arguments passed to the \linkS4class{Image} constructor.}
+
+\item{metadata}{an \linkS4class{ImageMetadata} object containing image metadata}
 
 \item{x}{an \linkS4class{AnnotatedImage} object.}
 

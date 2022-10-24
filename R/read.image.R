@@ -59,14 +59,10 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
         .jfield(coreMetadata, .coreMetadataFields[[field]], field, true.class=FALSE)
       })
       names(coreMetadata) = names(.coreMetadataFields)
-      ImageMetadata( list(
-        coreMetadata = coreMetadata,
-        seriesMetadata = NULL,
-        globalMetadata = NULL
-      ))
+      ImageMetadata(coreMetadata = coreMetadata)
     }
 
-    coreMetadata = metadata[["coreMetadata"]]
+  coreMetadata = metadata[["coreMetadata"]]
 
     ## get indices of image planes to read
     xyczt = c(x = coreMetadata[["sizeX"]],
@@ -164,11 +160,10 @@ read.image <- function(file, filter.metadata = FALSE, proprietary.metadata = TRU
         coreMetadata[["series"]] = s
         coreMetadata[["resolutionLevel"]] = r
 
-        ImageMetadata( list(
-          coreMetadata = coreMetadata,
-          seriesMetadata = seriesMetadata,
-          globalMetadata = globalMetadata
-        ))
+        ImageMetadata(coreMetadata = coreMetadata,
+                      seriesMetadata = seriesMetadata,
+                      globalMetadata = globalMetadata
+        )
       })
     }), recursive=FALSE)
   )

@@ -3,7 +3,9 @@
 \docType{class}
 \name{ImageMetadata-class}
 \alias{ImageMetadata-class}
+\alias{.ImageMetadata}
 \alias{ImageMetadataList-class}
+\alias{.ImageMetadataList}
 \alias{ImageMetadata}
 \alias{ImageMetadataList}
 \alias{print.ImageMetadata}
@@ -12,7 +14,11 @@
 \alias{print.ImageMetadataList}
 \title{ImageMetadata and ImageMetadataList Class}
 \usage{
-ImageMetadata(...)
+ImageMetadata(
+  coreMetadata = NULL,
+  globalMetadata = NULL,
+  seriesMetadata = NULL
+)
 
 ImageMetadataList(...)
 
@@ -25,6 +31,12 @@ ImageMetadataList(...)
 \method{print}{ImageMetadataList}(x, ...)
 }
 \arguments{
+\item{coreMetadata}{a list of core metadata entries}
+
+\item{globalMetadata}{a list of global metadata entries}
+
+\item{seriesMetadata}{a list of series metadata entries}
+
 \item{...}{further arguments to be passed to other methods}
 
 \item{x}{An ImageMetadata object}

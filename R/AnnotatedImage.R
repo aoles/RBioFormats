@@ -11,28 +11,29 @@
 #' @example man-roxygen/ex-mockFile.R
 #' @examples
 #' img
-#' @export
-setClass ("AnnotatedImage",
+#' @exportClass AnnotatedImage
+.AnnotatedImage <- setClass ("AnnotatedImage",
           contains = "Image",
           slots = c(metadata = "ImageMetadata"),
           validity = function(object) {
+            cat("Valid AnnotatedImage\n")
             if ( !is(object, "Image") )
               return( 'AnnotatedImage must be an Image' )
             if ( !is(object@metadata, "ImageMetadata") )
               return( 'the metadata slot must be an ImageMetadata object' )
 
             TRUE
-          },
-          prototype = prototype(
-            Image(), metadata = ImageMetadata()
-          )
+          }
 )
 
 #' @rdname AnnotatedImage-class
-#' @param ... data to include in the new object. Named arguments correspond to slots in the class definition. Unnamed arguments must be objects from classes that this class extends.
+#' @param ... arguments passed to the \linkS4class{Image} constructor.
+#' @param metadata an \linkS4class{ImageMetadata} object containing image metadata
 #' @return \code{AnnotatedImage} returns a new \linkS4class{AnnotatedImage} object.
 #' @export
-AnnotatedImage = function(...) new("AnnotatedImage", ...)
+AnnotatedImage <- function(..., metadata = ImageMetadata()) {
+  .AnnotatedImage(Image(...), metadata = metadata)
+}
 
 #' AnnotatedImageList Class
 #'
@@ -40,10 +41,11 @@ AnnotatedImage = function(...) new("AnnotatedImage", ...)
 #' @example man-roxygen/ex-mockFileSeries.R
 #' @examples
 #' img
-#' @export
-setClass ("AnnotatedImageList",
+#' @exportClass AnnotatedImageList
+.AnnotatedImageList <- setClass ("AnnotatedImageList",
           contains = "list",
           validity = function(object) {
+            cat("Valid AnnotatedImageList\n")
             if ( !is.list(object) )
               return( 'AnnotatedImageList must be a list' )
             if ( !all(vapply(object, function(x) is(x, "AnnotatedImage"), logical(1), USE.NAMES = FALSE)) )
@@ -57,7 +59,7 @@ setClass ("AnnotatedImageList",
 #' @param ... a list of \linkS4class{AnnotatedImage} objects to include in the new object.
 #' @return \code{AnnotatedImageList} returns a new \linkS4class{AnnotatedImageList} object.
 #' @export
-AnnotatedImageList = function(...) new("AnnotatedImageList", ...)
+AnnotatedImageList <- function(...) .AnnotatedImageList(...)
 
 #' Image Frames Order
 #'

@@ -36,10 +36,14 @@
   bf_url <- .bioformats_jar_url(ver)
 
   if ( !file.exists(bf_jar) ) {
+    # Use 100s instead of default of 60s for timing out the file download
     tryCatch(utils::download.file(bf_url, bf_jar, mode = "wb", quiet = FALSE),
+             timeout = max(100, getOption("timeout")),
              error = function(e) {
                file.remove(bf_jar)
-               stop("failed to download Bio-Formats Java library.\n  Check your internet connection and try again.", call.=FALSE)
+               stop(
+                 "Failed to download Bio-Formats Java library.\n  Check your internet connection and try again. Consider setting the environment variable R_DEFAULT_INTERNET_TIMEOUT to a value higher than 100.",
+                 call.=FALSE)
              }
     )
   }

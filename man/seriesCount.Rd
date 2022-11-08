@@ -2,18 +2,39 @@
 % Please edit documentation in R/metadataAccessors.R
 \name{seriesCount}
 \alias{seriesCount}
+\alias{seriesCount,ANY-method}
+\alias{seriesCount,matrix-method}
+\alias{seriesCount,array-method}
+\alias{seriesCount,ImageMetadata-method}
+\alias{seriesCount,AnnotatedImageList-method}
+\alias{seriesCount,ImageMetadataList-method}
 \title{Number of Image Series}
 \usage{
 seriesCount(x)
+
+\S4method{seriesCount}{ANY}(x)
+
+\S4method{seriesCount}{matrix}(x)
+
+\S4method{seriesCount}{array}(x)
+
+\S4method{seriesCount}{ImageMetadata}(x)
+
+\S4method{seriesCount}{AnnotatedImageList}(x)
+
+\S4method{seriesCount}{ImageMetadataList}(x)
 }
 \arguments{
-\item{x}{an \code{AnnotatedImageList} or \code{ImageMetadataList} object}
+\item{x}{an images object.}
 }
 \value{
-The number of image series.
+The number of image series the object contains, see Details.
 }
 \description{
-Get the number of image series
+Get the number of image series contained in an object.
+}
+\details{
+Image series are encoded by \linkS4class{AnnotatedImageList} or \linkS4class{ImageMetadataList} objects. Therefore, only these objects can possibly yield image series count higher than 1 while for all the rest of image objects this number is expected to be 1.
 }
 \examples{
 f = mockFile(sizeX = 256, sizeY = 256, series = 2)

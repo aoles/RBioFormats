@@ -54,9 +54,11 @@ seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 
 #' Number of Image Series
 #'
-#' Get the number of image series
-#' @param x an \code{AnnotatedImageList} or \code{ImageMetadataList} object
-#' @return The number of image series.
+#' Get the number of image series contained in an object.
+#'
+#' Image series are encoded by \linkS4class{AnnotatedImageList} or \linkS4class{ImageMetadataList} objects. Therefore, only these objects can possibly yield image series count higher than 1 while for all the rest of image objects this number is expected to be 1.
+#' @param x an images object.
+#' @return The number of image series the object contains, see Details.
 #' @template author
 #' @example man-roxygen/ex-mockFileSeries.R
 #' @examples
@@ -65,29 +67,37 @@ seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 #' meta <- metadata(img)
 #' seriesCount(meta)
 #' @export
-seriesCount = function(x) UseMethod("seriesCount")
+setGeneric("seriesCount", function(x) {
+  standardGeneric("seriesCount")
+})
 
+#' @rdname seriesCount
 #' @export
-seriesCount.default = function(x) NA
+setMethod("seriesCount", "ANY", function(x) NA)
 
 .singleSeries = function(x) 1L
 
 .seriesList = function(x) length(x)
 
+#' @rdname seriesCount
 #' @export
-seriesCount.matrix = .singleSeries
+setMethod("seriesCount", "matrix", .singleSeries)
 
+#' @rdname seriesCount
 #' @export
-seriesCount.array = .singleSeries
+setMethod("seriesCount", "array", .singleSeries)
 
+#' @rdname seriesCount
 #' @export
-seriesCount.ImageMetadata = .singleSeries
+setMethod("seriesCount", "ImageMetadata", .singleSeries)
 
+#' @rdname seriesCount
 #' @export
-seriesCount.AnnotatedImageList = .seriesList
+setMethod("seriesCount", "AnnotatedImageList", .seriesList)
 
+#' @rdname seriesCount
 #' @export
-seriesCount.ImageMetadataList = .seriesList
+setMethod("seriesCount", "ImageMetadataList", .seriesList)
 
 #' @rdname metadataAccessors
 #' @export

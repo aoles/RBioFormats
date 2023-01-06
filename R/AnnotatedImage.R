@@ -102,8 +102,12 @@ setMethod ("show", signature(object = "AnnotatedImage"), function(object) {
 #' @importFrom EBImage as.Image
 #' @return \code{as.Image} returns an \linkS4class{Image} object.
 #' @export
-as.Image.AnnotatedImage = function(x) {
-  y = as(x, "Image")
-  dimnames(y) = NULL
-  y
-}
+as.Image.AnnotatedImage = function(x) as(x, "Image")
+
+#' @importFrom methods slot slot<-
+setAs("AnnotatedImage", "Image", function(from) new("Image",
+                                                    from@.Data,
+                                                    colormode = from@colormode,
+                                                    dim = from@dim,
+                                                    dimnames = NULL)
+)

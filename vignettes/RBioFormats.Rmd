@@ -164,10 +164,10 @@ individual time frames.  Similarly a region if interest from within individual
 image frames could be extracted by providing ranges on the `X` and `Y` planar
 dimensions. To subset image series specify them in the `series` argument.
 
-```{r read.image slices, fig.small=TRUE}
+```{r read.image slices, eval=FALSE}
 for(t in seq_len(coreMetadata(metadata)$sizeT)) {
   frame <- read.image(f, subset = list(T = t))
-  EBImage::display(frame)
+  # perform some operations on each `frame`
 }
 ```
 

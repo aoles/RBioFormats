@@ -30,5 +30,5 @@ omexml
 \code{\link{read.metadata}} for reading image metadata, \code{\link{read.image}} for reading image data
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2023
 }

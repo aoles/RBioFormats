@@ -18,6 +18,6 @@ A utility class for format reader and writer implementations.
 sapply(0:7, FormatTools$getPixelTypeString)
 }
 \author{
-Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2022
+Andrzej Oleś <\email{andrzej.oles@gmail.com}>, 2014-2023
 }
 \keyword{datasets}

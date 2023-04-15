@@ -36,7 +36,8 @@ commit:
 	git commit -am "Update to BioFormats ${BFVER}"; git tag Bio-Formats_${BFVER}
 
 push: commit
-	git push; git push --tags
+	git push upstream
+	git push origin; git push origin --tags
 
 publish: push
 

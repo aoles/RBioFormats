@@ -9,7 +9,7 @@ parameters = list (
   sizeT = 2L,
   dimOrder = "XYTZC",
   interleaved = TRUE,
-  rgb = 3L,
+  rgb = 1L,
   indexed = TRUE
 )
 

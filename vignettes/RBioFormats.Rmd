@@ -39,7 +39,7 @@ metadata are described too.
 
 # Getting started
 
-`r Biocpkg("EBImage")` is an R package distributed as part of the
+`r Biocpkg("RBioFormats")` is an R package distributed as part of the
 [Bioconductor](http://bioconductor.org) project. To install the package, start R
 (version 4.2 or higher) and enter:
 

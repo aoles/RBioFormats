@@ -32,8 +32,8 @@ seriesMetadata = function (x, series, ...) .getMetadata(x, series, ...)
 
 .getMetadata = function (x, series, ...) {
   ## metadata type equals accessor name
-  sys_call <- sys.call(-1L)[[1L]]
-  type = as.character(sys_call[[length(sys_call)]])# account for calls via `::`
+  sys_call <- as.character(sys.call(-1L)[[1L]])
+  type = sys_call[[length(sys_call)]]# account for calls via `::` and `:::`
 
   metadata = metadata(x)
 
